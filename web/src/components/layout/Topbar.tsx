@@ -4,9 +4,6 @@ import { useLocation, Link } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { SearchNormal1, ArrowRight2, ArrowDown2 } from 'iconsax-react'
 
-// hooks
-import { useTheme } from '@/hooks'
-
 // store
 import { useAuthStore } from '@/store'
 
@@ -257,194 +254,92 @@ function CmeSelector() {
 
 export function Topbar() {
   const location = useLocation()
-  const [testPreloader, setTestPreloader] = useState<'navigation-auth' | 'navigation-public' | 'component' | null>(null)
 
   const breadcrumbs = useMemo(() => buildBreadcrumbs(location.pathname), [location.pathname])
 
   return (
-    <>
-      <div
-        className="h-14 shrink-0 flex items-center px-xl"
-        style={{
-          borderBottom: '1px solid var(--border)',
-          backgroundColor: 'var(--background-glass)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          position: 'sticky',
-          top: 0,
-          zIndex: 5
-        }}
-      >
-        {/* Left: Breadcrumb */}
-        <nav className="flex items-center gap-xs flex-1 min-w-0">
-          {breadcrumbs.map((segment, index) => (
-            <div key={segment.path} className="flex items-center gap-xs min-w-0">
-              {index > 0 && (
-                <ArrowRight2
-                  size={14}
-                  color="currentColor"
-                  style={{ color: 'var(--fg-muted)', flexShrink: 0 }}
-                />
-              )}
-              {segment.isLast ? (
-                <span
-                  className="truncate"
-                  style={{
-                    fontSize: 'var(--text-sm)',
-                    fontWeight: 600,
-                    color: 'var(--foreground)',
-                    minWidth: 0
-                  }}
-                >
-                  {segment.label}
-                </span>
-              ) : (
-                <Link
-                  to={segment.path}
-                  className="truncate"
-                  style={{
-                    fontSize: 'var(--text-sm)',
-                    fontWeight: 400,
-                    color: 'var(--muted-foreground)',
-                    textDecoration: 'none',
-                    transition: 'color 150ms ease',
-                    minWidth: 0
-                  }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'var(--foreground)' }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--muted-foreground)' }}
-                >
-                  {segment.label}
-                </Link>
-              )}
-            </div>
-          ))}
-        </nav>
-
-        {/* Right: Preloader test buttons + Search + CME */}
-        <div className="flex items-center gap-md shrink-0">
-          {/* DEV: Preloader test buttons (temporary) */}
-          <div className="flex items-center gap-xs">
-            {(['navigation-auth', 'navigation-public', 'component'] as const).map(v => (
-              <button
-                key={v}
-                onClick={() => {
-                  setTestPreloader(v)
-                  if (v !== 'component') setTimeout(() => setTestPreloader(null), 3000)
-                }}
-                className="cursor-pointer"
-                style={{
-                  padding: '3px 8px',
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: 'var(--destructive-8)',
-                  border: '1px solid var(--destructive-10)',
-                  color: 'var(--destructive)',
-                  fontSize: 9,
-                  fontWeight: 600,
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                {v === 'navigation-auth' ? 'Auth' : v === 'navigation-public' ? 'Public' : 'Component'}
-              </button>
-            ))}
-          </div>
-
-          {/* Search trigger */}
-          <div
-            className="flex items-center gap-sm cursor-pointer"
-            style={{
-              padding: '6px 12px',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: 'var(--input)',
-              border: '1px solid var(--input-border)',
-              color: 'var(--fg-muted)',
-              fontSize: 'var(--text-xs)',
-              minWidth: 160,
-              transition: 'border-color 150ms ease'
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-soft)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--input-border)' }}
-          >
-            <SearchNormal1 size={14} color="currentColor" style={{ flexShrink: 0 }} />
-            <span>Buscar...</span>
-          </div>
-
-          {/* CME Selector */}
-          <CmeSelector />
-        </div>
-      </div>
-
-      {/* Preloader test overlay */}
-      {testPreloader === 'navigation-auth' && (
-        <PreloaderTest variant="navigation-auth" onClose={() => setTestPreloader(null)} />
-      )}
-      {testPreloader === 'navigation-public' && (
-        <PreloaderTest variant="navigation-public" onClose={() => setTestPreloader(null)} />
-      )}
-      {testPreloader === 'component' && (
-        <div style={{ position: 'relative', height: 200, margin: 20, borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', backgroundColor: 'var(--card)' }}>
-          <div className="flex items-center justify-center h-full">
-            <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted-foreground)' }}>Conteudo atras do loader</span>
-          </div>
-          <PreloaderTest variant="component" onClose={() => setTestPreloader(null)} />
-        </div>
-      )}
-    </>
-  )
-}
-
-/** Temporary test wrapper for preloaders */
-function PreloaderTest({ variant, onClose }: { variant: 'navigation-auth' | 'navigation-public' | 'component'; onClose: () => void }) {
-  const { theme } = useTheme()
-  const [progress, setProgress] = useState(0)
-
-  const isNavigation = variant === 'navigation-auth' || variant === 'navigation-public'
-
-  useEffect(() => {
-    if (!isNavigation) return
-    const t1 = setTimeout(() => setProgress(30), 100)
-    const t2 = setTimeout(() => setProgress(60), 400)
-    const t3 = setTimeout(() => setProgress(80), 800)
-    const t4 = setTimeout(() => setProgress(95), 1500)
-    const t5 = setTimeout(() => { setProgress(100); setTimeout(onClose, 300) }, 2500)
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5) }
-  }, [isNavigation, onClose])
-
-  const fullLogoSrc = theme === 'dark' ? '/images/logo/logo-white-full-gradient.svg' : '/images/logo/logo-full-gradient.svg'
-  const iconLogoSrc = theme === 'dark' ? '/icons/logo/logo-icon-white.svg' : '/icons/logo/logo-icon.svg'
-
-  if (variant === 'component') {
-    return (
-      <div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{
-          backgroundColor: 'rgba(255,255,255,0.08)',
-          backdropFilter: 'blur(2px)',
-          WebkitBackdropFilter: 'blur(2px)',
-          zIndex: 50,
-          borderRadius: 'inherit'
-        }}
-      >
-        <img src={iconLogoSrc} alt="Carregando..." className="animate-spin" style={{ width: 32, height: 32, animationDuration: '3s' }} />
-      </div>
-    )
-  }
-
-  return createPortal(
     <div
-      className="fixed inset-0 flex flex-col items-center justify-center gap-xl"
+      className="h-14 shrink-0 flex items-center px-xl"
       style={{
-        zIndex: 200,
-        ...(variant === 'navigation-auth'
-          ? { backgroundColor: 'rgba(0,0,0,0.15)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }
-          : { backgroundColor: 'var(--bg)' }
-        )
+        borderBottom: '1px solid var(--border)',
+        backgroundColor: 'var(--background-glass)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 5
       }}
     >
-      <img src={fullLogoSrc} alt="Medtracker Etiquetagem" style={{ height: 56, objectFit: 'contain' }} />
-      <div style={{ width: 220, height: 6, borderRadius: 9999, backgroundColor: theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'var(--elevated)', overflow: 'hidden' }}>
-        <div style={{ height: '100%', width: `${progress}%`, backgroundColor: theme === 'dark' ? '#ffffff' : 'var(--primary)', borderRadius: 9999, transition: 'width 500ms ease-out' }} />
+      {/* Left: Breadcrumb */}
+      <nav className="flex items-center gap-xs flex-1 min-w-0">
+        {breadcrumbs.map((segment, index) => (
+          <div key={segment.path} className="flex items-center gap-xs min-w-0">
+            {index > 0 && (
+              <ArrowRight2
+                size={14}
+                color="currentColor"
+                style={{ color: 'var(--fg-muted)', flexShrink: 0 }}
+              />
+            )}
+            {segment.isLast ? (
+              <span
+                className="truncate"
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 600,
+                  color: 'var(--foreground)',
+                  minWidth: 0
+                }}
+              >
+                {segment.label}
+              </span>
+            ) : (
+              <Link
+                to={segment.path}
+                className="truncate"
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 400,
+                  color: 'var(--muted-foreground)',
+                  textDecoration: 'none',
+                  transition: 'color 150ms ease',
+                  minWidth: 0
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'var(--foreground)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--muted-foreground)' }}
+              >
+                {segment.label}
+              </Link>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      {/* Right: Search + CME */}
+      <div className="flex items-center gap-md shrink-0">
+        {/* Search trigger */}
+        <div
+          className="flex items-center gap-sm cursor-pointer"
+          style={{
+            padding: '6px 12px',
+            borderRadius: 'var(--radius-sm)',
+            backgroundColor: 'var(--input)',
+            border: '1px solid var(--input-border)',
+            color: 'var(--fg-muted)',
+            fontSize: 'var(--text-xs)',
+            minWidth: 160,
+            transition: 'border-color 150ms ease'
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-soft)' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--input-border)' }}
+        >
+          <SearchNormal1 size={14} color="currentColor" style={{ flexShrink: 0 }} />
+          <span>Buscar...</span>
+        </div>
+
+        {/* CME Selector */}
+        <CmeSelector />
       </div>
-    </div>,
-    document.body
+    </div>
   )
 }

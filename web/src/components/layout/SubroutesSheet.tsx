@@ -37,6 +37,7 @@ const sheetStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
+  overflowX: 'hidden',
   animation: 'subroutes-sheet-slide-in 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards'
 }
 
@@ -148,7 +149,7 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
           )}
 
           {/* Subroute list */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px 24px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px' }}>
             {filteredChildren.map(child => {
               const isActive = location.pathname === child.path || location.pathname.startsWith(child.path + '/')
 

@@ -160,7 +160,14 @@ export function BottomTabBar() {
       </div>
 
       {/* Tools Sheet */}
-      <ToolsSheet open={showToolsSheet} onClose={() => setShowToolsSheet(false)} />
+      <ToolsSheet
+        open={showToolsSheet}
+        onClose={() => setShowToolsSheet(false)}
+        onOpenSubroutes={(route) => {
+          setShowToolsSheet(false)
+          setSubroutesSheet(route)
+        }}
+      />
 
       {/* Subroutes Sheet */}
       <SubroutesSheet
