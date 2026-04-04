@@ -1,0 +1,281 @@
+/* ============================================
+   Medtracker v2 Design System — Theme Variables
+   Based on iGreen Design System (igreen-design MCP)
+   Primary color adapted to Medtracker Blue
+   ============================================ */
+
+/* ── Base (Dark Theme — Default) ── */
+:root {
+  /* Surfaces */
+  --bg: #0f1014;
+  --background: #0f1014;
+  --background-glass: rgba(15, 16, 20, 0.75);
+  --card-bg: #171920;
+  --card: #171920;
+  --sidebar-bg: #0b0c10;
+  --sidebar: #0b0c10;
+  --input-bg: #12141a;
+  --input: #12141a;
+  --popover-bg: #1c1e26;
+  --popover: #1c1e26;
+  --elevated: #22242c;
+  --elevated-hover: #2a2c34;
+  --nav-hover-bg: #14161c;
+  --muted: #12141a;
+  --surface-raised: #20232b;
+  --accent: #22242c;
+  --secondary: #1e2028;
+
+  /* Foreground scale */
+  --fg: #f0f0f3;
+  --foreground: #f0f0f3;
+  --fg-strong: #e2e2e8;
+  --fg-secondary: #c8c8d0;
+  --fg-tooltip: #b0b0ba;
+  --fg-hover: #a0a0ac;
+  --fg-tertiary: #8e8e9a;
+  --fg-muted: #6e6e7a;
+  --fg-dim: #5e5e6a;
+  --fg-faint: #4e4e5a;
+  --fg-ghost: #3e3e4a;
+  --fg-hint: #34343e;
+  --fg-decoration: #24242c;
+  --fg-whisper: #2e2e36;
+  --fg-disabled: #282830;
+
+  /* Semantic foreground */
+  --card-foreground: #f0f0f3;
+  --popover-foreground: #b0b0ba;
+  --muted-foreground: #6e6e7a;
+  --accent-foreground: #f0f0f3;
+  --secondary-foreground: #8e8e9a;
+
+  /* Foreground alpha */
+  --fg-30: rgba(240, 240, 243, 0.30);
+  --fg-40: rgba(240, 240, 243, 0.40);
+  --fg-45: rgba(240, 240, 243, 0.45);
+  --fg-50: rgba(240, 240, 243, 0.50);
+  --fg-60: rgba(240, 240, 243, 0.60);
+  --fg-70: rgba(240, 240, 243, 0.70);
+  --fg-80: rgba(240, 240, 243, 0.80);
+
+  /* Primary / Brand — MEDTRACKER BLUE (dark) */
+  --primary: #4B7BFF;
+  --primary-fg: #ffffff;
+  --primary-7: rgba(75, 123, 255, 0.07);
+  --primary-8: rgba(75, 123, 255, 0.08);
+  --primary-10: rgba(75, 123, 255, 0.10);
+  --primary-12: rgba(75, 123, 255, 0.12);
+  --primary-15: rgba(75, 123, 255, 0.15);
+  --primary-20: rgba(75, 123, 255, 0.20);
+  --primary-70: rgba(75, 123, 255, 0.70);
+
+  /* Status */
+  --destructive: #ef4444;
+  --destructive-8: rgba(239, 68, 68, 0.08);
+  --destructive-10: rgba(239, 68, 68, 0.10);
+  --warning: #f6b51e;
+  --warning-8: rgba(246, 181, 30, 0.08);
+  --warning-10: rgba(246, 181, 30, 0.10);
+  --info: #8754ec;
+  --info-8: rgba(135, 84, 236, 0.08);
+  --info-10: rgba(135, 84, 236, 0.10);
+  --chart-2: #7c6cff;
+
+  /* Borders */
+  --border: #1a1c24;
+  --border-structural: #1a1c24;
+  --border-separator: rgba(255, 255, 255, 0.04);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-soft: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.20);
+  --border-focus: #363846;
+  --border-tooltip: #2e3040;
+  --input-border: rgba(255, 255, 255, 0.06);
+  --popover-border: #2e3040;
+  --sidebar-border: #1a1c24;
+  --ring: #363846;
+
+  /* Overlays */
+  --overlay-3: rgba(255, 255, 255, 0.03);
+  --overlay-4: rgba(255, 255, 255, 0.04);
+  --overlay-5: rgba(255, 255, 255, 0.05);
+  --overlay-6: rgba(255, 255, 255, 0.06);
+  --overlay-7: rgba(255, 255, 255, 0.07);
+  --overlay-8: rgba(255, 255, 255, 0.08);
+  --overlay-10: rgba(255, 255, 255, 0.10);
+  --overlay-12: rgba(255, 255, 255, 0.12);
+  --overlay-22: rgba(255, 255, 255, 0.22);
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-card-hover: 0 4px 8px rgba(0,0,0,0.10), 0 8px 24px rgba(0,0,0,0.14);
+  --shadow-popover: 0 8px 32px rgba(0,0,0,0.40);
+
+  /* Sidebar */
+  --sidebar-foreground: #4e4e5a;
+  --sidebar-muted: #3e3e4a;
+  --sidebar-accent: #14161c;
+
+  /* Typography */
+  --text-display: 28px;
+  --text-lg: 22px;
+  --text-title: 20px;
+  --text-heading: 18px;
+  --text-subheading: 15px;
+  --text-body: 14px;
+  --text-sm: 13px;
+  --text-caption: 12px;
+  --text-xs: 11px;
+
+  /* On-solid */
+  --on-solid: #ffffff;
+
+  /* Spacing (8px grid) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+
+  /* Border Radius */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+
+  /* Transition */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Light Theme ── */
+.light {
+  --bg: #f3f3f9;
+  --background: #f3f3f9;
+  --background-glass: rgba(243, 243, 249, 0.75);
+  --card-bg: #ffffff;
+  --card: #ffffff;
+  --sidebar-bg: #ffffff;
+  --sidebar: #ffffff;
+  --input-bg: #f5f5fa;
+  --input: #ffffff;
+  --popover-bg: #ffffff;
+  --popover: #ffffff;
+  --elevated: #ecedf2;
+  --elevated-hover: #e4e5eb;
+  --nav-hover-bg: #e8ecf1;
+  --muted: #f5f5fa;
+  --surface-raised: #ffffff;
+  --accent: #ecedf2;
+  --secondary: #ffffff;
+
+  --fg: #1a1a2e;
+  --foreground: #1a1a2e;
+  --fg-strong: #2a2a3e;
+  --fg-secondary: #3a3a50;
+  --fg-tooltip: #555568;
+  --fg-hover: #5e5e72;
+  --fg-tertiary: #6e6e82;
+  --fg-muted: #8b8ba0;
+  --fg-dim: #9e9eb2;
+  --fg-faint: #b0b0c0;
+  --fg-ghost: #c4c4d0;
+  --fg-hint: #d0d0da;
+  --fg-decoration: #e0e0e8;
+  --fg-whisper: #d8d8e2;
+  --fg-disabled: #dcdce4;
+
+  --card-foreground: #1a1a2e;
+  --popover-foreground: #555568;
+  --muted-foreground: #8b8ba0;
+  --accent-foreground: #1a1a2e;
+  --secondary-foreground: #6e6e82;
+
+  --fg-30: rgba(26, 26, 46, 0.30);
+  --fg-40: rgba(26, 26, 46, 0.40);
+  --fg-45: rgba(26, 26, 46, 0.45);
+  --fg-50: rgba(26, 26, 46, 0.50);
+  --fg-60: rgba(26, 26, 46, 0.60);
+  --fg-70: rgba(26, 26, 46, 0.70);
+  --fg-80: rgba(26, 26, 46, 0.80);
+
+  /* Primary / Brand — MEDTRACKER BLUE (light) */
+  --primary: #2155FC;
+  --primary-fg: #ffffff;
+  --primary-7: rgba(33, 85, 252, 0.07);
+  --primary-8: rgba(33, 85, 252, 0.08);
+  --primary-10: rgba(33, 85, 252, 0.10);
+  --primary-12: rgba(33, 85, 252, 0.12);
+  --primary-15: rgba(33, 85, 252, 0.15);
+  --primary-20: rgba(33, 85, 252, 0.20);
+  --primary-70: rgba(33, 85, 252, 0.70);
+
+  --destructive: #dc2626;
+  --destructive-8: rgba(220, 38, 38, 0.08);
+  --destructive-10: rgba(220, 38, 38, 0.10);
+  --warning: #d97706;
+  --warning-8: rgba(217, 119, 6, 0.08);
+  --warning-10: rgba(217, 119, 6, 0.10);
+  --info: #7c3aed;
+  --info-8: rgba(124, 58, 237, 0.08);
+  --info-10: rgba(124, 58, 237, 0.10);
+  --chart-2: #6c5ce7;
+
+  --border: #e4e5eb;
+  --border-structural: #e4e5eb;
+  --border-separator: rgba(0, 0, 0, 0.06);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-soft: rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.20);
+  --border-focus: #bbbdc6;
+  --border-tooltip: #d4d6de;
+  --input-border: #e4e5eb;
+  --popover-border: #d4d6de;
+  --sidebar-border: #e4e5eb;
+  --ring: #bbbdc6;
+
+  --overlay-3: rgba(26, 26, 46, 0.02);
+  --overlay-4: rgba(26, 26, 46, 0.03);
+  --overlay-5: rgba(26, 26, 46, 0.04);
+  --overlay-6: rgba(26, 26, 46, 0.05);
+  --overlay-7: rgba(26, 26, 46, 0.06);
+  --overlay-8: rgba(26, 26, 46, 0.07);
+  --overlay-10: rgba(26, 26, 46, 0.09);
+  --overlay-12: rgba(26, 26, 46, 0.11);
+  --overlay-22: rgba(26, 26, 46, 0.20);
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 4px 12px rgba(0,0,0,0.06), 0 8px 28px rgba(0,0,0,0.10);
+  --shadow-popover: 0 8px 32px rgba(0,0,0,0.12);
+
+  --sidebar-foreground: #8b8ba0;
+  --sidebar-muted: #9e9eb2;
+  --sidebar-accent: #e8ecf1;
+}
+
+/* ── Base Styles ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: var(--text-body);
+  color: var(--fg);
+  background-color: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}

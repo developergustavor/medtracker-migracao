@@ -1,0 +1,278 @@
+<h2>Mobile Final — Bottom Tab com Tools + Spotlight + Sheet Expandida</h2>
+<p class="subtitle">Refinamento aprovado. Icones representados como placeholders (producao usara Iconsax SVG). Sem topbar principal em mobile — apenas secundaria contextual.</p>
+
+<div class="section">
+  <h3>1. Estado Base — Sem topbar principal, apenas secundaria contextual + tab bar com Tools</h3>
+  <p class="subtitle">Tab bar com icone Tools centralizado (absolute). Topbar secundaria densa com acoes contextuais. Em telas sem acoes contextuais, a secundaria nao aparece.</p>
+
+  <div class="split">
+    <!-- Mobile com topbar secundaria (rota Ciclos) -->
+    <div class="mockup">
+      <div class="mockup-header">Ciclos — Com topbar secundaria</div>
+      <div class="mockup-body" style="width:280px;margin:0 auto;height:520px;background:var(--bg);border-radius:20px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;border:2px solid var(--border);position:relative">
+        <!-- Topbar secundaria (contextual - unica topbar) -->
+        <div style="height:44px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:6px;flex-shrink:0">
+          <!-- START -->
+          <div style="padding:6px 12px;border-radius:8px;background:var(--primary-8);color:var(--primary);font-size:11px;font-weight:500;white-space:nowrap;display:flex;align-items:center;gap:4px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo Ciclo
+          </div>
+          <div style="padding:6px 12px;border-radius:8px;background:var(--elevated);font-size:11px;color:var(--foreground);white-space:nowrap;display:flex;align-items:center;gap:4px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Rack
+          </div>
+          <!-- OVERFLOW -->
+          <div style="margin-left:auto;width:32px;height:32px;border-radius:8px;background:var(--elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:var(--foreground)"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+          </div>
+        </div>
+        <!-- Page title + tabs -->
+        <div style="padding:12px 14px 0;flex-shrink:0">
+          <div style="font-size:18px;font-weight:700;color:var(--foreground);margin-bottom:10px">Ciclos</div>
+        </div>
+        <div style="display:flex;border-bottom:1px solid var(--border);flex-shrink:0;margin:0 14px">
+          <div style="flex:1;padding:10px 0;text-align:center;font-size:12px;font-weight:500;color:var(--primary);border-bottom:2px solid var(--primary)">Desinfeccao</div>
+          <div style="flex:1;padding:10px 0;text-align:center;font-size:12px;color:var(--muted-foreground)">Esterilizacao</div>
+        </div>
+        <!-- Body -->
+        <div style="flex:1;padding:12px 14px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+          <div style="background:var(--card-bg);border-radius:10px;padding:14px;border:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:600;color:var(--foreground)">CISA</div><div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Termodesinfectadora</div></div>
+              <div style="padding:3px 8px;border-radius:12px;background:var(--primary-10);color:var(--primary);font-size:10px;font-weight:500">15 ciclos</div>
+            </div>
+          </div>
+          <div style="background:var(--card-bg);border-radius:10px;padding:14px;border:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:600;color:var(--foreground)">CISA 2</div><div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Termodesinfectadora</div></div>
+              <div style="padding:3px 8px;border-radius:12px;background:var(--primary-10);color:var(--primary);font-size:10px;font-weight:500">6 ciclos</div>
+            </div>
+          </div>
+          <div style="background:var(--card-bg);border-radius:10px;padding:14px;border:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:600;color:var(--foreground)">MEDFACE</div><div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Lavadora Ultrassonica</div></div>
+              <div style="padding:3px 8px;border-radius:12px;background:var(--primary-10);color:var(--primary);font-size:10px;font-weight:500">1 ciclo</div>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom Tab Bar com Tools centralizado -->
+        <div style="height:64px;background:var(--card-bg);border-top:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-around;flex-shrink:0;padding:0 8px 8px;position:relative">
+          <!-- Item 1 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground);width:56px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.02 2.84l-5.39 4.2C2.73 7.74 2 9.05 2 10.36v7.04c0 2.66 2.17 4.84 4.84 4.84h10.32c2.67 0 4.84-2.18 4.84-4.84v-6.84c0-1.41-.82-2.79-1.76-3.49l-6.18-4.33"/></svg>
+            <span style="font-size:9px">Home</span>
+          </div>
+          <!-- Item 2 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--primary);width:56px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2"/><path d="M13 2.05A10 10 0 0 1 22 12"/></svg>
+            <span style="font-size:9px;font-weight:600">Ciclos</span>
+          </div>
+          <!-- TOOLS - Centralizado e elevated -->
+          <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:52px;height:52px;border-radius:16px;background:var(--primary);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(33,85,252,0.3);cursor:pointer">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <!-- Spacer para o botao central -->
+          <div style="width:56px"></div>
+          <!-- Item 4 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground);width:56px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.17 7.44L12 12.55l8.77-5.08M12 21.61v-9.07"/><path d="M9.93 2.48L4.59 5.44c-1.21.67-2.2 2.35-2.2 3.73v5.65c0 1.38.99 3.06 2.2 3.73l5.34 2.97c1.14.63 3.01.63 4.15 0l5.34-2.97c1.21-.67 2.2-2.35 2.2-3.73V9.17c0-1.38-.99-3.06-2.2-3.73l-5.34-2.97c-1.15-.63-3.01-.63-4.15.01z"/></svg>
+            <span style="font-size:9px">Entrada</span>
+          </div>
+          <!-- Item 5 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground);width:56px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 19H8c-4 0-6-1-6-6V8c0-4 2-6 6-6h8c4 0 6 2 6 6v5c0 4-2 6-6 6h-.5c-.31 0-.61.15-.8.4l-1.5 2c-.66.88-1.74.88-2.4 0l-1.5-2c-.16-.22-.53-.4-.8-.4z"/></svg>
+            <span style="font-size:9px">Mais</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile SEM topbar secundaria (rota Home) -->
+    <div class="mockup">
+      <div class="mockup-header">Home — Sem topbar secundaria</div>
+      <div class="mockup-body" style="width:280px;margin:0 auto;height:520px;background:var(--bg);border-radius:20px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;border:2px solid var(--border);position:relative">
+        <!-- SEM topbar secundaria — direto no conteudo -->
+        <div style="padding:16px 14px 0;flex-shrink:0">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div>
+              <div style="font-size:11px;color:var(--muted-foreground)">Bem-vindo,</div>
+              <div style="font-size:20px;font-weight:700;color:var(--foreground)">Gustavo</div>
+            </div>
+            <div style="width:36px;height:36px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center">
+              <span style="color:white;font-weight:600;font-size:14px">G</span>
+            </div>
+          </div>
+        </div>
+        <!-- Body -->
+        <div style="flex:1;padding:0 14px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px">
+          <div style="background:var(--card-bg);border-radius:12px;padding:16px;border:1px solid var(--border)">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground);margin-bottom:6px">Area de Limpeza</div>
+            <div style="font-size:14px;font-weight:600;color:var(--foreground)">Entrada de Materiais</div>
+            <div style="font-size:11px;color:var(--muted-foreground);margin-top:4px">Registrar recebimento de materiais</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:var(--card-bg);border-radius:12px;padding:14px;border:1px solid var(--border)">
+              <div style="font-size:10px;color:var(--muted-foreground);margin-bottom:4px">Preparo</div>
+              <div style="font-size:13px;font-weight:600;color:var(--foreground)">Ciclos</div>
+            </div>
+            <div style="background:var(--card-bg);border-radius:12px;padding:14px;border:1px solid var(--border)">
+              <div style="font-size:10px;color:var(--muted-foreground);margin-bottom:4px">Arsenal</div>
+              <div style="font-size:13px;font-weight:600;color:var(--foreground)">Saida</div>
+            </div>
+          </div>
+          <div style="background:var(--card-bg);border-radius:12px;padding:16px;border:1px solid var(--border)">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground);margin-bottom:6px">Centro Cirurgico</div>
+            <div style="font-size:14px;font-weight:600;color:var(--foreground)">Conferencia</div>
+            <div style="font-size:11px;color:var(--muted-foreground);margin-top:4px">Verificar materiais no CC</div>
+          </div>
+        </div>
+        <!-- Tab Bar identica -->
+        <div style="height:64px;background:var(--card-bg);border-top:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-around;flex-shrink:0;padding:0 8px 8px;position:relative">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--primary);width:56px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.02 2.84l-5.39 4.2C2.73 7.74 2 9.05 2 10.36v7.04c0 2.66 2.17 4.84 4.84 4.84h10.32c2.67 0 4.84-2.18 4.84-4.84v-6.84c0-1.41-.82-2.79-1.76-3.49l-6.18-4.33"/></svg>
+            <span style="font-size:9px;font-weight:600">Home</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground);width:56px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2"/><path d="M13 2.05A10 10 0 0 1 22 12"/></svg>
+            <span style="font-size:9px">Ciclos</span>
+          </div>
+          <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:52px;height:52px;border-radius:16px;background:var(--primary);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(33,85,252,0.3)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <div style="width:56px"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground);width:56px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.17 7.44L12 12.55l8.77-5.08M12 21.61v-9.07"/><path d="M9.93 2.48L4.59 5.44c-1.21.67-2.2 2.35-2.2 3.73v5.65c0 1.38.99 3.06 2.2 3.73l5.34 2.97c1.14.63 3.01.63 4.15 0l5.34-2.97c1.21-.67 2.2-2.35 2.2-3.73V9.17c0-1.38-.99-3.06-2.2-3.73l-5.34-2.97c-1.15-.63-3.01-.63-4.15.01z"/></svg>
+            <span style="font-size:9px">Entrada</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground);width:56px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 19H8c-4 0-6-1-6-6V8c0-4 2-6 6-6h8c4 0 6 2 6 6v5c0 4-2 6-6 6h-.5c-.31 0-.61.15-.8.4l-1.5 2c-.66.88-1.74.88-2.4 0l-1.5-2c-.16-.22-.53-.4-.8-.4z"/></svg>
+            <span style="font-size:9px">Mais</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. Tools Sheet — Pesquisa + CME + Profile + Opcoes v1</h3>
+  <p class="subtitle">Tap no icone Tools centralizado abre bottom sheet com: busca, seletor CME, opcoes do profile (alterar senha, config, sair), e atalhos da topbar v1.</p>
+
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">Tools Sheet aberta</div>
+      <div class="mockup-body" style="width:280px;margin:0 auto;height:520px;background:var(--bg);border-radius:20px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;position:relative;border:2px solid var(--border)">
+        <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:5"></div>
+        <!-- Bottom Sheet — quase full height -->
+        <div style="position:absolute;bottom:0;left:0;right:0;background:var(--card-bg);border-top-left-radius:20px;border-top-right-radius:20px;padding:10px 16px 20px;z-index:10;box-shadow:0 -8px 32px rgba(0,0,0,0.2);max-height:88%;display:flex;flex-direction:column;overflow-y:auto">
+          <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 12px;flex-shrink:0"></div>
+
+          <!-- Busca -->
+          <div style="padding:10px 14px;border-radius:12px;background:var(--input-bg);border:1px solid var(--border);font-size:13px;color:var(--muted-foreground);margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:pointer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Buscar materiais, rotas, acoes...
+          </div>
+
+          <!-- CME Selector -->
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground);margin-bottom:6px;flex-shrink:0">CME Ativa</div>
+          <div style="padding:12px 14px;border-radius:12px;background:var(--elevated);border:1px solid var(--border);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;cursor:pointer">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:32px;height:32px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center"><span style="color:white;font-weight:600;font-size:12px">M</span></div>
+              <div><div style="font-size:13px;font-weight:600;color:var(--foreground)">Medtracker</div><div style="font-size:10px;color:var(--muted-foreground)">Completo &bull; Ilimitado</div></div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--muted-foreground)"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <!-- Navegacao rapida -->
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground);margin-bottom:6px;flex-shrink:0">Navegacao</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;flex-shrink:0">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:10px;background:var(--elevated);border:1px solid var(--border);cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+              <span style="font-size:10px;color:var(--foreground)">Dashboard</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:10px;background:var(--elevated);border:1px solid var(--border);cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v16.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h6.9"/></svg>
+              <span style="font-size:10px;color:var(--foreground)">Cadastros</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:10px;background:var(--elevated);border:1px solid var(--border);cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><path d="M8 2v3M16 2v3M3.5 9.09h17M21 8.5V17c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V8.5c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5z"/></svg>
+              <span style="font-size:10px;color:var(--foreground)">Relatorios</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:10px;background:var(--elevated);border:1px solid var(--border);cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M2 12.88V11.12c0-.87.71-1.58 1.58-1.58 1.19 0 1.77-.84 1.18-1.87A1.58 1.58 0 015.34 5.5l1.74-1.01c.79-.47 1.8-.19 2.27.6l.11.19c.58 1.03 1.53 1.03 2.12 0l.11-.19a1.636 1.636 0 012.27-.6l1.74 1.01a1.58 1.58 0 01.58 2.17c-.59 1.03-.01 1.87 1.18 1.87.86 0 1.58.71 1.58 1.58v1.76"/></svg>
+              <span style="font-size:10px;color:var(--foreground)">Config</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:10px;background:var(--elevated);border:1px solid var(--border);cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><path d="M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7z"/><path d="M7.33 14.49l2.38-3.09c.34-.44.97-.52 1.41-.18l1.83 1.44c.44.34 1.07.26 1.41-.17l2.31-2.98"/></svg>
+              <span style="font-size:10px;color:var(--foreground)">Gerenciar</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:10px;background:var(--elevated);border:1px solid var(--border);cursor:pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><path d="M21 7v10c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V7c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5z"/></svg>
+              <span style="font-size:10px;color:var(--foreground)">Manual</span>
+            </div>
+          </div>
+
+          <!-- Perfil / Conta -->
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground);margin-bottom:6px;flex-shrink:0">Conta</div>
+          <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0">
+            <div style="padding:12px;border-radius:10px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:10px;cursor:pointer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12.12 12.78a.963.963 0 00-.24 0 3.27 3.27 0 01-3.16-3.27c0-1.81 1.46-3.28 3.28-3.28a3.276 3.276 0 01.12 6.55zM18.74 19.38A9.934 9.934 0 0012 22c-2.6 0-4.96-.99-6.74-2.62.1-.94.7-1.86 1.77-2.58 2.74-1.82 7.22-1.82 9.94 0 1.07.72 1.67 1.64 1.77 2.58z"/><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
+              Gustavo — Administrador
+            </div>
+            <div style="padding:12px;border-radius:10px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:10px;cursor:pointer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.67 14H4c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h4.67c.55 0 1 .45 1 1v9c0 .55-.45 1-1 1z"/><path d="M21 14h-4c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h4c.55 0 1 .45 1 1v9c0 .55-.45 1-1 1z"/></svg>
+              Alterar Senha
+            </div>
+            <div style="padding:12px;border-radius:10px;font-size:13px;color:rgb(239,68,68);display:flex;align-items:center;gap:10px;cursor:pointer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgb(239,68,68)" stroke-width="1.5"><path d="M8.9 7.56c.31-3.6 2.16-5.07 6.21-5.07h.13c4.47 0 6.26 1.79 6.26 6.26v6.52c0 4.47-1.79 6.26-6.26 6.26h-.13c-4.02 0-5.87-1.45-6.2-4.99M15 12H3.62M5.85 8.65L2.5 12l3.35 3.35"/></svg>
+              Sair
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Busca spotlight no mobile -->
+    <div class="mockup">
+      <div class="mockup-header">Spotlight (tap na busca da Tools sheet)</div>
+      <div class="mockup-body" style="width:280px;margin:0 auto;height:520px;background:rgba(15,16,20,0.7);backdrop-filter:blur(24px);border-radius:20px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:40px 16px 16px;position:relative;border:2px solid var(--border)">
+        <!-- Barra de busca -->
+        <div style="width:100%;background:var(--card-bg);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.3);border:1px solid var(--border);overflow:hidden">
+          <div style="padding:14px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted-foreground)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span style="font-size:15px;color:var(--foreground)">cx vas</span>
+            <span style="font-size:15px;color:var(--foreground);opacity:0.3">|</span>
+            <div style="margin-left:auto;padding:4px 8px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--muted-foreground)">ESC</div>
+          </div>
+          <!-- Autocomplete -->
+          <div style="padding:8px">
+            <div style="padding:4px 10px;font-size:10px;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:0.5px">Materiais</div>
+            <div style="padding:12px;border-radius:8px;background:var(--primary-8);font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px;margin-top:4px">
+              <div style="width:28px;height:28px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">&#x2702;</div>
+              <div style="min-width:0"><div style="font-weight:500"><span style="color:var(--primary)">CX VAS</span>CULAR N1</div><div style="font-size:10px;color:var(--muted-foreground)">KIT &bull; 11 submateriais</div></div>
+            </div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px;margin-top:4px">
+              <div style="width:28px;height:28px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">&#x2702;</div>
+              <div style="min-width:0"><div><span style="color:var(--primary)">CX VAS</span>CULAR N2</div><div style="font-size:10px;color:var(--muted-foreground)">KIT &bull; 8 submateriais</div></div>
+            </div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px;margin-top:4px">
+              <div style="width:28px;height:28px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">&#x2702;</div>
+              <div style="min-width:0"><div><span style="color:var(--primary)">CX VAS</span>CULAR N10</div><div style="font-size:10px;color:var(--muted-foreground)">KIT &bull; 149 submateriais</div></div>
+            </div>
+            <div style="padding:4px 10px;font-size:10px;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:0.5px;margin-top:8px">Paginas</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px;margin-top:4px">
+              <div style="width:28px;height:28px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">&#x1F4CB;</div>
+              <div>Cadastros &rarr; Materiais</div>
+            </div>
+          </div>
+        </div>
+        <!-- Dicas -->
+        <div style="position:absolute;bottom:20px;display:flex;gap:12px;font-size:10px;color:rgba(255,255,255,0.35)">
+          <span>&#8593;&#8595; Navegar</span>
+          <span>&#9166; Abrir</span>
+          <span>Tap fora: Fechar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

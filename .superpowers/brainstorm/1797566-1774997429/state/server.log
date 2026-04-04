@@ -1,0 +1,5 @@
+{"type":"server-started","port":63474,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:63474","screen_dir":"/home/developergustavor/Documents/Medtracker/medtracker-migracao/.superpowers/brainstorm/1797566-1774997429/content","state_dir":"/home/developergustavor/Documents/Medtracker/medtracker-migracao/.superpowers/brainstorm/1797566-1774997429/state"}
+{"type":"screen-added","file":"/home/developergustavor/Documents/Medtracker/medtracker-migracao/.superpowers/brainstorm/1797566-1774997429/content/mobile-final.html"}
+{"type":"screen-added","file":"/home/developergustavor/Documents/Medtracker/medtracker-migracao/.superpowers/brainstorm/1797566-1774997429/content/color-comparison.html"}
+{"type":"screen-added","file":"/home/developergustavor/Documents/Medtracker/medtracker-migracao/.superpowers/brainstorm/1797566-1774997429/content/waiting.html"}
+{"type":"server-stopped","reason":"idle timeout"}

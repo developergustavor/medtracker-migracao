@@ -1,0 +1,314 @@
+<h2>Layout de Navegacao v2 — Sidebar Colapsavel + Sub-sidebar + Topbar Dupla</h2>
+<p class="subtitle">Base: Opcao A + breadcrumb + busca + sub-sidebar para subrotas + topbar secundaria contextual. Clique para selecionar.</p>
+
+<div class="options">
+
+  <!-- OPCAO D -->
+  <div class="option" data-choice="d" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content">
+      <h3>Sub-sidebar Overlay (flutuante)</h3>
+      <p>Ao clicar em "Cadastros" ou "Ciclos" na sidebar, uma sub-sidebar <strong>flutuante</strong> aparece ao lado (overlay) com as subrotas. Ela fecha ao clicar fora ou ao selecionar uma subrota. Topbar dupla: principal fixa + secundaria contextual abaixo.</p>
+
+      <!-- Estado: Sidebar expandida, sem sub-sidebar -->
+      <div class="label" style="margin-top:12px">Estado 1 — Sidebar expandida, rota simples (Home)</div>
+      <div class="mockup" style="margin-top:8px">
+        <div class="mockup-body" style="display:flex;height:340px;background:var(--bg);border-radius:var(--radius-md);overflow:hidden;font-family:system-ui,sans-serif;position:relative">
+          <!-- Sidebar -->
+          <div style="width:200px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:2px;flex-shrink:0">
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:10px">
+              <div style="width:28px;height:28px;background:var(--primary);border-radius:7px"></div>
+              <span style="font-weight:600;font-size:13px;color:var(--foreground)">Medtracker</span>
+              <div style="margin-left:auto;width:18px;height:18px;border-radius:4px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted-foreground);cursor:pointer">&#9664;</div>
+            </div>
+            <div style="padding:7px 12px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:12px;font-weight:500;border-left:2px solid var(--primary)">&#x1F3E0; Home</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4CA; Dashboard</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground);display:flex;justify-content:space-between">&#x1F4CB; Cadastros <span style="font-size:9px;color:var(--sidebar-muted)">&#9654;</span></div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4E5; Entrada</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground);display:flex;justify-content:space-between">&#x1F504; Ciclos <span style="font-size:9px;color:var(--sidebar-muted)">&#9654;</span></div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4E4; Saida</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3E5; Conferencia</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3F7; Impressao</div>
+            <div style="flex:1"></div>
+            <div style="padding:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;margin-top:4px">
+              <div style="width:24px;height:24px;border-radius:50%;background:var(--primary)"></div>
+              <div><div style="font-size:11px;font-weight:500;color:var(--foreground)">Gustavo</div><div style="font-size:9px;color:var(--sidebar-muted)">Administrador</div></div>
+            </div>
+          </div>
+          <!-- Main -->
+          <div style="flex:1;display:flex;flex-direction:column">
+            <!-- Topbar Principal -->
+            <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;justify-content:space-between;flex-shrink:0">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="font-size:12px;color:var(--muted-foreground)">Home</span>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <div style="padding:5px 10px;border-radius:6px;background:var(--input-bg);border:1px solid var(--border);font-size:11px;color:var(--muted-foreground);width:180px">&#x1F50D; Buscar...</div>
+                <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">Medtracker &#9662;</div>
+                <div style="width:26px;height:26px;border-radius:50%;background:var(--primary)"></div>
+              </div>
+            </div>
+            <!-- Topbar Secundaria (contextual) -->
+            <div style="height:40px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0">
+              <div style="padding:4px 10px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:11px;font-weight:500;cursor:pointer">&#x1F4CA; Dashboard</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground);cursor:pointer">&#x1F4CB; Cadastros</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground);cursor:pointer">&#x1F4C4; Relatorios</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground);cursor:pointer">&#x1F4D6; Manual</div>
+            </div>
+            <!-- Body -->
+            <div style="flex:1;padding:16px;background:var(--bg)">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted-foreground)">Area de Limpeza</div><div style="font-size:12px;font-weight:500;color:var(--foreground);margin-top:3px">Entrada de Materiais</div></div>
+                <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted-foreground)">Area de Preparo</div><div style="font-size:12px;font-weight:500;color:var(--foreground);margin-top:3px">Ciclos</div></div>
+                <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted-foreground)">Arsenal</div><div style="font-size:12px;font-weight:500;color:var(--foreground);margin-top:3px">Saida de Materiais</div></div>
+                <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted-foreground)">Centro Cirurgico</div><div style="font-size:12px;font-weight:500;color:var(--foreground);margin-top:3px">Conferencia</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado: Sub-sidebar aberta -->
+      <div class="label" style="margin-top:16px">Estado 2 — "Cadastros" clicado, sub-sidebar overlay aberta</div>
+      <div class="mockup" style="margin-top:8px">
+        <div class="mockup-body" style="display:flex;height:340px;background:var(--bg);border-radius:var(--radius-md);overflow:hidden;font-family:system-ui,sans-serif;position:relative">
+          <!-- Sidebar -->
+          <div style="width:200px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;z-index:3">
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:10px">
+              <div style="width:28px;height:28px;background:var(--primary);border-radius:7px"></div>
+              <span style="font-weight:600;font-size:13px;color:var(--foreground)">Medtracker</span>
+            </div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3E0; Home</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4CA; Dashboard</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--primary);background:var(--primary-8);font-weight:500;display:flex;justify-content:space-between;border-left:2px solid var(--primary)">&#x1F4CB; Cadastros <span style="font-size:9px">&#9654;</span></div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4E5; Entrada</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground);display:flex;justify-content:space-between">&#x1F504; Ciclos <span style="font-size:9px;color:var(--sidebar-muted)">&#9654;</span></div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4E4; Saida</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3E5; Conferencia</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3F7; Impressao</div>
+            <div style="flex:1"></div>
+            <div style="padding:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;margin-top:4px">
+              <div style="width:24px;height:24px;border-radius:50%;background:var(--primary)"></div>
+              <div><div style="font-size:11px;font-weight:500;color:var(--foreground)">Gustavo</div><div style="font-size:9px;color:var(--sidebar-muted)">Administrador</div></div>
+            </div>
+          </div>
+          <!-- Sub-sidebar overlay -->
+          <div style="width:180px;background:var(--popover-bg);border-right:1px solid var(--border);padding:10px 8px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;z-index:2;box-shadow:4px 0 16px rgba(0,0,0,0.15);position:absolute;left:200px;top:0;bottom:0">
+            <div style="padding:6px 10px;font-size:11px;font-weight:600;color:var(--foreground);margin-bottom:4px">Cadastros</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--primary);background:var(--primary-8);font-weight:500">Materiais</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Colaboradores</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Equipamentos</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Embalagens</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Tipos de Ciclo</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Tipos de Ocorrencia</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Indicadores</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Insumos</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Terceiros</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Setores</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Medicos</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Pacientes</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Checklists</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Modelos</div>
+          </div>
+          <!-- Backdrop semi-transparente -->
+          <div style="position:absolute;left:380px;top:0;right:0;bottom:0;background:rgba(0,0,0,0.08);z-index:1"></div>
+          <!-- Main (por traz) -->
+          <div style="flex:1;display:flex;flex-direction:column;margin-left:0">
+            <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;justify-content:space-between;flex-shrink:0">
+              <div style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:var(--muted-foreground)">Home</span><span style="font-size:11px;color:var(--muted-foreground)">/</span><span style="font-size:12px;color:var(--foreground);font-weight:500">Cadastros</span></div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <div style="padding:5px 10px;border-radius:6px;background:var(--input-bg);border:1px solid var(--border);font-size:11px;color:var(--muted-foreground);width:180px">&#x1F50D; Buscar...</div>
+                <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">Medtracker &#9662;</div>
+                <div style="width:26px;height:26px;border-radius:50%;background:var(--primary)"></div>
+              </div>
+            </div>
+            <div style="height:40px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0">
+              <div style="padding:4px 10px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:11px;font-weight:500">&#x2795; Novo Material</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">&#x1F4E4; Exportar</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">&#x1F5D1; Excluir Selecionados</div>
+            </div>
+            <div style="flex:1;padding:16px;background:var(--bg);opacity:0.5">
+              <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border);font-size:12px;color:var(--muted-foreground)">Tabela de materiais...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>Sub-sidebar nao empurra o conteudo (overlay)</li><li>Fecha facil (click fora ou selecionar subrota)</li><li>Touch-friendly: areas grandes de toque</li><li>Topbar secundaria mostra acoes contextuais da rota (ex: "+ Novo Material" em Cadastros)</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Overlay pode cobrir conteudo temporariamente</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPCAO E -->
+  <div class="option" data-choice="e" onclick="toggleSelect(this)">
+    <div class="letter">E</div>
+    <div class="content">
+      <h3>Sub-sidebar Push (empurra conteudo)</h3>
+      <p>Mesmo conceito, mas a sub-sidebar <strong>empurra</strong> o conteudo para a direita em vez de flutuar. Transicao animada suave. Quando colapsada, sidebar vira 68px (icones) e sub-sidebar some.</p>
+
+      <!-- Estado expandido com sub-sidebar push -->
+      <div class="label" style="margin-top:12px">Estado — "Ciclos" clicado, sub-sidebar push + topbar contextual</div>
+      <div class="mockup" style="margin-top:8px">
+        <div class="mockup-body" style="display:flex;height:340px;background:var(--bg);border-radius:var(--radius-md);overflow:hidden;font-family:system-ui,sans-serif">
+          <!-- Sidebar principal -->
+          <div style="width:200px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:2px;flex-shrink:0">
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:10px">
+              <div style="width:28px;height:28px;background:var(--primary);border-radius:7px"></div>
+              <span style="font-weight:600;font-size:13px;color:var(--foreground)">Medtracker</span>
+            </div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3E0; Home</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4CA; Dashboard</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground);display:flex;justify-content:space-between">&#x1F4CB; Cadastros <span style="font-size:9px;color:var(--sidebar-muted)">&#9654;</span></div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4E5; Entrada</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--primary);background:var(--primary-8);font-weight:500;display:flex;justify-content:space-between;border-left:2px solid var(--primary)">&#x1F504; Ciclos <span style="font-size:9px">&#9654;</span></div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4E4; Saida</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3E5; Conferencia</div>
+            <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3F7; Impressao</div>
+            <div style="flex:1"></div>
+            <div style="padding:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;margin-top:4px">
+              <div style="width:24px;height:24px;border-radius:50%;background:var(--primary)"></div>
+              <div><div style="font-size:11px;font-weight:500;color:var(--foreground)">Gustavo</div><div style="font-size:9px;color:var(--sidebar-muted)">Administrador</div></div>
+            </div>
+          </div>
+          <!-- Sub-sidebar push -->
+          <div style="width:160px;background:var(--card-bg);border-right:1px solid var(--border);padding:10px 8px;display:flex;flex-direction:column;gap:2px;flex-shrink:0">
+            <div style="padding:6px 10px;font-size:11px;font-weight:600;color:var(--foreground);margin-bottom:4px;display:flex;justify-content:space-between;align-items:center">Ciclos <span style="font-size:9px;color:var(--muted-foreground);cursor:pointer">&#x2715;</span></div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--primary);background:var(--primary-8);font-weight:500">Desinfeccao</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Esterilizacao</div>
+          </div>
+          <!-- Main -->
+          <div style="flex:1;display:flex;flex-direction:column">
+            <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;justify-content:space-between;flex-shrink:0">
+              <div style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:var(--muted-foreground)">Home</span><span style="font-size:11px;color:var(--muted-foreground)">/</span><span style="font-size:11px;color:var(--muted-foreground)">Ciclos</span><span style="font-size:11px;color:var(--muted-foreground)">/</span><span style="font-size:12px;color:var(--foreground);font-weight:500">Desinfeccao</span></div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <div style="padding:5px 10px;border-radius:6px;background:var(--input-bg);border:1px solid var(--border);font-size:11px;color:var(--muted-foreground);width:180px">&#x1F50D; Buscar...</div>
+                <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">Medtracker &#9662;</div>
+                <div style="width:26px;height:26px;border-radius:50%;background:var(--primary)"></div>
+              </div>
+            </div>
+            <!-- Topbar Secundaria contextual para Ciclos -->
+            <div style="height:40px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0">
+              <div style="padding:4px 10px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:11px;font-weight:500">&#x2795; Novo Ciclo</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">&#x1F4E6; Rack Virtual</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">&#x1F4C4; Relatorio</div>
+            </div>
+            <!-- Body -->
+            <div style="flex:1;padding:16px;background:var(--bg)">
+              <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)">
+                <div style="font-size:13px;font-weight:600;color:var(--foreground);margin-bottom:8px">CISA — Termodesinfectadora</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <div style="padding:6px 10px;border-radius:6px;background:var(--elevated);font-size:11px"><span style="color:var(--muted-foreground)">Lote:</span> <span style="color:var(--foreground)">812</span></div>
+                  <div style="padding:4px 8px;border-radius:12px;background:var(--warning-bg, rgba(255,180,0,0.12));color:var(--warning, #f5a623);font-size:10px;font-weight:500">Processando</div>
+                  <div style="padding:6px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--muted-foreground)">06/02/2025 15:54</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado: Sidebar colapsada -->
+      <div class="label" style="margin-top:16px">Estado colapsado (68px icones) — sub-sidebar e topbar contextual permanecem</div>
+      <div class="mockup" style="margin-top:8px">
+        <div class="mockup-body" style="display:flex;height:260px;background:var(--bg);border-radius:var(--radius-md);overflow:hidden;font-family:system-ui,sans-serif">
+          <!-- Sidebar colapsada -->
+          <div style="width:56px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div style="width:32px;height:32px;background:var(--primary);border-radius:7px;margin-bottom:8px"></div>
+            <div style="width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px">&#x1F3E0;</div>
+            <div style="width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px">&#x1F4CA;</div>
+            <div style="width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px">&#x1F4CB;</div>
+            <div style="width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px">&#x1F4E5;</div>
+            <div style="width:36px;height:36px;border-radius:6px;background:var(--primary-8);display:flex;align-items:center;justify-content:center;font-size:14px">&#x1F504;</div>
+            <div style="flex:1"></div>
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--primary)"></div>
+          </div>
+          <!-- Sub-sidebar (permanece visivel) -->
+          <div style="width:160px;background:var(--card-bg);border-right:1px solid var(--border);padding:10px 8px;display:flex;flex-direction:column;gap:2px;flex-shrink:0">
+            <div style="padding:6px 10px;font-size:11px;font-weight:600;color:var(--foreground);margin-bottom:4px">Ciclos</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--primary);background:var(--primary-8);font-weight:500">Desinfeccao</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">Esterilizacao</div>
+          </div>
+          <!-- Main -->
+          <div style="flex:1;display:flex;flex-direction:column">
+            <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;justify-content:space-between;flex-shrink:0">
+              <div style="font-size:12px;color:var(--foreground);font-weight:500">Ciclos / Desinfeccao</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <div style="padding:5px 10px;border-radius:6px;background:var(--input-bg);border:1px solid var(--border);font-size:11px;color:var(--muted-foreground);width:180px">&#x1F50D; Buscar...</div>
+                <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">Medtracker &#9662;</div>
+              </div>
+            </div>
+            <div style="height:40px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0">
+              <div style="padding:4px 10px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:11px;font-weight:500">&#x2795; Novo Ciclo</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground)">&#x1F4E6; Rack Virtual</div>
+            </div>
+            <div style="flex:1;padding:16px;background:var(--bg)">
+              <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border);font-size:12px;color:var(--muted-foreground)">Equipamentos e ciclos...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>Conteudo se adapta naturalmente (sem sobreposicao)</li><li>Sub-sidebar fixa enquanto navega nas subrotas</li><li>Transicao suave sidebar expand/collapse</li><li>No modo colapsado, sub-sidebar assume navegacao contextual</li><li>Touch-friendly: areas grandes, sem hover necessario</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Conteudo perde ~160px quando sub-sidebar esta aberta</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPCAO F -->
+  <div class="option" data-choice="f" onclick="toggleSelect(this)">
+    <div class="letter">F</div>
+    <div class="content">
+      <h3>Hibrido: Overlay no desktop expandido, Push no colapsado</h3>
+      <p>Quando sidebar esta <strong>expandida</strong>: sub-sidebar abre como overlay (nao perde espaco). Quando sidebar esta <strong>colapsada</strong>: sub-sidebar faz push (substitui a sidebar slim). No mobile: drawer full-screen com subrotas inline.</p>
+
+      <div class="label" style="margin-top:12px">Desktop expandido — sub-sidebar overlay</div>
+      <div class="mockup" style="margin-top:8px">
+        <div class="mockup-body" style="display:flex;height:200px;background:var(--bg);border-radius:var(--radius-md);overflow:hidden;font-family:system-ui,sans-serif;position:relative">
+          <div style="width:200px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:10px 8px;flex-shrink:0;z-index:3;display:flex;flex-direction:column;gap:2px">
+            <div style="display:flex;align-items:center;gap:6px;padding:6px;margin-bottom:6px"><div style="width:24px;height:24px;background:var(--primary);border-radius:6px"></div><span style="font-size:12px;font-weight:600;color:var(--foreground)">Medtracker</span></div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">&#x1F3E0; Home</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--primary);background:var(--primary-8);border-left:2px solid var(--primary);font-weight:500">&#x1F4CB; Cadastros &#9654;</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">&#x1F504; Ciclos &#9654;</div>
+            <div style="padding:6px 10px;border-radius:5px;font-size:11px;color:var(--sidebar-foreground)">&#x1F4E5; Entrada</div>
+          </div>
+          <div style="width:170px;background:var(--popover-bg);border-right:1px solid var(--border);padding:8px 6px;flex-shrink:0;z-index:2;box-shadow:4px 0 16px rgba(0,0,0,0.12);position:absolute;left:200px;top:0;bottom:0;display:flex;flex-direction:column;gap:1px">
+            <div style="padding:5px 8px;font-size:10px;font-weight:600;color:var(--foreground);margin-bottom:2px">Cadastros</div>
+            <div style="padding:5px 8px;border-radius:4px;font-size:10px;color:var(--primary);background:var(--primary-8)">Materiais</div>
+            <div style="padding:5px 8px;border-radius:4px;font-size:10px;color:var(--sidebar-foreground)">Colaboradores</div>
+            <div style="padding:5px 8px;border-radius:4px;font-size:10px;color:var(--sidebar-foreground)">Equipamentos</div>
+            <div style="padding:5px 8px;border-radius:4px;font-size:10px;color:var(--sidebar-foreground)">...</div>
+          </div>
+          <div style="flex:1;opacity:0.4;padding:12px;display:flex;flex-direction:column"><div style="height:44px;background:var(--background-glass);border-bottom:1px solid var(--border);margin:-12px -12px 12px;padding:0 12px;display:flex;align-items:center;font-size:11px;color:var(--foreground)">Breadcrumb + Busca + CME</div><div style="height:36px;background:var(--card-bg);border-bottom:1px solid var(--border);margin:0 -12px 12px;padding:0 12px;display:flex;align-items:center;font-size:10px;color:var(--muted-foreground)">Topbar secundaria contextual</div><div style="flex:1;background:var(--card-bg);border-radius:6px;border:1px solid var(--border)"></div></div>
+        </div>
+      </div>
+
+      <div class="label" style="margin-top:12px">Desktop colapsado — sub-sidebar push (substitui slim)</div>
+      <div class="mockup" style="margin-top:8px">
+        <div class="mockup-body" style="display:flex;height:200px;background:var(--bg);border-radius:var(--radius-md);overflow:hidden;font-family:system-ui,sans-serif">
+          <div style="width:56px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div style="width:28px;height:28px;background:var(--primary);border-radius:6px;margin-bottom:6px"></div>
+            <div style="width:32px;height:32px;border-radius:5px;font-size:12px;display:flex;align-items:center;justify-content:center">&#x1F3E0;</div>
+            <div style="width:32px;height:32px;border-radius:5px;background:var(--primary-8);font-size:12px;display:flex;align-items:center;justify-content:center">&#x1F4CB;</div>
+            <div style="width:32px;height:32px;border-radius:5px;font-size:12px;display:flex;align-items:center;justify-content:center">&#x1F504;</div>
+          </div>
+          <div style="width:160px;background:var(--card-bg);border-right:1px solid var(--border);padding:8px 6px;display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+            <div style="padding:5px 8px;font-size:10px;font-weight:600;color:var(--foreground);margin-bottom:2px">Cadastros</div>
+            <div style="padding:5px 8px;border-radius:4px;font-size:10px;color:var(--primary);background:var(--primary-8)">Materiais</div>
+            <div style="padding:5px 8px;border-radius:4px;font-size:10px;color:var(--sidebar-foreground)">Colaboradores</div>
+            <div style="padding:5px 8px;border-radius:4px;font-size:10px;color:var(--sidebar-foreground)">Equipamentos</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column"><div style="height:44px;background:var(--background-glass);border-bottom:1px solid var(--border);padding:0 12px;display:flex;align-items:center;font-size:11px;color:var(--foreground)">Breadcrumb + Busca + CME</div><div style="height:36px;background:var(--card-bg);border-bottom:1px solid var(--border);padding:0 12px;display:flex;align-items:center;font-size:10px;color:var(--muted-foreground)">Topbar contextual: + Novo Material | Exportar</div><div style="flex:1;padding:12px;background:var(--bg)"><div style="background:var(--card-bg);border-radius:6px;padding:10px;border:1px solid var(--border);font-size:11px;color:var(--muted-foreground)">Conteudo principal</div></div></div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>Melhor dos dois mundos: overlay preserva espaco, push no colapsado da contexto</li><li>Mobile: drawer unico com tudo (sem sub-sidebar separada)</li><li>Adaptavel a touch: areas amplas, poucos cliques</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Mais complexo de implementar (2 comportamentos)</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>

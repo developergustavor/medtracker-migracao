@@ -1,0 +1,263 @@
+<h2>Navegacao Mobile — Medtracker v2</h2>
+<p class="subtitle">Prioridade: Desktop/Tablet > Mobile. Todos os breakpoints do CLAUDE.md respeitados (xxxxs a 2xl). Clique para selecionar.</p>
+
+<div class="options">
+
+  <!-- OPCAO G -->
+  <div class="option" data-choice="g" onclick="toggleSelect(this)">
+    <div class="letter">G</div>
+    <div class="content">
+      <h3>Drawer Lateral com Subrotas Accordion</h3>
+      <p>Hamburger abre drawer pela esquerda (80% da tela). Rotas com subrotas expandem inline como accordion (tap para abrir/fechar). Topbar secundaria permanece visivel com scroll horizontal.</p>
+
+      <div class="split" style="margin-top:12px">
+        <!-- Mobile: Drawer fechado -->
+        <div class="mockup">
+          <div class="mockup-header">Mobile — Drawer fechado (375px)</div>
+          <div class="mockup-body" style="width:280px;margin:0 auto;height:480px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;border:2px solid var(--border)">
+            <!-- Topbar principal -->
+            <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;justify-content:space-between;flex-shrink:0">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:28px;height:28px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer">&#9776;</div>
+                <span style="font-size:13px;font-weight:600;color:var(--foreground)">Ciclos</span>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <div style="width:28px;height:28px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:12px">&#x1F50D;</div>
+                <div style="width:26px;height:26px;border-radius:50%;background:var(--primary)"></div>
+              </div>
+            </div>
+            <!-- Topbar secundaria (scroll horizontal) -->
+            <div style="height:40px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:6px;flex-shrink:0;overflow-x:auto">
+              <div style="padding:4px 10px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:10px;font-weight:500;white-space:nowrap">&#x2795; Novo Ciclo</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground);white-space:nowrap">&#x1F4E6; Rack Virtual</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground);white-space:nowrap">&#x1F4C4; Relatorio</div>
+            </div>
+            <!-- Tabs Desinf/Esteril -->
+            <div style="display:flex;border-bottom:1px solid var(--border);flex-shrink:0">
+              <div style="flex:1;padding:10px;text-align:center;font-size:11px;font-weight:500;color:var(--primary);border-bottom:2px solid var(--primary)">Desinfeccao</div>
+              <div style="flex:1;padding:10px;text-align:center;font-size:11px;color:var(--muted-foreground)">Esterilizacao</div>
+            </div>
+            <!-- Body -->
+            <div style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+              <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border)">
+                <div style="font-size:12px;font-weight:600;color:var(--foreground)">CISA</div>
+                <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Termodesinfectadora &bull; 15 ciclos</div>
+              </div>
+              <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border)">
+                <div style="font-size:12px;font-weight:600;color:var(--foreground)">CISA 2</div>
+                <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Termodesinfectadora &bull; 6 ciclos</div>
+              </div>
+              <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border)">
+                <div style="font-size:12px;font-weight:600;color:var(--foreground)">MEDFACE</div>
+                <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Lavadora Ultrassonica &bull; 1 ciclo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile: Drawer aberto -->
+        <div class="mockup">
+          <div class="mockup-header">Mobile — Drawer aberto + Accordion</div>
+          <div class="mockup-body" style="width:280px;margin:0 auto;height:480px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;position:relative;border:2px solid var(--border)">
+            <!-- Drawer -->
+            <div style="width:224px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;z-index:10;position:absolute;left:0;top:0;bottom:0;box-shadow:4px 0 24px rgba(0,0,0,0.2)">
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:10px">
+                <div style="width:28px;height:28px;background:var(--primary);border-radius:7px"></div>
+                <span style="font-weight:600;font-size:13px;color:var(--foreground)">Medtracker</span>
+                <div style="margin-left:auto;font-size:14px;color:var(--muted-foreground);cursor:pointer">&#x2715;</div>
+              </div>
+              <!-- CME selector mobile -->
+              <div style="padding:8px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">Medtracker CME <span style="font-size:9px">&#9662;</span></div>
+              <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F3E0; Home</div>
+              <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4CA; Dashboard</div>
+              <!-- Cadastros expandido (accordion aberto) -->
+              <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--primary);background:var(--primary-8);font-weight:500;display:flex;justify-content:space-between">&#x1F4CB; Cadastros <span style="font-size:9px">&#9660;</span></div>
+              <div style="padding:0 8px;margin-left:16px;display:flex;flex-direction:column;gap:1px;border-left:1px solid var(--border)">
+                <div style="padding:5px 10px;border-radius:4px;font-size:11px;color:var(--primary);background:var(--primary-7)">Materiais</div>
+                <div style="padding:5px 10px;border-radius:4px;font-size:11px;color:var(--sidebar-foreground)">Colaboradores</div>
+                <div style="padding:5px 10px;border-radius:4px;font-size:11px;color:var(--sidebar-foreground)">Equipamentos</div>
+                <div style="padding:5px 10px;border-radius:4px;font-size:11px;color:var(--sidebar-foreground)">Embalagens</div>
+                <div style="padding:5px 10px;border-radius:4px;font-size:11px;color:var(--sidebar-foreground)">+ 10 mais...</div>
+              </div>
+              <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4E5; Entrada</div>
+              <!-- Ciclos colapsado -->
+              <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground);display:flex;justify-content:space-between">&#x1F504; Ciclos <span style="font-size:9px;color:var(--sidebar-muted)">&#9654;</span></div>
+              <div style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--sidebar-foreground)">&#x1F4E4; Saida</div>
+              <div style="flex:1"></div>
+              <div style="padding:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;margin-top:4px">
+                <div style="width:24px;height:24px;border-radius:50%;background:var(--primary)"></div>
+                <div><div style="font-size:11px;font-weight:500;color:var(--foreground)">Gustavo</div><div style="font-size:9px;color:var(--sidebar-muted)">Administrador</div></div>
+                <div style="margin-left:auto;font-size:11px;color:var(--muted-foreground)">&#x1F6AA;</div>
+              </div>
+            </div>
+            <!-- Backdrop -->
+            <div style="position:absolute;left:224px;top:0;right:0;bottom:0;background:rgba(0,0,0,0.3);z-index:5"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>Accordion evita tela separada para subrotas</li><li>Tudo em um drawer — menos navegacao</li><li>CME selector dentro do drawer no mobile</li><li>Swipe/tap fora para fechar</li><li>Topbar secundaria com scroll horizontal funciona bem em touch</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Drawer pode ficar longo com Cadastros expandido (14 subrotas)</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPCAO H -->
+  <div class="option" data-choice="h" onclick="toggleSelect(this)">
+    <div class="letter">H</div>
+    <div class="content">
+      <h3>Drawer com Navegacao em 2 Niveis (tap para sub-nivel)</h3>
+      <p>Drawer abre com rotas principais. Tap em rota com subrotas faz <strong>slide para segundo nivel</strong> (transicao tipo iOS drill-down). Botao "Voltar" no topo do segundo nivel. Menos scroll, mais organizado.</p>
+
+      <div class="split" style="margin-top:12px">
+        <!-- Nivel 1 -->
+        <div class="mockup">
+          <div class="mockup-header">Nivel 1 — Rotas principais</div>
+          <div class="mockup-body" style="width:280px;margin:0 auto;height:480px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;position:relative;border:2px solid var(--border)">
+            <div style="width:260px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;z-index:10;position:absolute;left:0;top:0;bottom:0;box-shadow:4px 0 24px rgba(0,0,0,0.2)">
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:6px">
+                <div style="width:28px;height:28px;background:var(--primary);border-radius:7px"></div>
+                <span style="font-weight:600;font-size:13px;color:var(--foreground)">Medtracker</span>
+                <div style="margin-left:auto;font-size:14px;color:var(--muted-foreground);cursor:pointer">&#x2715;</div>
+              </div>
+              <div style="padding:8px 10px;border-radius:6px;background:var(--elevated);font-size:11px;color:var(--foreground);margin-bottom:8px;display:flex;justify-content:space-between">Medtracker CME <span style="font-size:9px">&#9662;</span></div>
+              <div style="padding:10px 12px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:13px;font-weight:500;border-left:2px solid var(--primary)">&#x1F3E0; Home</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F4CA; Dashboard</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground);display:flex;justify-content:space-between;align-items:center">&#x1F4CB; Cadastros <span style="font-size:11px;color:var(--sidebar-muted)">&#9654;</span></div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F4E5; Entrada de Materiais</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground);display:flex;justify-content:space-between;align-items:center">&#x1F504; Ciclos <span style="font-size:11px;color:var(--sidebar-muted)">&#9654;</span></div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F4E4; Saida de Materiais</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F3E5; Conferencia</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F3F7; Impressao</div>
+              <div style="flex:1"></div>
+              <div style="padding:10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;margin-top:4px">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--primary)"></div>
+                <div><div style="font-size:12px;font-weight:500;color:var(--foreground)">Gustavo</div><div style="font-size:10px;color:var(--sidebar-muted)">Administrador</div></div>
+              </div>
+            </div>
+            <div style="position:absolute;left:260px;top:0;right:0;bottom:0;background:rgba(0,0,0,0.3);z-index:5"></div>
+          </div>
+        </div>
+
+        <!-- Nivel 2: Cadastros drill-down -->
+        <div class="mockup">
+          <div class="mockup-header">Nivel 2 — Subrotas de Cadastros (slide)</div>
+          <div class="mockup-body" style="width:280px;margin:0 auto;height:480px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;position:relative;border:2px solid var(--border)">
+            <div style="width:260px;background:var(--sidebar-bg);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;z-index:10;position:absolute;left:0;top:0;bottom:0;box-shadow:4px 0 24px rgba(0,0,0,0.2)">
+              <!-- Header com voltar -->
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:6px">
+                <div style="width:28px;height:28px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer">&#9664;</div>
+                <span style="font-weight:600;font-size:13px;color:var(--foreground)">Cadastros</span>
+                <div style="margin-left:auto;font-size:14px;color:var(--muted-foreground);cursor:pointer">&#x2715;</div>
+              </div>
+              <!-- Busca inline -->
+              <div style="padding:8px 10px;border-radius:6px;background:var(--input-bg);border:1px solid var(--border);font-size:11px;color:var(--muted-foreground);margin-bottom:8px">&#x1F50D; Filtrar cadastros...</div>
+              <!-- Subrotas com areas grandes de toque -->
+              <div style="padding:10px 12px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:13px;font-weight:500;border-left:2px solid var(--primary)">&#x2702; Materiais</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F464; Colaboradores</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x2699; Equipamentos</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F4E6; Embalagens</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F504; Tipos de Ciclo</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x26A0; Tipos de Ocorrencia</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F4CA; Indicadores</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F9EA; Insumos</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F465; Terceiros</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F3E2; Setores</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1FA7A; Medicos</div>
+              <div style="padding:10px 12px;border-radius:6px;font-size:13px;color:var(--sidebar-foreground)">&#x1F9D1; Pacientes</div>
+            </div>
+            <div style="position:absolute;left:260px;top:0;right:0;bottom:0;background:rgba(0,0,0,0.3);z-index:5"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>Sem scroll longo — subrotas em tela separada</li><li>Areas de toque grandes (padding 10px 12px, font 13px)</li><li>Filtro inline para Cadastros (14 subrotas)</li><li>Transicao slide intuitiva (padrao mobile)</li><li>Botao voltar claro e acessivel</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>1 tap a mais para chegar na subrota</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPCAO I -->
+  <div class="option" data-choice="i" onclick="toggleSelect(this)">
+    <div class="letter">I</div>
+    <div class="content">
+      <h3>Bottom Navigation (Tab Bar) + Sheet para Subrotas</h3>
+      <p>Sem drawer. Rotas principais em <strong>bottom tab bar</strong> fixa (5 itens). Tap em item com subrotas abre <strong>bottom sheet</strong> com opcoes. Topbar simplificada (titulo + busca + avatar). Nativo para touch.</p>
+
+      <div class="split" style="margin-top:12px">
+        <!-- Bottom nav normal -->
+        <div class="mockup">
+          <div class="mockup-header">Tab Bar — Navegacao principal</div>
+          <div class="mockup-body" style="width:280px;margin:0 auto;height:480px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;border:2px solid var(--border)">
+            <!-- Topbar simplificada -->
+            <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;justify-content:space-between;flex-shrink:0">
+              <span style="font-size:14px;font-weight:600;color:var(--foreground)">Home</span>
+              <div style="display:flex;gap:6px;align-items:center">
+                <div style="width:28px;height:28px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:12px">&#x1F50D;</div>
+                <div style="padding:4px 8px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground)">CME &#9662;</div>
+                <div style="width:26px;height:26px;border-radius:50%;background:var(--primary)"></div>
+              </div>
+            </div>
+            <!-- Topbar secundaria -->
+            <div style="height:40px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:6px;flex-shrink:0;overflow-x:auto">
+              <div style="padding:4px 10px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:10px;font-weight:500;white-space:nowrap">&#x1F4CA; Dashboard</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground);white-space:nowrap">&#x1F4C4; Relatorios</div>
+              <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground);white-space:nowrap">&#x1F4D6; Manual</div>
+            </div>
+            <!-- Body -->
+            <div style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+              <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted-foreground)">Area de Limpeza</div><div style="font-size:13px;font-weight:500;color:var(--foreground);margin-top:3px">Entrada de Materiais</div></div>
+              <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted-foreground)">Area de Preparo</div><div style="font-size:13px;font-weight:500;color:var(--foreground);margin-top:3px">Ciclos</div></div>
+              <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted-foreground)">Arsenal</div><div style="font-size:13px;font-weight:500;color:var(--foreground);margin-top:3px">Saida de Materiais</div></div>
+              <div style="background:var(--card-bg);border-radius:8px;padding:14px;border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted-foreground)">Centro Cirurgico</div><div style="font-size:13px;font-weight:500;color:var(--foreground);margin-top:3px">Conferencia</div></div>
+            </div>
+            <!-- Bottom Tab Bar -->
+            <div style="height:56px;background:var(--card-bg);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;flex-shrink:0;padding:0 4px">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--primary)"><span style="font-size:16px">&#x1F3E0;</span><span style="font-size:9px;font-weight:500">Home</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F504;</span><span style="font-size:9px">Ciclos</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F4CB;</span><span style="font-size:9px">Cadastros</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F4E5;</span><span style="font-size:9px">Entrada</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x22EF;</span><span style="font-size:9px">Mais</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom sheet para subrotas -->
+        <div class="mockup">
+          <div class="mockup-header">Bottom Sheet — Subrotas de "Mais"</div>
+          <div class="mockup-body" style="width:280px;margin:0 auto;height:480px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;position:relative;border:2px solid var(--border)">
+            <!-- Backdrop -->
+            <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);z-index:5"></div>
+            <!-- Content atras -->
+            <div style="flex:1;padding:12px;opacity:0.3">
+              <div style="height:48px;background:var(--card-bg);border-radius:8px;margin-bottom:8px"></div>
+              <div style="height:100px;background:var(--card-bg);border-radius:8px"></div>
+            </div>
+            <!-- Bottom Sheet -->
+            <div style="position:absolute;bottom:0;left:0;right:0;background:var(--card-bg);border-top-left-radius:16px;border-top-right-radius:16px;padding:12px 16px 20px;z-index:10;box-shadow:0 -8px 32px rgba(0,0,0,0.15)">
+              <!-- Handle -->
+              <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 12px"></div>
+              <div style="font-size:13px;font-weight:600;color:var(--foreground);margin-bottom:10px">Navegacao</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:8px;background:var(--elevated)"><span style="font-size:18px">&#x1F4E4;</span><span style="font-size:10px;color:var(--foreground);text-align:center">Saida</span></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:8px;background:var(--elevated)"><span style="font-size:18px">&#x1F3E5;</span><span style="font-size:10px;color:var(--foreground);text-align:center">Conferencia</span></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:8px;background:var(--elevated)"><span style="font-size:18px">&#x1F3F7;</span><span style="font-size:10px;color:var(--foreground);text-align:center">Impressao</span></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:8px;background:var(--elevated)"><span style="font-size:18px">&#x2699;</span><span style="font-size:10px;color:var(--foreground);text-align:center">Config</span></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:8px;background:var(--elevated)"><span style="font-size:18px">&#x1F4C4;</span><span style="font-size:10px;color:var(--foreground);text-align:center">Relatorios</span></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:8px;background:var(--elevated)"><span style="font-size:18px">&#x1F511;</span><span style="font-size:10px;color:var(--foreground);text-align:center">Gerenciar</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>100% nativo mobile — sem drawer, sem hamburger</li><li>Bottom tab = maximo alcance de polegar</li><li>Bottom sheet = padrao iOS/Android para opcoes extras</li><li>Menos cliques para rotas frequentes (1 tap)</li><li>Grid de icones no "Mais" e touch-otimizado</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Tab bar limita a 5 itens (rest vai para "Mais")</li><li>Experiencia diferente do desktop (drawer vs tab bar)</li><li>Precisa definir quais 4 rotas ficam na tab bar</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,260 @@
+<h2>Mobile v2 — Bottom Tab + Sheet com Subrotas + Busca Spotlight</h2>
+<p class="subtitle">Refinamento da opcao I com suas especificacoes. Veja os 4 estados.</p>
+
+<div class="section">
+  <h3>1. Estado Base — Tab Bar + Topbar Dupla</h3>
+  <p class="subtitle">Topbar secundaria com grupamentos start/center/end. Em telas menores, overflow vira botao "..." que abre sheet.</p>
+
+  <div class="split">
+    <!-- Tela maior (tablet) - grupamentos visiveis -->
+    <div class="mockup">
+      <div class="mockup-header">Tablet (768px+) — Grupamentos visiveis</div>
+      <div class="mockup-body" style="width:380px;margin:0 auto;height:440px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;border:2px solid var(--border)">
+        <!-- Topbar principal -->
+        <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;justify-content:space-between;flex-shrink:0">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:24px;height:24px;background:var(--primary);border-radius:6px"></div>
+            <span style="font-size:11px;color:var(--muted-foreground)">Home</span>
+            <span style="font-size:11px;color:var(--muted-foreground)">/</span>
+            <span style="font-size:12px;font-weight:600;color:var(--foreground)">Ciclos</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <!-- Busca (botao que abre spotlight) -->
+            <div style="padding:5px 12px;border-radius:8px;background:var(--input-bg);border:1px solid var(--border);font-size:11px;color:var(--muted-foreground);display:flex;align-items:center;gap:6px;cursor:pointer;width:160px">
+              <span>&#x1F50D;</span> Buscar...
+              <span style="margin-left:auto;font-size:9px;padding:2px 4px;border-radius:3px;background:var(--elevated);color:var(--muted-foreground)">&#8984;K</span>
+            </div>
+            <div style="padding:4px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground)">Medtracker &#9662;</div>
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--primary)"></div>
+          </div>
+        </div>
+        <!-- Topbar secundaria com grupamentos -->
+        <div style="height:42px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;flex-shrink:0">
+          <!-- START group -->
+          <div style="display:flex;gap:6px;align-items:center">
+            <div style="padding:5px 10px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:10px;font-weight:500">&#x2795; Novo Ciclo</div>
+          </div>
+          <!-- CENTER group (flex:1 + justify center) -->
+          <div style="flex:1;display:flex;justify-content:center;gap:6px">
+            <div style="padding:5px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground)">&#x1F4E6; Rack Virtual</div>
+            <div style="padding:5px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground)">&#x1F4C4; Relatorio</div>
+          </div>
+          <!-- END group -->
+          <div style="display:flex;gap:6px;align-items:center">
+            <div style="padding:5px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground)">&#x2699; Filtros</div>
+          </div>
+        </div>
+        <!-- Tabs Desinf/Esteril -->
+        <div style="display:flex;border-bottom:1px solid var(--border);flex-shrink:0">
+          <div style="flex:1;padding:10px;text-align:center;font-size:11px;font-weight:500;color:var(--primary);border-bottom:2px solid var(--primary)">Desinfeccao</div>
+          <div style="flex:1;padding:10px;text-align:center;font-size:11px;color:var(--muted-foreground)">Esterilizacao</div>
+        </div>
+        <!-- Body -->
+        <div style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+          <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:600;color:var(--foreground)">CISA</div><div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Termodesinfectadora &bull; 15 ciclos</div></div>
+          <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:600;color:var(--foreground)">CISA 2</div><div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">6 ciclos</div></div>
+        </div>
+        <!-- Bottom Tab Bar -->
+        <div style="height:56px;background:var(--card-bg);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;flex-shrink:0;padding:0 4px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F3E0;</span><span style="font-size:9px">Home</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--primary)"><span style="font-size:16px">&#x1F504;</span><span style="font-size:9px;font-weight:500">Ciclos</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F4CB;</span><span style="font-size:9px">Cadastros</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F4E5;</span><span style="font-size:9px">Entrada</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x22EF;</span><span style="font-size:9px">Mais</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tela menor (mobile) - overflow vira "..." -->
+    <div class="mockup">
+      <div class="mockup-header">Mobile (375px) — Overflow vira botao "..."</div>
+      <div class="mockup-body" style="width:280px;margin:0 auto;height:440px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;border:2px solid var(--border)">
+        <!-- Topbar principal (compacta) -->
+        <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;justify-content:space-between;flex-shrink:0">
+          <span style="font-size:13px;font-weight:600;color:var(--foreground)">Ciclos</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <div style="width:30px;height:30px;border-radius:8px;background:var(--input-bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer">&#x1F50D;</div>
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--primary)"></div>
+          </div>
+        </div>
+        <!-- Topbar secundaria — itens visiveis + overflow "..." -->
+        <div style="height:42px;background:var(--card-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:6px;flex-shrink:0">
+          <div style="padding:5px 10px;border-radius:6px;background:var(--primary-8);color:var(--primary);font-size:10px;font-weight:500;white-space:nowrap">&#x2795; Novo Ciclo</div>
+          <div style="padding:5px 10px;border-radius:6px;background:var(--elevated);font-size:10px;color:var(--foreground);white-space:nowrap">&#x1F4E6; Rack Virtual</div>
+          <!-- Overflow button -->
+          <div style="margin-left:auto;width:30px;height:30px;border-radius:6px;background:var(--elevated);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--foreground);cursor:pointer;flex-shrink:0">&#x22EF;</div>
+        </div>
+        <!-- Tabs -->
+        <div style="display:flex;border-bottom:1px solid var(--border);flex-shrink:0">
+          <div style="flex:1;padding:10px;text-align:center;font-size:11px;font-weight:500;color:var(--primary);border-bottom:2px solid var(--primary)">Desinfeccao</div>
+          <div style="flex:1;padding:10px;text-align:center;font-size:11px;color:var(--muted-foreground)">Esterilizacao</div>
+        </div>
+        <!-- Body -->
+        <div style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+          <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:600;color:var(--foreground)">CISA</div><div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">15 ciclos</div></div>
+          <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:600;color:var(--foreground)">CISA 2</div><div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">6 ciclos</div></div>
+          <div style="background:var(--card-bg);border-radius:8px;padding:12px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:600;color:var(--foreground)">MEDFACE</div><div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">1 ciclo</div></div>
+        </div>
+        <!-- Bottom Tab -->
+        <div style="height:56px;background:var(--card-bg);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;flex-shrink:0">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F3E0;</span><span style="font-size:8px">Home</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--primary)"><span style="font-size:16px">&#x1F504;</span><span style="font-size:8px;font-weight:500">Ciclos</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F4CB;</span><span style="font-size:8px">Cadastros</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x1F4E5;</span><span style="font-size:8px">Entrada</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;color:var(--sidebar-foreground)"><span style="font-size:16px">&#x22EF;</span><span style="font-size:8px">Mais</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. Bottom Sheet — Subrotas com Filtro</h3>
+  <p class="subtitle">Ao clicar em "Cadastros" na tab bar, abre bottom sheet com input de filtro + lista de subrotas.</p>
+
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">Cadastros — Sheet com filtro</div>
+      <div class="mockup-body" style="width:280px;margin:0 auto;height:500px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;position:relative;border:2px solid var(--border)">
+        <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);z-index:5"></div>
+        <div style="flex:1"></div>
+        <!-- Bottom Sheet -->
+        <div style="position:absolute;bottom:0;left:0;right:0;background:var(--card-bg);border-top-left-radius:16px;border-top-right-radius:16px;padding:10px 14px 16px;z-index:10;box-shadow:0 -8px 32px rgba(0,0,0,0.18);max-height:85%;display:flex;flex-direction:column">
+          <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 10px"></div>
+          <div style="font-size:14px;font-weight:600;color:var(--foreground);margin-bottom:8px">Cadastros</div>
+          <!-- Input de filtro -->
+          <div style="padding:8px 12px;border-radius:8px;background:var(--input-bg);border:1px solid var(--border);font-size:12px;color:var(--muted-foreground);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            <span>&#x1F50D;</span> Filtrar cadastros...
+          </div>
+          <!-- Lista de subrotas -->
+          <div style="overflow-y:auto;display:flex;flex-direction:column;gap:2px">
+            <div style="padding:12px;border-radius:8px;background:var(--primary-8);color:var(--primary);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x2702;</span> Materiais</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F464;</span> Colaboradores</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x2699;</span> Equipamentos</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F4E6;</span> Embalagens</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F504;</span> Tipos de Ciclo</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x26A0;</span> Tipos de Ocorrencia</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F4CA;</span> Indicadores</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F9EA;</span> Insumos</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F465;</span> Terceiros</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F3E2;</span> Setores</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1FA7A;</span> Medicos</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F9D1;</span> Pacientes</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x2705;</span> Checklists</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F3F7;</span> Modelos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overflow da topbar secundaria -->
+    <div class="mockup">
+      <div class="mockup-header">Overflow "..." — Sheet com acoes extras</div>
+      <div class="mockup-body" style="width:280px;margin:0 auto;height:500px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;position:relative;border:2px solid var(--border)">
+        <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);z-index:5"></div>
+        <div style="flex:1"></div>
+        <!-- Bottom Sheet para overflow da topbar -->
+        <div style="position:absolute;bottom:0;left:0;right:0;background:var(--card-bg);border-top-left-radius:16px;border-top-right-radius:16px;padding:10px 14px 20px;z-index:10;box-shadow:0 -8px 32px rgba(0,0,0,0.18)">
+          <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 10px"></div>
+          <div style="font-size:14px;font-weight:600;color:var(--foreground);margin-bottom:10px">Acoes — Ciclos</div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="padding:12px;border-radius:8px;background:var(--primary-8);color:var(--primary);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x2795;</span> Novo Ciclo</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F4E6;</span> Rack Virtual</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x1F4C4;</span> Relatorio</div>
+            <div style="padding:12px;border-radius:8px;font-size:13px;color:var(--foreground);display:flex;align-items:center;gap:8px"><span style="font-size:15px">&#x2699;</span> Filtros</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>3. Busca Spotlight — Dialog Full-screen com Blur</h3>
+  <p class="subtitle">Click na lupa ou Ctrl+K abre dialog full-screen com backdrop blur. Autocomplete ao digitar. Enter mostra resultados em grid na bottom sheet.</p>
+
+  <div class="split">
+    <!-- Spotlight aberto - digitando -->
+    <div class="mockup">
+      <div class="mockup-header">Spotlight — Digitando com autocomplete</div>
+      <div class="mockup-body" style="width:320px;margin:0 auto;height:500px;background:rgba(15,16,20,0.65);backdrop-filter:blur(24px);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding-top:60px;position:relative;border:2px solid var(--border)">
+        <!-- Barra de busca centralizada -->
+        <div style="width:280px;background:var(--card-bg);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);border:1px solid var(--border);overflow:hidden">
+          <!-- Input -->
+          <div style="padding:14px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)">
+            <span style="font-size:16px;color:var(--muted-foreground)">&#x1F50D;</span>
+            <span style="font-size:14px;color:var(--foreground)">pinc</span>
+            <span style="font-size:14px;color:var(--foreground);opacity:0.4;animation:blink 1s infinite">|</span>
+            <div style="margin-left:auto;font-size:10px;padding:3px 6px;border-radius:4px;background:var(--elevated);color:var(--muted-foreground)">ESC</div>
+          </div>
+          <!-- Autocomplete results -->
+          <div style="padding:6px">
+            <div style="padding:4px 10px;font-size:10px;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:0.5px">Materiais</div>
+            <div style="padding:10px 12px;border-radius:6px;background:var(--primary-8);font-size:12px;color:var(--foreground);display:flex;align-items:center;gap:8px;margin-top:2px">
+              <span style="font-size:14px">&#x2702;</span>
+              <div><div style="font-weight:500"><span style="color:var(--primary)">PINC</span>A BACKAUS</div><div style="font-size:10px;color:var(--muted-foreground)">Avulso &bull; Qtd: 17</div></div>
+              <span style="margin-left:auto;font-size:9px;color:var(--muted-foreground)">&#9166;</span>
+            </div>
+            <div style="padding:10px 12px;border-radius:6px;font-size:12px;color:var(--foreground);display:flex;align-items:center;gap:8px;margin-top:2px">
+              <span style="font-size:14px">&#x2702;</span>
+              <div><div><span style="color:var(--primary)">PINC</span>A KELLY</div><div style="font-size:10px;color:var(--muted-foreground)">Avulso &bull; Qtd: 5</div></div>
+            </div>
+            <div style="padding:4px 10px;font-size:10px;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:0.5px;margin-top:6px">Paginas</div>
+            <div style="padding:10px 12px;border-radius:6px;font-size:12px;color:var(--foreground);display:flex;align-items:center;gap:8px;margin-top:2px">
+              <span style="font-size:14px">&#x1F4CB;</span>
+              <div>Cadastros &rarr; Materiais</div>
+            </div>
+          </div>
+        </div>
+        <!-- Dica inferior -->
+        <div style="position:absolute;bottom:16px;display:flex;gap:12px;font-size:10px;color:rgba(255,255,255,0.4)">
+          <span>&#8593;&#8595; Navegar</span>
+          <span>&#9166; Abrir</span>
+          <span>ESC Fechar</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spotlight - resultados em grid (bottom sheet) -->
+    <div class="mockup">
+      <div class="mockup-header">Enter — Resultados em grid (bottom sheet)</div>
+      <div class="mockup-body" style="width:320px;margin:0 auto;height:500px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:system-ui,sans-serif;display:flex;flex-direction:column;position:relative;border:2px solid var(--border)">
+        <!-- Topbar com busca ativa -->
+        <div style="height:48px;background:var(--background-glass);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0">
+          <div style="flex:1;padding:6px 12px;border-radius:8px;background:var(--primary-8);border:1px solid var(--primary);font-size:12px;color:var(--foreground);display:flex;align-items:center;gap:6px">
+            <span style="color:var(--primary)">&#x1F50D;</span> "pinca"
+            <span style="margin-left:auto;font-size:10px;color:var(--primary);cursor:pointer">&#x2715;</span>
+          </div>
+        </div>
+        <div style="flex:1"></div>
+        <!-- Backdrop -->
+        <div style="position:absolute;top:48px;left:0;right:0;bottom:0;background:rgba(0,0,0,0.25);z-index:5"></div>
+        <!-- Bottom Sheet com grid de resultados -->
+        <div style="position:absolute;bottom:0;left:0;right:0;background:var(--card-bg);border-top-left-radius:16px;border-top-right-radius:16px;padding:10px 14px 16px;z-index:10;box-shadow:0 -8px 32px rgba(0,0,0,0.18);max-height:75%;display:flex;flex-direction:column">
+          <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 8px"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:13px;font-weight:600;color:var(--foreground)">Resultados para "pinca"</div>
+            <div style="font-size:11px;color:var(--muted-foreground)">2 encontrados</div>
+          </div>
+          <!-- Grid de resultados -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow-y:auto">
+            <div style="background:var(--elevated);border-radius:8px;padding:12px;border:1px solid var(--border);cursor:pointer">
+              <div style="font-size:12px;font-weight:600;color:var(--foreground)">PINCA BACKAUS</div>
+              <div style="font-size:10px;color:var(--muted-foreground);margin-top:4px">Avulso &bull; Qtd: 17</div>
+              <div style="margin-top:6px;padding:3px 6px;border-radius:4px;background:var(--primary-10);color:var(--primary);font-size:9px;display:inline-block">Material</div>
+            </div>
+            <div style="background:var(--elevated);border-radius:8px;padding:12px;border:1px solid var(--border);cursor:pointer">
+              <div style="font-size:12px;font-weight:600;color:var(--foreground)">PINCA KELLY</div>
+              <div style="font-size:10px;color:var(--muted-foreground);margin-top:4px">Avulso &bull; Qtd: 5</div>
+              <div style="margin-top:6px;padding:3px 6px;border-radius:4px;background:var(--primary-10);color:var(--primary);font-size:9px;display:inline-block">Material</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes blink { 0%,50% { opacity:1; } 51%,100% { opacity:0; } }
+</style>
