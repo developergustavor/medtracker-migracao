@@ -1,5 +1,5 @@
 // packages
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 
 // components
@@ -8,6 +8,7 @@ import { SubSidebar } from '@/components/layout/SubSidebar'
 import { Topbar } from '@/components/layout/Topbar'
 import { ContextualBar } from '@/components/layout/ContextualBar'
 import { BottomTabBar } from '@/components/layout/BottomTabBar'
+import { SpotlightSearch } from '@/components/layout/SpotlightSearch'
 
 // hooks
 import { useIsMobile } from '@/hooks'
@@ -40,6 +41,23 @@ export function AppLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [activeSubRoute, setActiveSubRoute] = useState<RouteMetadataProps | null>(null)
+  const [spotlightOpen, setSpotlightOpen] = useState(false)
+
+  // Global keybinding: Ctrl+K / Cmd+K
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault()
+        setSpotlightOpen(prev => !prev)
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  const handleOpenSpotlight = useCallback(() => {
+    setSpotlightOpen(true)
+  }, [])
 
   const currentRouteActions = useMemo(
     () => findContextualActions(ROUTES, location.pathname),
@@ -79,7 +97,7 @@ export function AppLayout() {
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Topbar - desktop only */}
-        {!isMobile && <Topbar />}
+        {!isMobile && <Topbar onOpenSpotlight={handleOpenSpotlight} />}
 
         {/* ContextualBar - both desktop and mobile */}
         {currentRouteActions && <ContextualBar actions={currentRouteActions} />}
@@ -91,7 +109,10 @@ export function AppLayout() {
       </div>
 
       {/* BottomTabBar - mobile only */}
-      {isMobile && <BottomTabBar />}
+      {isMobile && <BottomTabBar onOpenSpotlight={handleOpenSpotlight} />}
+
+      {/* Spotlight Search */}
+      <SpotlightSearch open={spotlightOpen} onClose={() => setSpotlightOpen(false)} />
     </div>
   )
 }

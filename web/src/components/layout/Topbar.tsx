@@ -252,7 +252,11 @@ function CmeSelector() {
   )
 }
 
-export function Topbar() {
+type TopbarProps = {
+  onOpenSpotlight: () => void
+}
+
+export function Topbar({ onOpenSpotlight }: TopbarProps) {
   const location = useLocation()
 
   const breadcrumbs = useMemo(() => buildBreadcrumbs(location.pathname), [location.pathname])
@@ -320,6 +324,7 @@ export function Topbar() {
         {/* Search trigger */}
         <div
           className="flex items-center gap-sm cursor-pointer"
+          onClick={onOpenSpotlight}
           style={{
             padding: '6px 12px',
             borderRadius: 'var(--radius-sm)',

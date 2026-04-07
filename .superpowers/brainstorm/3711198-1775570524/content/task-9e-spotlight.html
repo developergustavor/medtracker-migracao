@@ -1,0 +1,132 @@
+<h2>Task 9e — SpotlightSearch</h2>
+<p class="subtitle">Dialog full-screen com backdrop blur. Autocomplete categorizado. Resultados em grid. Desktop: Ctrl+K. Mobile: tap na busca da ToolsSheet.</p>
+
+<div class="section">
+  <h3>1. Desktop — Spotlight aberto, digitando</h3>
+  <p class="subtitle">Backdrop blur suave. Barra de busca centralizada no topo. Autocomplete categorizado (Materiais, Paginas) com highlight do termo.</p>
+
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">Light — Autocomplete ao digitar</div>
+      <div class="mockup-body" style="height:420px;background:rgba(243,243,249,0.6);backdrop-filter:blur(20px);border-radius:12px;overflow:hidden;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding-top:80px;position:relative">
+        <!-- Search bar -->
+        <div style="width:480px;background:#ffffff;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,0.12);border:1px solid #e4e5eb;overflow:hidden">
+          <!-- Input -->
+          <div style="padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #e4e5eb">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span style="font-size:15px;color:#1a1a2e">cx vas</span>
+            <span style="font-size:15px;color:#1a1a2e;opacity:0.3">|</span>
+            <div style="margin-left:auto;display:flex;gap:6px">
+              <span style="font-size:10px;padding:3px 6px;border-radius:4px;background:#ecedf2;color:#8b8ba0">ESC</span>
+            </div>
+          </div>
+          <!-- Results -->
+          <div style="padding:8px;max-height:280px;overflow-y:auto">
+            <!-- Category: Materiais -->
+            <div style="padding:4px 10px;font-size:10px;color:#8b8ba0;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">Materiais</div>
+            <div style="padding:10px 12px;border-radius:8px;background:rgba(33,85,252,0.06);display:flex;align-items:center;gap:10px;margin-top:4px;cursor:pointer">
+              <div style="width:32px;height:32px;border-radius:8px;background:#ecedf2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5"><path d="M12 3l-8 4.5v9L12 21l8-4.5v-9L12 3z"/></svg>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:500;color:#1a1a2e"><span style="color:#2155FC;font-weight:600">CX VAS</span>CULAR N1</div>
+                <div style="font-size:11px;color:#8b8ba0;margin-top:1px">KIT &bull; 11 submateriais</div>
+              </div>
+              <span style="font-size:10px;color:#8b8ba0">&#9166;</span>
+            </div>
+            <div style="padding:10px 12px;border-radius:8px;display:flex;align-items:center;gap:10px;margin-top:2px;cursor:pointer">
+              <div style="width:32px;height:32px;border-radius:8px;background:#ecedf2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5"><path d="M12 3l-8 4.5v9L12 21l8-4.5v-9L12 3z"/></svg>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;color:#1a1a2e"><span style="color:#2155FC;font-weight:600">CX VAS</span>CULAR N2</div>
+                <div style="font-size:11px;color:#8b8ba0;margin-top:1px">KIT &bull; 8 submateriais</div>
+              </div>
+            </div>
+            <div style="padding:10px 12px;border-radius:8px;display:flex;align-items:center;gap:10px;margin-top:2px;cursor:pointer">
+              <div style="width:32px;height:32px;border-radius:8px;background:#ecedf2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5"><path d="M12 3l-8 4.5v9L12 21l8-4.5v-9L12 3z"/></svg>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;color:#1a1a2e"><span style="color:#2155FC;font-weight:600">CX VAS</span>CULAR N10</div>
+                <div style="font-size:11px;color:#8b8ba0;margin-top:1px">KIT &bull; 149 submateriais</div>
+              </div>
+            </div>
+
+            <!-- Category: Paginas -->
+            <div style="padding:4px 10px;font-size:10px;color:#8b8ba0;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-top:10px">Paginas</div>
+            <div style="padding:10px 12px;border-radius:8px;display:flex;align-items:center;gap:10px;margin-top:4px;cursor:pointer">
+              <div style="width:32px;height:32px;border-radius:8px;background:#ecedf2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5"><path d="M8 2v3M16 2v3M3.5 9.09h17"/></svg>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;color:#1a1a2e">Cadastros &rarr; Materiais</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Hints -->
+        <div style="position:absolute;bottom:20px;display:flex;gap:16px;font-size:11px;color:#8b8ba0">
+          <span>&#8593;&#8595; Navegar</span>
+          <span>&#9166; Abrir</span>
+          <span>ESC Fechar</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mockup">
+      <div class="mockup-header">Dark — Autocomplete</div>
+      <div class="mockup-body" style="height:420px;background:rgba(15,16,20,0.65);backdrop-filter:blur(20px);border-radius:12px;overflow:hidden;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding-top:80px;position:relative">
+        <div style="width:480px;background:#171920;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,0.4);border:1px solid #1a1c24;overflow:hidden">
+          <div style="padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a1c24">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6e6e7a" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span style="font-size:15px;color:#f0f0f3">cx vas</span>
+            <span style="font-size:15px;color:#f0f0f3;opacity:0.3">|</span>
+            <div style="margin-left:auto"><span style="font-size:10px;padding:3px 6px;border-radius:4px;background:#22242c;color:#4e4e5a">ESC</span></div>
+          </div>
+          <div style="padding:8px;max-height:280px;overflow-y:auto">
+            <div style="padding:4px 10px;font-size:10px;color:#4e4e5a;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">Materiais</div>
+            <div style="padding:10px 12px;border-radius:8px;background:rgba(75,123,255,0.06);display:flex;align-items:center;gap:10px;margin-top:4px">
+              <div style="width:32px;height:32px;border-radius:8px;background:#22242c;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6e6e7a" stroke-width="1.5"><path d="M12 3l-8 4.5v9L12 21l8-4.5v-9L12 3z"/></svg>
+              </div>
+              <div><div style="font-size:13px;font-weight:500;color:#f0f0f3"><span style="color:#4B7BFF;font-weight:600">CX VAS</span>CULAR N1</div><div style="font-size:11px;color:#4e4e5a;margin-top:1px">KIT &bull; 11 submateriais</div></div>
+            </div>
+            <div style="padding:10px 12px;border-radius:8px;display:flex;align-items:center;gap:10px;margin-top:2px">
+              <div style="width:32px;height:32px;border-radius:8px;background:#22242c;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6e6e7a" stroke-width="1.5"><path d="M12 3l-8 4.5v9L12 21l8-4.5v-9L12 3z"/></svg>
+              </div>
+              <div><div style="font-size:13px;color:#f0f0f3"><span style="color:#4B7BFF;font-weight:600">CX VAS</span>CULAR N2</div><div style="font-size:11px;color:#4e4e5a;margin-top:1px">KIT &bull; 8 submateriais</div></div>
+            </div>
+            <div style="padding:4px 10px;font-size:10px;color:#4e4e5a;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-top:10px">Paginas</div>
+            <div style="padding:10px 12px;border-radius:8px;display:flex;align-items:center;gap:10px;margin-top:4px">
+              <div style="width:32px;height:32px;border-radius:8px;background:#22242c;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6e6e7a" stroke-width="1.5"><path d="M8 2v3M16 2v3M3.5 9.09h17"/></svg>
+              </div>
+              <div style="font-size:13px;color:#f0f0f3">Cadastros &rarr; Materiais</div>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:20px;display:flex;gap:16px;font-size:11px;color:rgba(255,255,255,0.3)">
+          <span>&#8593;&#8595; Navegar</span>
+          <span>&#9166; Abrir</span>
+          <span>ESC Fechar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. Estados</h3>
+  <ul style="font-size:13px;color:var(--foreground);line-height:1.8;list-style:disc;padding-left:20px">
+    <li><strong>Vazio (acabou de abrir)</strong>: Input vazio + texto "Busque por materiais, paginas, acoes..." + secao "Recentes" se houver historico</li>
+    <li><strong>Digitando</strong>: Autocomplete categorizado (Materiais, Paginas, Acoes). Primeiro resultado selecionado por padrao. Highlight do termo buscado</li>
+    <li><strong>Sem resultados</strong>: Mensagem "Nenhum resultado para 'termo'" centralizada</li>
+    <li><strong>Navegacao por teclado</strong>: &#8593;&#8595; move selecao entre resultados, Enter navega, ESC fecha</li>
+    <li><strong>Dados mock</strong>: Busca filtra mockUsers, mockCmes, ROUTES por nome. Categoriza por tipo (Material, Pagina, Acao)</li>
+    <li><strong>Mobile</strong>: Mesma UI mas full-width, input no topo sem margem</li>
+    <li><strong>Trigger desktop</strong>: Ctrl+K / Cmd+K (global) ou click no input de busca da Topbar</li>
+    <li><strong>Trigger mobile</strong>: Click na busca da ToolsSheet</li>
+  </ul>
+</div>

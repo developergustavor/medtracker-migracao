@@ -24,12 +24,16 @@ import type { RouteMetadataProps } from '@/types'
 
 const _loc = '@/components/layout/BottomTabBar'
 
+type BottomTabBarProps = {
+  onOpenSpotlight: () => void
+}
+
 function getMobileTabItems(role: user_role | undefined): RouteMetadataProps[] {
   if (!role) return []
   return ROUTES.filter(route => route.showInMobileTab && route.mobileTabRoles && isRoleIn(role, route.mobileTabRoles))
 }
 
-export function BottomTabBar() {
+export function BottomTabBar({ onOpenSpotlight }: BottomTabBarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user } = useAuthStore()
@@ -167,6 +171,7 @@ export function BottomTabBar() {
           setShowToolsSheet(false)
           setSubroutesSheet(route)
         }}
+        onOpenSpotlight={onOpenSpotlight}
       />
 
       {/* Subroutes Sheet */}

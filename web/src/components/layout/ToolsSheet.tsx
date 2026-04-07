@@ -41,6 +41,7 @@ type ToolsSheetProps = {
   open: boolean
   onClose: () => void
   onOpenSubroutes: (route: RouteMetadataProps) => void
+  onOpenSpotlight: () => void
 }
 
 type SheetView = 'main' | 'cme-selector'
@@ -105,17 +106,13 @@ const sheetStyle: React.CSSProperties = {
   animation: 'tools-sheet-slide-in 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards'
 }
 
-export function ToolsSheet({ open, onClose, onOpenSubroutes }: ToolsSheetProps) {
+export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: ToolsSheetProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const { user, cme, setCme, logout } = useAuthStore()
   const { theme, toggleTheme } = useTheme()
 
   const [view, setView] = useState<SheetView>('main')
-  const [isAnimating, setIsAnimating] = useState(false)
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('left')
-  const [secondaryView, setSecondaryView] = useState<SheetView | null>(null)
-  const animationRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const showThemeToggle = checkCanToggleTheme(user?.role)
   const navGridRoutes = getNavGridRoutes(ROUTES, user?.role, cme?.module)
@@ -123,52 +120,18 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes }: ToolsSheetProps) 
   const showAccountAdminRoutes = checkIsNonColab(user?.role) && accountAdminRoutes.length > 0
   const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U'
 
-  useEffect(() => {
-    return () => {
-      if (animationRef.current) clearTimeout(animationRef.current)
-    }
-  }, [])
-
-  // Reset view when sheet closes — track previous open state
+  // Reset view when sheet closes
   const prevOpenRef = useRef(open)
   useEffect(() => {
     if (prevOpenRef.current && !open) {
-      // Sheet just closed — schedule reset for next tick
-      const resetTimer = setTimeout(() => {
-        setView('main')
-        setIsAnimating(false)
-        setSecondaryView(null)
-      }, 0)
-      return () => clearTimeout(resetTimer)
+      const t = setTimeout(() => setView('main'), 300)
+      return () => clearTimeout(t)
     }
     prevOpenRef.current = open
   }, [open])
 
-  const goToCmeSelector = useCallback(() => {
-    if (isAnimating) return
-    setSlideDirection('left')
-    setSecondaryView('cme-selector')
-    setIsAnimating(true)
-
-    animationRef.current = setTimeout(() => {
-      setView('cme-selector')
-      setSecondaryView(null)
-      setIsAnimating(false)
-    }, 250)
-  }, [isAnimating])
-
-  const goBackToMain = useCallback(() => {
-    if (isAnimating) return
-    setSlideDirection('right')
-    setSecondaryView('main')
-    setIsAnimating(true)
-
-    animationRef.current = setTimeout(() => {
-      setView('main')
-      setSecondaryView(null)
-      setIsAnimating(false)
-    }, 250)
-  }, [isAnimating])
+  const goToCmeSelector = useCallback(() => setView('cme-selector'), [])
+  const goBackToMain = useCallback(() => setView('main'), [])
 
   const handleClose = useCallback(() => {
     onClose()
@@ -209,9 +172,9 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes }: ToolsSheetProps) 
   }, [onClose, logout])
 
   const handleSearchClick = useCallback(() => {
-    const fullLoc = `${_loc}.handleSearchClick`
-    console.log(`[${fullLoc}] Spotlight search triggered (placeholder)`)
-  }, [])
+    onClose()
+    onOpenSpotlight()
+  }, [onClose, onOpenSpotlight])
 
   const isRouteActive = useCallback(
     (route: RouteMetadataProps): boolean => {
@@ -606,15 +569,8 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes }: ToolsSheetProps) 
     </div>
   )
 
-  const renderSecondaryContent = () => {
-    const target = secondaryView || view
-    if (target === 'cme-selector') return renderCmeSelectorView()
-    return renderMainView()
-  }
-
   return createPortal(
     <>
-      {/* Keyframe styles */}
       <style>{`
         @keyframes tools-sheet-slide-in {
           from { transform: translateY(100%); }
@@ -627,52 +583,25 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes }: ToolsSheetProps) 
       `}</style>
 
       <div style={{ position: 'fixed', inset: 0, zIndex: 200 }}>
-        {/* Backdrop */}
         <div onClick={handleClose} style={backdropStyle} />
 
-        {/* Sheet */}
         <div style={sheetStyle}>
-          <div style={{ overflow: 'hidden', overflowX: 'hidden', position: 'relative', height: '100%' }}>
-            {!isAnimating ? (
-              <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}>
-                {view === 'main' && renderMainView()}
-                {view === 'cme-selector' && renderCmeSelectorView()}
-              </div>
-            ) : (
-              <div
-                style={{
-                  display: 'flex',
-                  width: '200%',
-                  height: '100%',
-                  transition: 'transform 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-                  overflowX: 'hidden'
-                }}
-                ref={el => {
-                  if (el && isAnimating) {
-                    if (slideDirection === 'left') {
-                      el.style.transform = 'translateX(0%)'
-                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                      el.offsetHeight
-                      el.style.transform = 'translateX(-50%)'
-                    } else {
-                      el.style.transform = 'translateX(-50%)'
-                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                      el.offsetHeight
-                      el.style.transform = 'translateX(0%)'
-                    }
-                  }
-                }}
-              >
-                <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden' }}>
-                  {slideDirection === 'left' ? renderMainView() : renderSecondaryContent()}
-                </div>
-                <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden' }}>
-                  {slideDirection === 'left' ? renderSecondaryContent() : (
-                    view === 'cme-selector' ? renderCmeSelectorView() : renderMainView()
-                  )}
-                </div>
-              </div>
-            )}
+          <div
+            style={{
+              display: 'flex',
+              width: '200%',
+              height: '100%',
+              transform: view === 'main' ? 'translateX(0%)' : 'translateX(-50%)',
+              transition: 'transform 250ms cubic-bezier(0.16, 1, 0.3, 1)',
+              overflowX: 'hidden'
+            }}
+          >
+            <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              {renderMainView()}
+            </div>
+            <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              {renderCmeSelectorView()}
+            </div>
           </div>
         </div>
       </div>
