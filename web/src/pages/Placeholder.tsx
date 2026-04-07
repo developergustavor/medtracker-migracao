@@ -25,10 +25,10 @@ export function Placeholder() {
         <span style={{ fontSize: 20, color: 'var(--primary)' }}>&#x1F6A7;</span>
       </div>
       <h2 style={{ fontSize: 'var(--text-heading)', fontWeight: 600, color: 'var(--foreground)' }}>
-        {pageName || 'Pagina'}
+        {pageName || 'Página'}
       </h2>
       <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted-foreground)', textAlign: 'center' }}>
-        Esta pagina sera implementada nas proximas tasks.
+        Esta página será implementada nas próximas tasks.
       </p>
       <span
         style={{

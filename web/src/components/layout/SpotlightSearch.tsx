@@ -21,7 +21,7 @@ type SpotlightSearchProps = {
 }
 
 type SearchResult = {
-  category: 'Paginas' | 'Materiais'
+  category: 'Páginas' | 'Materiais'
   label: string
   sublabel?: string
   path?: string
@@ -46,7 +46,7 @@ function flattenRoutes(routes: RouteMetadataProps[], parentName?: string): Searc
   for (const route of routes) {
     const sublabel = parentName ? `${parentName} > ${route.name}` : route.name
     results.push({
-      category: 'Paginas',
+      category: 'Páginas',
       label: route.name,
       sublabel: parentName ? sublabel : undefined,
       path: route.path,
@@ -194,7 +194,7 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
   const hasResults = results.length > 0
 
   // Group results by category for rendering
-  const pageResults = results.filter(r => r.category === 'Paginas')
+  const pageResults = results.filter(r => r.category === 'Páginas')
   const materialResults = results.filter(r => r.category === 'Materiais')
 
   return createPortal(
@@ -333,7 +333,7 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
                       letterSpacing: '0.05em'
                     }}
                   >
-                    Paginas
+                    Páginas
                   </div>
                   {pageResults.map((result, i) => {
                     const flatIndex = results.indexOf(result)
@@ -440,7 +440,7 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
                 fontSize: 'var(--text-sm)'
               }}
             >
-              Busque por materiais, paginas, acoes...
+              Busque por materiais, páginas, ações...
             </div>
           )}
         </div>

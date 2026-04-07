@@ -1,5 +1,5 @@
 // packages
-import { useState, useMemo, useCallback, useRef } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useLocation } from 'react-router-dom'
 import { SearchNormal1 } from 'iconsax-react'
@@ -60,6 +60,31 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
     onClose()
   }, [onClose])
 
+  // Lock body scroll when sheet is open
+  useEffect(() => {
+    if (route) {
+      const prev = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = prev }
+    }
+  }, [route])
+
+  // Touch gesture: swipe down or swipe right to close
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }, [])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current
+    if (deltaY > 80) { handleClose(); return }
+    if (deltaX > 80 && Math.abs(deltaY) < 40) handleClose()
+  }, [handleClose])
+
   const handleItemClick = useCallback(
     (path: string) => {
       setFilterText('')
@@ -84,14 +109,19 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
         }
       `}</style>
 
-      <div style={{ position: 'fixed', inset: 0, zIndex: 200 }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 200, touchAction: 'none', overscrollBehavior: 'contain' }}>
         {/* Backdrop */}
         <div onClick={handleClose} style={backdropStyle} />
 
         {/* Sheet */}
         <div style={sheetStyle}>
           {/* Handle bar */}
-          <div className="flex items-center justify-center shrink-0" style={{ padding: '10px 0 6px' }}>
+          <div
+            className="flex items-center justify-center shrink-0"
+            style={{ padding: '10px 0 6px' }}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
               style={{
                 width: 36,
@@ -149,7 +179,7 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
           )}
 
           {/* Subroute list */}
-          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
             {filteredChildren.map(child => {
               const isActive = location.pathname === child.path || location.pathname.startsWith(child.path + '/')
 

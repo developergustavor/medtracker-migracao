@@ -33,7 +33,6 @@ export const useAuthStore = create<AuthState>()(
       setCme: cme => set({ cme }),
       logout: () => {
         set({ user: null, cme: null, token: null, isAuthenticated: false })
-        window.location.href = '/login'
       }
     }),
     { name: `${VITE_APP_NAME}-${VITE_NODE_ENV}-auth-storage` }

@@ -28,20 +28,27 @@ type BottomTabBarProps = {
   onOpenSpotlight: () => void
 }
 
+const CME_ONLY_TAB_PATHS = ['/home', '/dashboard-cme']
+
 function getMobileTabItems(role: user_role | undefined): RouteMetadataProps[] {
   if (!role) return []
   return ROUTES.filter(route => route.showInMobileTab && route.mobileTabRoles && isRoleIn(role, route.mobileTabRoles))
 }
 
+function getCmeOnlyTabItems(): RouteMetadataProps[] {
+  return ROUTES.filter(route => CME_ONLY_TAB_PATHS.includes(route.path))
+}
+
 export function BottomTabBar({ onOpenSpotlight }: BottomTabBarProps) {
   const location = useLocation()
   const navigate = useNavigate()
-  const { user } = useAuthStore()
+  const { user, cme } = useAuthStore()
 
   const [showToolsSheet, setShowToolsSheet] = useState(false)
   const [subroutesSheet, setSubroutesSheet] = useState<RouteMetadataProps | null>(null)
 
-  const tabItems = useMemo(() => getMobileTabItems(user?.role), [user?.role])
+  const isCmeOnly = !user && !!cme
+  const tabItems = useMemo(() => isCmeOnly ? getCmeOnlyTabItems() : getMobileTabItems(user?.role), [user?.role, isCmeOnly])
 
   const isActive = useCallback(
     (route: RouteMetadataProps): boolean => {
@@ -72,9 +79,10 @@ export function BottomTabBar({ onOpenSpotlight }: BottomTabBarProps) {
     [navigate]
   )
 
-  // Split items: first 2 on left, last 2 on right (Tools in center)
-  const leftItems = tabItems.slice(0, 2)
-  const rightItems = tabItems.slice(2, 4)
+  // Split items: for CME-only (2 items) put 1 left + 1 right; otherwise 2 left + 2 right
+  const splitIndex = isCmeOnly ? 1 : 2
+  const leftItems = tabItems.slice(0, splitIndex)
+  const rightItems = tabItems.slice(splitIndex, isCmeOnly ? 2 : 4)
 
   return (
     <>
@@ -128,7 +136,7 @@ export function BottomTabBar({ onOpenSpotlight }: BottomTabBarProps) {
               color: '#ffffff',
               boxShadow: '0 4px 16px rgba(33,85,252,0.35)',
               position: 'absolute',
-              bottom: 8,
+              bottom: 32,
               transition: 'transform 150ms ease'
             }}
           >

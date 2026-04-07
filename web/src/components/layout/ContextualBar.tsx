@@ -44,7 +44,7 @@ function ActionButton({ action, isPrimary }: { action: ContextualActionProps; is
       }}
     >
       {action.icon && (
-        <span className="flex items-center" style={{ color: isPrimary ? 'var(--primary)' : 'var(--muted-foreground)' }}>
+        <span className="flex items-center" style={{ color: isPrimary ? 'var(--primary)' : 'var(--foreground)' }}>
           {getRouteIcon(action.icon, 16, false)}
         </span>
       )}
@@ -143,7 +143,7 @@ function OverflowMenu({ actions }: { actions: ContextualActionProps[] }) {
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
             >
               {action.icon && (
-                <span className="flex items-center" style={{ color: 'var(--muted-foreground)' }}>
+                <span className="flex items-center" style={{ color: 'var(--foreground)' }}>
                   {getRouteIcon(action.icon, 16, false)}
                 </span>
               )}

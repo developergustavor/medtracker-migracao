@@ -1,0 +1,237 @@
+<h2>Task 10 — Login Page (v2)</h2>
+<p class="subtitle">4 abas: Codigo, Usuario (CPF), CME, Facial (placeholder). Modernizado mas funcionalidade 100% da v1 + melhorias. Dark/Light desde o inicio.</p>
+
+<div class="section">
+  <h3>1. Desktop — Light Mode</h3>
+  <p class="subtitle">Card centralizado sobre fundo com gradiente sutil. Logo full-gradient no topo. 4 abas tipo segmented control. Formulario limpo.</p>
+
+  <div class="split">
+    <!-- Aba Codigo -->
+    <div class="mockup">
+      <div class="mockup-header">Aba "Codigo" (padrao)</div>
+      <div class="mockup-body" style="height:540px;background:linear-gradient(135deg,#f3f3f9 0%,#e8ecf8 50%,#f0f0f8 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Inter',system-ui,sans-serif">
+        <div style="width:400px;background:#ffffff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.08);border:1px solid #e4e5eb;padding:36px 32px;display:flex;flex-direction:column;align-items:center">
+          <!-- Logo -->
+          <div style="width:160px;height:36px;background:linear-gradient(135deg,#2155FC,#4B7BFF);border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center">
+            <span style="color:white;font-weight:700;font-size:14px;letter-spacing:0.5px">MEDTRACKER</span>
+          </div>
+          <p style="font-size:12px;color:#8b8ba0;margin-bottom:24px;text-align:center">Insira seus dados para acessar a plataforma</p>
+
+          <!-- Tabs (segmented) -->
+          <div style="display:flex;width:100%;background:#f5f5fa;border-radius:10px;padding:3px;margin-bottom:24px;gap:2px">
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;background:#ffffff;box-shadow:0 1px 3px rgba(0,0,0,0.08);font-size:12px;font-weight:600;color:#2155FC;cursor:pointer">Codigo</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#8b8ba0;cursor:pointer">Usuario</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#8b8ba0;cursor:pointer">CME</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#8b8ba0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              Facial
+            </div>
+          </div>
+
+          <!-- Form: Codigo -->
+          <div style="width:100%">
+            <label style="font-size:12px;font-weight:500;color:#1a1a2e;margin-bottom:6px;display:block">Codigo</label>
+            <div style="display:flex;align-items:center;border:1px solid #e4e5eb;border-radius:10px;padding:0 14px;height:44px;background:#f5f5fa;transition:border-color 0.15s">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5" style="margin-right:10px;flex-shrink:0"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              <span style="font-size:13px;color:#8b8ba0">&#x2022;&#x2022;&#x2022;</span>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button style="width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#2155FC,#4B7BFF);color:white;font-size:14px;font-weight:600;border:none;margin-top:20px;cursor:pointer;opacity:0.5" disabled>Acessar</button>
+
+          <!-- Links -->
+          <div style="display:flex;justify-content:center;gap:16px;margin-top:16px">
+            <a style="font-size:12px;color:#2155FC;text-decoration:none;cursor:pointer">Esqueci minha senha</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aba Usuario (CPF) -->
+    <div class="mockup">
+      <div class="mockup-header">Aba "Usuario" (CPF + Senha)</div>
+      <div class="mockup-body" style="height:540px;background:linear-gradient(135deg,#f3f3f9 0%,#e8ecf8 50%,#f0f0f8 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Inter',system-ui,sans-serif">
+        <div style="width:400px;background:#ffffff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.08);border:1px solid #e4e5eb;padding:36px 32px;display:flex;flex-direction:column;align-items:center">
+          <div style="width:160px;height:36px;background:linear-gradient(135deg,#2155FC,#4B7BFF);border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center">
+            <span style="color:white;font-weight:700;font-size:14px;letter-spacing:0.5px">MEDTRACKER</span>
+          </div>
+          <p style="font-size:12px;color:#8b8ba0;margin-bottom:24px;text-align:center">Insira seus dados para acessar a plataforma</p>
+
+          <div style="display:flex;width:100%;background:#f5f5fa;border-radius:10px;padding:3px;margin-bottom:24px;gap:2px">
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#8b8ba0;cursor:pointer">Codigo</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;background:#ffffff;box-shadow:0 1px 3px rgba(0,0,0,0.08);font-size:12px;font-weight:600;color:#2155FC;cursor:pointer">Usuario</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#8b8ba0;cursor:pointer">CME</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#8b8ba0;cursor:pointer">Facial</div>
+          </div>
+
+          <!-- CPF -->
+          <div style="width:100%;margin-bottom:14px">
+            <label style="font-size:12px;font-weight:500;color:#1a1a2e;margin-bottom:6px;display:block">CPF</label>
+            <div style="display:flex;align-items:center;border:1px solid #e4e5eb;border-radius:10px;padding:0 14px;height:44px;background:#f5f5fa">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5" style="margin-right:10px;flex-shrink:0"><path d="M12.12 12.78a.963.963 0 00-.24 0 3.27 3.27 0 01-3.16-3.27c0-1.81 1.46-3.28 3.28-3.28a3.276 3.276 0 01.12 6.55z"/><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
+              <span style="font-size:13px;color:#1a1a2e">101.261.546-43</span>
+            </div>
+          </div>
+
+          <!-- Senha -->
+          <div style="width:100%">
+            <label style="font-size:12px;font-weight:500;color:#1a1a2e;margin-bottom:6px;display:block">Senha</label>
+            <div style="display:flex;align-items:center;border:1px solid #e4e5eb;border-radius:10px;padding:0 14px;height:44px;background:#f5f5fa">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5" style="margin-right:10px;flex-shrink:0"><path d="M6 10V8c0-3.31 1-6 6-6s6 2.69 6 6v2"/><path d="M17 22H7c-4 0-5-1-5-5v-2c0-4 1-5 5-5h10c4 0 5 1 5 5v2c0 4-1 5-5 5z"/></svg>
+              <span style="font-size:13px;color:#1a1a2e">&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b8ba0" stroke-width="1.5" style="margin-left:auto;cursor:pointer;flex-shrink:0"><path d="M15.58 12c0 1.98-1.6 3.58-3.58 3.58S8.42 13.98 8.42 12 10.02 8.42 12 8.42 15.58 10.02 15.58 12z"/><path d="M12 20.27c3.53 0 6.82-2.08 9.11-5.68.9-1.41.9-3.78 0-5.19-2.29-3.6-5.58-5.68-9.11-5.68-3.53 0-6.82 2.08-9.11 5.68-.9 1.41-.9 3.78 0 5.19 2.29 3.6 5.58 5.68 9.11 5.68z"/></svg>
+            </div>
+          </div>
+
+          <!-- Remember me -->
+          <div style="display:flex;align-items:center;gap:8px;width:100%;margin-top:12px">
+            <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid #e4e5eb;background:#ffffff"></div>
+            <span style="font-size:11px;color:#8b8ba0">Lembrar de mim</span>
+          </div>
+
+          <button style="width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#2155FC,#4B7BFF);color:white;font-size:14px;font-weight:600;border:none;margin-top:16px;cursor:pointer">Acessar</button>
+
+          <div style="display:flex;justify-content:center;gap:16px;margin-top:16px">
+            <a style="font-size:12px;color:#2155FC;text-decoration:none;cursor:pointer">Esqueci minha senha</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. Dark Mode + 2FA + Mobile</h3>
+
+  <div class="split">
+    <!-- Dark mode -->
+    <div class="mockup">
+      <div class="mockup-header">Dark Mode — Aba Codigo</div>
+      <div class="mockup-body" style="height:500px;background:linear-gradient(135deg,#0f1014 0%,#141620 50%,#0f1014 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Inter',system-ui,sans-serif">
+        <div style="width:400px;background:#171920;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.3);border:1px solid #1a1c24;padding:36px 32px;display:flex;flex-direction:column;align-items:center">
+          <div style="width:160px;height:36px;background:linear-gradient(135deg,#2155FC,#4B7BFF);border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center">
+            <span style="color:white;font-weight:700;font-size:14px;letter-spacing:0.5px">MEDTRACKER</span>
+          </div>
+          <p style="font-size:12px;color:#6e6e7a;margin-bottom:24px">Insira seus dados para acessar a plataforma</p>
+          <div style="display:flex;width:100%;background:#12141a;border-radius:10px;padding:3px;margin-bottom:24px;gap:2px">
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;background:#22242c;font-size:12px;font-weight:600;color:#4B7BFF;cursor:pointer">Codigo</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#4e4e5a;cursor:pointer">Usuario</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#4e4e5a;cursor:pointer">CME</div>
+            <div style="flex:1;padding:8px 0;text-align:center;border-radius:8px;font-size:12px;color:#4e4e5a;cursor:pointer">Facial</div>
+          </div>
+          <div style="width:100%">
+            <label style="font-size:12px;font-weight:500;color:#f0f0f3;margin-bottom:6px;display:block">Codigo</label>
+            <div style="display:flex;align-items:center;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:0 14px;height:44px;background:#12141a">
+              <span style="font-size:13px;color:#4e4e5a">&#x2022;&#x2022;&#x2022;</span>
+            </div>
+          </div>
+          <button style="width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#2155FC,#4B7BFF);color:white;font-size:14px;font-weight:600;border:none;margin-top:20px;opacity:0.5">Acessar</button>
+          <a style="font-size:12px;color:#4B7BFF;text-decoration:none;margin-top:16px;cursor:pointer">Esqueci minha senha</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2FA step -->
+    <div class="mockup">
+      <div class="mockup-header">2FA — Codigo OTP (apos login CPF)</div>
+      <div class="mockup-body" style="height:500px;background:linear-gradient(135deg,#f3f3f9 0%,#e8ecf8 50%,#f0f0f8 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Inter',system-ui,sans-serif">
+        <div style="width:400px;background:#ffffff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.08);border:1px solid #e4e5eb;padding:36px 32px;display:flex;flex-direction:column;align-items:center">
+          <div style="width:56px;height:56px;border-radius:14px;background:rgba(33,85,252,0.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2155FC" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 style="font-size:18px;font-weight:600;color:#1a1a2e;margin-bottom:4px">Verificacao em duas etapas</h3>
+          <p style="font-size:12px;color:#8b8ba0;margin-bottom:24px;text-align:center">Enviamos um codigo para<br><strong style="color:#1a1a2e">gu***@medtracker.com.br</strong></p>
+
+          <!-- OTP inputs -->
+          <div style="display:flex;gap:8px;margin-bottom:24px">
+            <div style="width:44px;height:52px;border:1.5px solid #2155FC;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#1a1a2e;background:#f5f5fa">1</div>
+            <div style="width:44px;height:52px;border:1.5px solid #2155FC;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#1a1a2e;background:#f5f5fa">2</div>
+            <div style="width:44px;height:52px;border:1.5px solid #2155FC;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#1a1a2e;background:#f5f5fa">3</div>
+            <div style="width:44px;height:52px;border:1.5px solid #e4e5eb;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#8b8ba0;background:#f5f5fa">_</div>
+            <div style="width:44px;height:52px;border:1.5px solid #e4e5eb;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#8b8ba0;background:#f5f5fa">_</div>
+          </div>
+
+          <button style="width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#2155FC,#4B7BFF);color:white;font-size:14px;font-weight:600;border:none;cursor:pointer;opacity:0.5">Verificar</button>
+
+          <div style="display:flex;gap:16px;margin-top:16px">
+            <a style="font-size:12px;color:#8b8ba0;text-decoration:none;cursor:pointer">Reenviar codigo</a>
+            <a style="font-size:12px;color:#8b8ba0;text-decoration:none;cursor:pointer">Voltar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>3. Mobile</h3>
+  <div class="mockup">
+    <div class="mockup-header">Mobile — Aba Usuario (full-width, sem card)</div>
+    <div class="mockup-body" style="width:300px;margin:0 auto;height:540px;background:var(--bg);border-radius:16px;overflow:hidden;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;padding:40px 24px;border:2px solid var(--border)">
+      <!-- Logo centered -->
+      <div style="display:flex;justify-content:center;margin-bottom:8px">
+        <div style="width:140px;height:32px;background:linear-gradient(135deg,#2155FC,#4B7BFF);border-radius:8px;display:flex;align-items:center;justify-content:center">
+          <span style="color:white;font-weight:700;font-size:12px;letter-spacing:0.5px">MEDTRACKER</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted-foreground);margin-bottom:20px;text-align:center">Insira seus dados para acessar</p>
+
+      <!-- Tabs -->
+      <div style="display:flex;background:var(--muted);border-radius:10px;padding:3px;margin-bottom:20px;gap:2px">
+        <div style="flex:1;padding:7px 0;text-align:center;border-radius:8px;font-size:11px;color:var(--muted-foreground)">Codigo</div>
+        <div style="flex:1;padding:7px 0;text-align:center;border-radius:8px;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,0.08);font-size:11px;font-weight:600;color:var(--primary)">Usuario</div>
+        <div style="flex:1;padding:7px 0;text-align:center;border-radius:8px;font-size:11px;color:var(--muted-foreground)">CME</div>
+        <div style="flex:1;padding:7px 0;text-align:center;border-radius:8px;font-size:11px;color:var(--muted-foreground)">Facial</div>
+      </div>
+
+      <!-- CPF -->
+      <label style="font-size:11px;font-weight:500;color:var(--foreground);margin-bottom:4px;display:block">CPF</label>
+      <div style="display:flex;align-items:center;border:1px solid var(--input-border);border-radius:10px;padding:0 12px;height:44px;background:var(--input);margin-bottom:12px">
+        <span style="font-size:13px;color:var(--foreground)">101.261.546-43</span>
+      </div>
+
+      <!-- Senha -->
+      <label style="font-size:11px;font-weight:500;color:var(--foreground);margin-bottom:4px;display:block">Senha</label>
+      <div style="display:flex;align-items:center;border:1px solid var(--input-border);border-radius:10px;padding:0 12px;height:44px;background:var(--input)">
+        <span style="font-size:13px;color:var(--foreground)">&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted-foreground)" stroke-width="1.5" style="margin-left:auto"><path d="M15.58 12c0 1.98-1.6 3.58-3.58 3.58S8.42 13.98 8.42 12 10.02 8.42 12 8.42"/></svg>
+      </div>
+
+      <!-- Remember + Submit -->
+      <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+        <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border);background:var(--card)"></div>
+        <span style="font-size:11px;color:var(--muted-foreground)">Lembrar de mim</span>
+      </div>
+
+      <button style="width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#2155FC,#4B7BFF);color:white;font-size:14px;font-weight:600;border:none;margin-top:16px">Acessar</button>
+
+      <div style="display:flex;justify-content:center;margin-top:16px">
+        <a style="font-size:12px;color:var(--primary);text-decoration:none">Esqueci minha senha</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Funcionalidades</h3>
+  <ul style="font-size:13px;color:var(--foreground);line-height:1.8;list-style:disc;padding-left:20px">
+    <li><strong>4 abas</strong>: Codigo, Usuario (CPF), CME, Facial (placeholder). Segmented control com transicao suave.</li>
+    <li><strong>Aba Codigo</strong>: Campo password, icone QR. API: POST /api/auth action user-by-code</li>
+    <li><strong>Aba Usuario</strong>: CPF (mascara ###.###.###-##) + Senha (toggle visibilidade). API: POST /api/auth action user</li>
+    <li><strong>Aba CME</strong>: Usuario + Senha. API: POST /api/auth action cme</li>
+    <li><strong>Aba Facial</strong>: Placeholder — icone + "Funcionalidade futura" + botao desabilitado</li>
+    <li><strong>2FA</strong>: Se user.auth2FA && emailChecked, troca para view de OTP (5 digitos, inputs individuais). Email mascarado. Reenviar/Voltar</li>
+    <li><strong>Remember Me</strong>: Checkbox, salva no localStorage</li>
+    <li><strong>Esqueci minha senha</strong>: Link para /recuperacao-senha</li>
+    <li><strong>Acessar disabled</strong>: Ate campos obrigatorios preenchidos + validacao Zod</li>
+    <li><strong>Erro</strong>: Toast/alert com mensagem do backend (usa design system tokens)</li>
+    <li><strong>Sucesso</strong>: store.login() + redirect /home (ou /dashboard-cme para CME)</li>
+    <li><strong>Validacao</strong>: Zod schemas ja existentes (loginByCodeSchema, loginByCpfSchema, loginByCmeSchema)</li>
+    <li><strong>React Hook Form</strong>: Para gerenciamento de formulario</li>
+    <li><strong>Preloader</strong>: Botao mostra spinner durante request</li>
+    <li><strong>Dark/Light</strong>: Segue tema do sistema ou ultimo salvo</li>
+    <li><strong>Mobile</strong>: Full-width sem card wrapper, padding lateral</li>
+    <li><strong>Logo</strong>: Usa logo-full-gradient.svg (light) / logo-white-full-gradient.svg (dark)</li>
+  </ul>
+</div>

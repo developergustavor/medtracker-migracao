@@ -1,5 +1,5 @@
 // packages
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Moon,
@@ -20,7 +20,7 @@ import { useTheme } from '@/hooks'
 import { ROUTES } from '@/constants'
 
 // entities
-import { formatted_user_role, formatted_cme_module, cme_module } from '@/entities'
+import { user_role, formatted_user_role, formatted_cme_module, cme_module } from '@/entities'
 
 // mock
 import { mockCmes } from '@/mock/data'
@@ -42,8 +42,6 @@ type ProfileDialogProps = {
 type DialogView = 'main' | 'cme-selector' | 'change-password'
 
 const ADMIN_ROUTES = ['/gerenciamento', '/configuracoes']
-
-const DIALOG_HEIGHT = 420
 
 function getVisibleAdminRoutes(routes: RouteMetadataProps[], userRole: user_role | undefined, cmeModule: cme_module | undefined): RouteMetadataProps[] {
   return routes.filter(route => {
@@ -82,32 +80,31 @@ function MenuButton({ onClick, children, destructive = false }: { onClick: () =>
 function ViewHeader({ title, onBack }: { title: string; onBack: () => void }) {
   return (
     <div
-      className="flex items-center gap-sm"
       style={{
-        padding: '14px 16px',
+        padding: '6px 8px',
         borderBottom: '1px solid var(--border-separator)'
       }}
     >
       <button
         onClick={onBack}
-        className="flex items-center justify-center cursor-pointer"
+        className="flex items-center gap-sm cursor-pointer w-full"
         style={{
-          width: 32,
-          height: 32,
+          padding: '8px 8px',
           borderRadius: 'var(--radius-sm)',
           backgroundColor: 'transparent',
           border: 'none',
           color: 'var(--foreground)',
-          transition: 'background-color 150ms ease'
+          fontSize: 'var(--text-body)',
+          fontWeight: 600,
+          transition: 'background-color 150ms ease',
+          textAlign: 'left'
         }}
         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
       >
-        <ArrowLeft2 size={18} color="currentColor" />
-      </button>
-      <span style={{ fontSize: 'var(--text-body)', fontWeight: 600, color: 'var(--foreground)' }}>
+        <ArrowLeft2 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
         {title}
-      </span>
+      </button>
     </div>
   )
 }
@@ -118,47 +115,27 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
   const { theme, toggleTheme } = useTheme()
 
   const [dialogView, setDialogView] = useState<DialogView>('main')
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('left')
-  const [isAnimating, setIsAnimating] = useState(false)
-  const [secondaryView, setSecondaryView] = useState<DialogView | null>(null)
-  const animationRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const adminRoutes = getVisibleAdminRoutes(ROUTES, user?.role, undefined)
-  const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U'
-  const showAdminItems = checkIsNonColab(user?.role)
-  const showThemeToggle = checkCanToggleTheme(user?.role)
-
+  // Lock body scroll when dialog is open
   useEffect(() => {
-    return () => {
-      if (animationRef.current) clearTimeout(animationRef.current)
+    if (open) {
+      const prev = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = prev }
     }
-  }, [])
+  }, [open])
 
-  const goToView = (target: DialogView) => {
-    if (isAnimating) return
-    setSlideDirection('left')
-    setSecondaryView(target)
-    setIsAnimating(true)
+  const isCmeOnly = !user && !!cme
+  const adminRoutes = isCmeOnly ? [] : getVisibleAdminRoutes(ROUTES, user?.role, undefined)
+  const displayName = isCmeOnly ? cme.corporateName : (user?.name || 'Usuário')
+  const displayRole = isCmeOnly ? 'CME' : (user?.role ? formatted_user_role[user.role] : '')
+  const displayEmail = isCmeOnly ? (cme.email || '') : (user?.email || '')
+  const userInitial = displayName.charAt(0)?.toUpperCase() || 'U'
+  const showAdminItems = isCmeOnly ? false : checkIsNonColab(user?.role)
+  const showThemeToggle = isCmeOnly ? false : checkCanToggleTheme(user?.role)
 
-    animationRef.current = setTimeout(() => {
-      setDialogView(target)
-      setSecondaryView(null)
-      setIsAnimating(false)
-    }, 250)
-  }
-
-  const goBack = () => {
-    if (isAnimating) return
-    setSlideDirection('right')
-    setSecondaryView('main')
-    setIsAnimating(true)
-
-    animationRef.current = setTimeout(() => {
-      setDialogView('main')
-      setSecondaryView(null)
-      setIsAnimating(false)
-    }, 250)
-  }
+  const goToView = (target: DialogView) => setDialogView(target)
+  const goBack = () => setDialogView('main')
 
   const handleCmeSelect = (selectedCme: CmeProps) => {
     setCme(selectedCme)
@@ -166,7 +143,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
   }
 
   const renderMainView = () => (
-    <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
       {/* User info header */}
       <div
         className="flex items-center gap-md"
@@ -195,13 +172,13 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
             className="truncate"
             style={{ fontSize: 'var(--text-body)', fontWeight: 600, color: 'var(--foreground)' }}
           >
-            {user?.name || 'Usuario'}
+            {displayName}
           </div>
           <div
             className="truncate"
             style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}
           >
-            {user?.role ? formatted_user_role[user.role] : ''} &bull; {user?.email || ''}
+            {displayRole}{displayEmail ? ` \u2022 ${displayEmail}` : ''}
           </div>
         </div>
       </div>
@@ -212,22 +189,24 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
         {showThemeToggle && (
           <MenuButton onClick={toggleTheme}>
             {theme === 'light'
-              ? <Moon size={18} color="currentColor" style={{ color: 'var(--muted-foreground)', flexShrink: 0 }} />
-              : <Sun1 size={18} color="currentColor" style={{ color: 'var(--muted-foreground)', flexShrink: 0 }} />
+              ? <Moon size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
+              : <Sun1 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
             }
             {theme === 'light' ? 'Modo escuro' : 'Modo claro'}
           </MenuButton>
         )}
 
-        {/* Alterar CME */}
-        <MenuButton onClick={() => goToView('cme-selector')}>
-          <Building size={18} color="currentColor" style={{ color: 'var(--muted-foreground)', flexShrink: 0 }} />
-          Alterar CME
-        </MenuButton>
+        {/* Alterar CME - hidden when logged in as CME directly */}
+        {!isCmeOnly && (
+          <MenuButton onClick={() => goToView('cme-selector')}>
+            <Building size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
+            Alterar CME
+          </MenuButton>
+        )}
 
         {/* Alterar Senha */}
         <MenuButton onClick={() => goToView('change-password')}>
-          <Lock1 size={18} color="currentColor" style={{ color: 'var(--muted-foreground)', flexShrink: 0 }} />
+          <Lock1 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
           Alterar Senha
         </MenuButton>
 
@@ -250,7 +229,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
                   navigate(route.path)
                 }}
               >
-                {route.icon && getRouteIcon(route.icon, 18, false)}
+                {route.icon && <span style={{ color: 'var(--foreground)', flexShrink: 0, display: 'flex' }}>{getRouteIcon(route.icon, 18, false)}</span>}
                 {route.name}
               </MenuButton>
             ))}
@@ -274,7 +253,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
             logout()
           }}
         >
-          <LogoutCurve size={18} color="currentColor" style={{ flexShrink: 0 }} />
+          <LogoutCurve size={18} color="var(--destructive)" style={{ flexShrink: 0 }} />
           Sair
         </MenuButton>
       </div>
@@ -282,7 +261,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
   )
 
   const renderCmeSelectorView = () => (
-    <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
       <ViewHeader title="Alterar CME" onBack={goBack} />
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
@@ -371,12 +350,12 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
   )
 
   const renderChangePasswordView = () => (
-    <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
       <ViewHeader title="Alterar Senha" onBack={goBack} />
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
         <p style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', marginBottom: 16 }}>
-          Formulario de alteracao de senha (placeholder)
+          Formulário de alteração de senha (placeholder)
         </p>
 
         <div className="flex flex-col gap-sm">
@@ -471,17 +450,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
     </div>
   )
 
-  const renderSecondaryContent = () => {
-    const view = secondaryView || dialogView
-    if (view === 'cme-selector') return renderCmeSelectorView()
-    if (view === 'change-password') return renderChangePasswordView()
-    return renderMainView()
-  }
-
   if (!open) return null
-
-  const slidingForward = isAnimating && slideDirection === 'left'
-  const slidingBack = isAnimating && slideDirection === 'right'
 
   return (
     <>
@@ -507,72 +476,18 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
           transform: 'translate(-50%, -50%)',
           zIndex: 101,
           width: 320,
-          height: DIALOG_HEIGHT,
+          maxHeight: '85vh',
           backgroundColor: 'var(--card)',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border)',
           boxShadow: 'var(--shadow-popover)',
-          overflow: 'hidden'
+          overflowY: 'auto',
+          overflowX: 'hidden'
         }}
       >
-        <div
-          style={{
-            overflow: 'hidden',
-            position: 'relative',
-            height: '100%'
-          }}
-        >
-          {!isAnimating ? (
-            // Static: render only the current view
-            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              {dialogView === 'main' && renderMainView()}
-              {dialogView === 'cme-selector' && renderCmeSelectorView()}
-              {dialogView === 'change-password' && renderChangePasswordView()}
-            </div>
-          ) : (
-            // Animating: render both views side by side
-            <div
-              style={{
-                display: 'flex',
-                width: '200%',
-                height: '100%',
-                transform: slidingForward
-                  ? 'translateX(-50%)'
-                  : slidingBack
-                    ? 'translateX(0%)'
-                    : 'translateX(0%)',
-                transition: 'transform 250ms cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
-              ref={el => {
-                if (el && isAnimating) {
-                  // Force initial position before transition
-                  if (slideDirection === 'left') {
-                    el.style.transform = 'translateX(0%)'
-                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    el.offsetHeight // force reflow
-                    el.style.transform = 'translateX(-50%)'
-                  } else {
-                    el.style.transform = 'translateX(-50%)'
-                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                    el.offsetHeight // force reflow
-                    el.style.transform = 'translateX(0%)'
-                  }
-                }
-              }}
-            >
-              <div style={{ width: '50%', flexShrink: 0, height: '100%' }}>
-                {slideDirection === 'left' ? renderMainView() : renderSecondaryContent()}
-              </div>
-              <div style={{ width: '50%', flexShrink: 0, height: '100%' }}>
-                {slideDirection === 'left' ? renderSecondaryContent() : (
-                  dialogView === 'cme-selector' ? renderCmeSelectorView() :
-                  dialogView === 'change-password' ? renderChangePasswordView() :
-                  renderMainView()
-                )}
-              </div>
-            </div>
-          )}
-        </div>
+        {dialogView === 'main' && renderMainView()}
+        {dialogView === 'cme-selector' && renderCmeSelectorView()}
+        {dialogView === 'change-password' && renderChangePasswordView()}
       </div>
     </>
   )

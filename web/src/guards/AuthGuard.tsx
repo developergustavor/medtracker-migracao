@@ -12,6 +12,9 @@ import type { RouteMetadataProps } from '@/types'
 
 const _loc = '@/guards/AuthGuard'
 
+/** Rotas permitidas no modo CME-only (login pela aba CME) */
+const CME_ONLY_ALLOWED_PATHS = ['/home', '/dashboard-cme']
+
 type AuthGuardProps = {
   children: React.ReactNode
   metadata?: RouteMetadataProps
@@ -30,6 +33,22 @@ export function AuthGuard({ children, metadata }: AuthGuardProps) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
+  const isCmeOnly = !user && !!cme
+
+  // CME-only mode: restringir a rotas permitidas
+  if (isCmeOnly) {
+    const isAllowedPath = CME_ONLY_ALLOWED_PATHS.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
+    if (!isAllowedPath) {
+      return <Navigate to="/home" replace />
+    }
+  }
+
+  // /dashboard-cme so pode ser acessado em CME-only mode
+  if (location.pathname.startsWith('/dashboard-cme') && !isCmeOnly) {
+    return <Navigate to="/home" replace />
+  }
+
+  // Role check (apenas para login com usuario)
   if (metadata?.allowedRoles && user) {
     const hasRole = metadata.allowedRoles.includes(user.role)
     if (!hasRole) {
@@ -37,6 +56,7 @@ export function AuthGuard({ children, metadata }: AuthGuardProps) {
     }
   }
 
+  // Module check
   if (metadata?.allowedModules && cme) {
     const hasModule = metadata.allowedModules.includes(cme.module)
     if (!hasModule) {

@@ -54,6 +54,7 @@ function getNavGridRoutes(routes: RouteMetadataProps[], userRole: user_role | un
   return routes.filter(route => {
     if (TAB_BAR_PATHS.includes(route.path)) return false
     if (ACCOUNT_SECTION_PATHS.includes(route.path)) return false
+    if (route.path === '/dashboard-cme') return false
     if (!route.showInSidebar) return false
     if (userRole && !isRoleIn(userRole, route.allowedRoles)) return false
     if (cmeModule && !route.allowedModules.includes(cmeModule)) return false
@@ -114,11 +115,37 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
 
   const [view, setView] = useState<SheetView>('main')
 
-  const showThemeToggle = checkCanToggleTheme(user?.role)
-  const navGridRoutes = getNavGridRoutes(ROUTES, user?.role, cme?.module)
-  const accountAdminRoutes = getAccountAdminRoutes(ROUTES, user?.role, cme?.module)
-  const showAccountAdminRoutes = checkIsNonColab(user?.role) && accountAdminRoutes.length > 0
-  const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U'
+  // Lock body scroll when sheet is open
+  useEffect(() => {
+    if (open) {
+      const prev = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = prev }
+    }
+  }, [open])
+
+  const isCmeOnly = !user && !!cme
+  const showThemeToggle = isCmeOnly ? false : checkCanToggleTheme(user?.role)
+  const navGridRoutes = isCmeOnly
+    ? ROUTES.filter(r => r.path === '/dashboard-cme' && r.showInSidebar)
+    : getNavGridRoutes(ROUTES, user?.role, cme?.module)
+  const accountAdminRoutes = isCmeOnly ? [] : getAccountAdminRoutes(ROUTES, user?.role, cme?.module)
+  const showAccountAdminRoutes = isCmeOnly ? false : checkIsNonColab(user?.role) && accountAdminRoutes.length > 0
+  const displayName = isCmeOnly ? cme.corporateName : (user?.name || 'Usuário')
+  const displayRole = isCmeOnly ? 'CME' : (user?.role ? formatted_user_role[user.role] : '')
+  const userInitial = displayName.charAt(0)?.toUpperCase() || 'U'
+
+  // Touch gesture: swipe down to close
+  const touchStartY = useRef(0)
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY
+  }, [])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current
+    if (deltaY > 80) onClose()
+  }, [onClose])
 
   // Reset view when sheet closes
   const prevOpenRef = useRef(open)
@@ -193,7 +220,12 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
   const renderMainView = () => (
     <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%', overflowX: 'hidden' }}>
       {/* Handle bar */}
-      <div className="flex items-center justify-center shrink-0" style={{ padding: '10px 0 6px' }}>
+      <div
+        className="flex items-center justify-center shrink-0"
+        style={{ padding: '10px 0 6px' }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <div
           style={{
             width: 36,
@@ -206,7 +238,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       </div>
 
       {/* Scrollable content */}
-      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '0 16px 24px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '0 16px 24px', touchAction: 'pan-y' }}>
         {/* Search input */}
         <button
           onClick={handleSearchClick}
@@ -226,8 +258,8 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           <span>Buscar...</span>
         </button>
 
-        {/* CME Selector card — clickable */}
-        {cme && (
+        {/* CME Selector card — clickable (hidden in CME-only mode) */}
+        {cme && !isCmeOnly && (
           <button
             onClick={goToCmeSelector}
             className="flex flex-col w-full cursor-pointer"
@@ -242,7 +274,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
             }}
           >
             <div className="flex items-center gap-sm">
-              <Building size={18} color="var(--muted-foreground)" style={{ flexShrink: 0 }} />
+              <Building size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
               <span
                 className="truncate"
                 style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)', flex: 1 }}
@@ -363,20 +395,20 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
               className="truncate"
               style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)' }}
             >
-              {user?.name || 'Usuario'}
+              {displayName}
             </div>
             <div
               className="truncate"
               style={{ fontSize: 'var(--text-xxs)', color: 'var(--muted-foreground)' }}
             >
-              {user?.role ? formatted_user_role[user.role] : ''}
+              {displayRole}
             </div>
           </div>
         </div>
 
         {/* Account actions */}
         <div className="flex flex-col" style={{ gap: 2 }}>
-          {/* Gerenciamento / Configuracoes — before Alterar Senha */}
+          {/* Gerenciamento / Configurações — before Alterar Senha */}
           {showAccountAdminRoutes && accountAdminRoutes.map(route => (
             <button
               key={route.path}
@@ -393,7 +425,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
                 transition: 'background-color 150ms ease'
               }}
             >
-              {route.icon && getRouteIcon(route.icon, 18, false)}
+              {route.icon && <span style={{ color: 'var(--foreground)', display: 'flex', flexShrink: 0 }}>{getRouteIcon(route.icon, 18, false)}</span>}
               {route.name}
             </button>
           ))}
@@ -416,7 +448,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
               transition: 'background-color 150ms ease'
             }}
           >
-            <Lock1 size={18} color="var(--muted-foreground)" style={{ flexShrink: 0 }} />
+            <Lock1 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
             Alterar Senha
           </button>
 
@@ -437,8 +469,8 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
               }}
             >
               {theme === 'light'
-                ? <Moon size={18} color="var(--muted-foreground)" style={{ flexShrink: 0 }} />
-                : <Sun1 size={18} color="var(--muted-foreground)" style={{ flexShrink: 0 }} />
+                ? <Moon size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
+                : <Sun1 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
               }
               {theme === 'light' ? 'Modo escuro' : 'Modo claro'}
             </button>
@@ -475,34 +507,36 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
     <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%', overflowX: 'hidden' }}>
       {/* Header with back button */}
       <div
-        className="flex items-center gap-sm shrink-0"
+        className="shrink-0"
         style={{
-          padding: '10px 16px',
+          padding: '6px 8px',
           borderBottom: '1px solid var(--border-separator)'
         }}
       >
         <button
           onClick={goBackToMain}
-          className="flex items-center justify-center cursor-pointer"
+          className="flex items-center gap-sm cursor-pointer w-full"
           style={{
-            width: 32,
-            height: 32,
+            padding: '8px 8px',
             borderRadius: 'var(--radius-sm)',
             backgroundColor: 'transparent',
             border: 'none',
             color: 'var(--foreground)',
-            transition: 'background-color 150ms ease'
+            fontSize: 'var(--text-body)',
+            fontWeight: 600,
+            transition: 'background-color 150ms ease',
+            textAlign: 'left'
           }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
         >
-          <ArrowLeft2 size={18} color="currentColor" />
-        </button>
-        <span style={{ fontSize: 'var(--text-body)', fontWeight: 600, color: 'var(--foreground)' }}>
+          <ArrowLeft2 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
           Alterar CME
-        </span>
+        </button>
       </div>
 
       {/* CME list */}
-      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
         {mockCmes.map(item => {
           const isCurrentCme = cme?.id === item.id
           const moduleColors = getModuleBadgeColors(item.module)
@@ -582,7 +616,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
         }
       `}</style>
 
-      <div style={{ position: 'fixed', inset: 0, zIndex: 200 }}>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 200, touchAction: 'none', overscrollBehavior: 'contain' }}>
         <div onClick={handleClose} style={backdropStyle} />
 
         <div style={sheetStyle}>

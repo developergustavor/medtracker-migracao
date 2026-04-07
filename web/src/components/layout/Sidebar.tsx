@@ -16,7 +16,7 @@ import { useTheme } from '@/hooks'
 import { ROUTES } from '@/constants'
 
 // entities
-import { cme_module } from '@/entities'
+import { user_role, cme_module } from '@/entities'
 
 // utils
 import { getRouteIcon } from '@/utils'
@@ -30,7 +30,7 @@ type SidebarProps = {
   onRouteWithChildren?: (route: RouteMetadataProps) => void
 }
 
-const SIDEBAR_ROUTES = ['/home', '/dashboard', '/cadastros', '/entrada-de-materiais', '/ciclos', '/saida-de-materiais', '/conferencia', '/impressao-de-etiquetas', '/relatorios']
+const SIDEBAR_ROUTES = ['/home', '/dashboard', '/dashboard-cme', '/cadastros', '/entrada-de-materiais', '/ciclos', '/saida-de-materiais', '/conferencia', '/impressao-de-etiquetas', '/relatorios']
 
 function getVisibleRoutes(routes: RouteMetadataProps[], userRole: user_role | undefined, cmeModule: cme_module | undefined): RouteMetadataProps[] {
   return routes.filter(route => {
@@ -84,13 +84,18 @@ function PortalTooltip({ state }: { state: TooltipState }) {
 export function Sidebar({ onRouteWithChildren }: SidebarProps) {
   const location = useLocation()
   const navigate = useNavigate()
-  const { user } = useAuthStore()
+  const { user, cme } = useAuthStore()
   const { theme } = useTheme()
   const [showProfileDialog, setShowProfileDialog] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [tooltip, setTooltip] = useState<TooltipState>({ visible: false, text: '', top: 0, left: 0 })
 
-  const visibleRoutes = getVisibleRoutes(ROUTES, user?.role, undefined)
+  const isCmeOnly = !user && !!cme
+
+  const CME_ONLY_PATHS = ['/home', '/dashboard-cme']
+  const visibleRoutes = isCmeOnly
+    ? ROUTES.filter(r => CME_ONLY_PATHS.includes(r.path) && r.showInSidebar)
+    : getVisibleRoutes(ROUTES, user?.role, undefined).filter(r => r.path !== '/dashboard-cme')
   const pageRoutes = getPageRoutes(visibleRoutes)
 
   const isActive = (route: RouteMetadataProps): boolean => {
@@ -100,7 +105,8 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
     return false
   }
 
-  const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U'
+  const displayName = isCmeOnly ? cme.corporateName : (user?.name || 'Perfil')
+  const userInitial = displayName.charAt(0)?.toUpperCase() || 'U'
 
 
   const handleNavClick = (route: RouteMetadataProps) => {
@@ -230,7 +236,7 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
             onClick={() => setShowProfileDialog(true)}
             onMouseEnter={e => {
               setHoveredItem('avatar')
-              showTooltip(e, user?.name || 'Perfil')
+              showTooltip(e, displayName)
             }}
             onMouseLeave={() => {
               setHoveredItem(null)
@@ -248,7 +254,7 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
               color: '#ffffff',
               transition: 'border-color 150ms ease'
             }}
-            title={user?.name || 'Perfil'}
+
           >
             {userInitial}
           </button>

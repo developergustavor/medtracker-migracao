@@ -15,13 +15,13 @@ const ROLE_HIERARCHY: Record<user_role, number> = {
   [user_role.DEV]: 4
 }
 
-/** Verifica se a role do usuario atinge o nivel minimo exigido */
+/** Verifica se a role do usuário atinge o nível mínimo exigido */
 export function isAllowed(currentRole: user_role | undefined, minimumRole: user_role): boolean {
   if (!currentRole) return false
   return ROLE_HIERARCHY[currentRole] >= ROLE_HIERARCHY[minimumRole]
 }
 
-/** Verifica se a role do usuario esta incluida em uma lista de roles permitidas */
+/** Verifica se a role do usuário está incluída em uma lista de roles permitidas */
 export function isRoleIn(currentRole: user_role | undefined, allowedRoles: user_role[]): boolean {
   if (!currentRole) return false
   return allowedRoles.includes(currentRole)
@@ -64,7 +64,7 @@ export function canAccessAdmin(role: user_role | undefined): boolean {
   return isAdminOrAbove(role)
 }
 
-/** Pode acessar cadastros, dashboard, configuracoes */
+/** Pode acessar cadastros, dashboard, configurações */
 export function canAccessManagement(role: user_role | undefined): boolean {
   return isNonColab(role)
 }

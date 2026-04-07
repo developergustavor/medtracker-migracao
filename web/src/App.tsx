@@ -27,7 +27,7 @@ const PAGE_MAP: Record<string, ReturnType<typeof lazy>> = {
 }
 
 const LazyPlaceholder = lazy(() => import('@/pages/Placeholder').then(m => ({ default: m.Placeholder })))
-const LazyLogin = lazy(() => import('@/pages/Login').then(m => ({ default: m.Login })))
+const LazyLogin = lazy(() => import('@/pages/login').then(m => ({ default: m.Login })))
 const LazyNotFound = lazy(() => import('@/pages/NotFound').then(m => ({ default: m.NotFound })))
 const LazyUnauthorized = lazy(() => import('@/pages/Unauthorized').then(m => ({ default: m.Unauthorized })))
 const LazyForbidden = lazy(() => import('@/pages/Forbidden').then(m => ({ default: m.Forbidden })))

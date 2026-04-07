@@ -16,5 +16,5 @@ export enum cme_status {
 export enum formatted_cme_module {
   ETIQUETAGEM = 'Etiquetagem',
   COMPLETO = 'Completo',
-  IMPRESSAO = 'Impressao'
+  IMPRESSAO = 'Impressão'
 }

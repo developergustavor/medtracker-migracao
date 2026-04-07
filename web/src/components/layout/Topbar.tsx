@@ -63,11 +63,15 @@ function buildBreadcrumbs(pathname: string): BreadcrumbSegment[] {
 }
 
 function CmeSelector() {
-  const { cme, setCme } = useAuthStore()
+  const { user, cme, setCme } = useAuthStore()
   const [open, setOpen] = useState(false)
   const [buttonRect, setButtonRect] = useState<DOMRect | null>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
+
+  const isCmeOnly = !user && !!cme
+  const hasSingleCme = mockCmes.length <= 1
+  const canExpand = !isCmeOnly && !hasSingleCme
 
   useEffect(() => {
     if (!open) return
@@ -86,6 +90,7 @@ function CmeSelector() {
   }, [open])
 
   const handleToggle = () => {
+    if (!canExpand) return
     if (!open && buttonRef.current) {
       setButtonRect(buttonRef.current.getBoundingClientRect())
     }
@@ -120,7 +125,7 @@ function CmeSelector() {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="flex items-center gap-sm cursor-pointer"
+        className="flex items-center gap-sm"
         style={{
           padding: '6px 12px',
           borderRadius: 'var(--radius-pill)',
@@ -130,7 +135,8 @@ function CmeSelector() {
           fontSize: 'var(--text-xs)',
           fontWeight: 500,
           transition: 'background-color 150ms ease',
-          whiteSpace: 'nowrap'
+          whiteSpace: 'nowrap',
+          cursor: canExpand ? 'pointer' : 'default'
         }}
         onMouseEnter={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--elevated)' }}
         onMouseLeave={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
@@ -147,16 +153,18 @@ function CmeSelector() {
         <span className="truncate" style={{ maxWidth: 140 }}>
           {cme?.corporateName || 'Selecionar CME'}
         </span>
-        <ArrowDown2
-          size={14}
-          color="currentColor"
-          style={{
-            color: 'var(--muted-foreground)',
-            flexShrink: 0,
-            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 200ms ease'
-          }}
-        />
+        {canExpand && (
+          <ArrowDown2
+            size={14}
+            color="currentColor"
+            style={{
+              color: 'var(--muted-foreground)',
+              flexShrink: 0,
+              transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 200ms ease'
+            }}
+          />
+        )}
       </button>
 
       {open && buttonRect && createPortal(

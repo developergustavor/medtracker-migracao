@@ -22,6 +22,14 @@ export const ROUTES: RouteMetadataProps[] = [
     mobileTabRoles: allRoles
   },
   {
+    name: 'Dashboard CME',
+    path: '/dashboard-cme',
+    icon: 'Chart',
+    allowedRoles: allRoles,
+    allowedModules: allModules,
+    showInSidebar: true
+  },
+  {
     name: 'Dashboard',
     path: '/dashboard',
     icon: 'Chart',
@@ -51,12 +59,12 @@ export const ROUTES: RouteMetadataProps[] = [
       { name: 'Equipamentos', path: '/cadastros/equipamentos', icon: 'Cpu', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
       { name: 'Embalagens', path: '/cadastros/embalagens', icon: 'Box1', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
       { name: 'Tipos de Ciclo', path: '/cadastros/tipos-de-ciclo', icon: 'Refresh2', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
-      { name: 'Tipos de Ocorrencia', path: '/cadastros/tipos-de-ocorrencia', icon: 'Danger', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
+      { name: 'Tipos de Ocorrência', path: '/cadastros/tipos-de-ocorrencia', icon: 'Danger', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
       { name: 'Indicadores', path: '/cadastros/indicadores', icon: 'Chart', allowedRoles: nonColabRoles, allowedModules: workflowModules, showInSidebar: true },
       { name: 'Insumos', path: '/cadastros/insumos', icon: 'Health', allowedRoles: nonColabRoles, allowedModules: workflowModules, showInSidebar: true },
       { name: 'Terceiros', path: '/cadastros/terceiros', icon: 'ProfileCircle', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
       { name: 'Setores', path: '/cadastros/setores', icon: 'Building4', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
-      { name: 'Medicos', path: '/cadastros/medicos', icon: 'Health', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
+      { name: 'Médicos', path: '/cadastros/medicos', icon: 'Health', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
       { name: 'Pacientes', path: '/cadastros/pacientes', icon: 'Profile2User', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true },
       { name: 'Checklists', path: '/cadastros/checklists', icon: 'TickSquare', allowedRoles: nonColabRoles, allowedModules: workflowModules, showInSidebar: true },
       { name: 'Modelos', path: '/cadastros/modelos', icon: 'DocumentText', allowedRoles: nonColabRoles, allowedModules: allModules, showInSidebar: true }
@@ -73,7 +81,7 @@ export const ROUTES: RouteMetadataProps[] = [
     mobileTabRoles: [user_role.COLABORADOR],
     contextualActions: [
       { label: 'Nova Entrada', icon: 'Add', action: 'new-entry', variant: 'primary', position: 'start' },
-      { label: 'Gerar Relatorio', icon: 'DocumentText', action: 'report', position: 'center' }
+      { label: 'Gerar Relatório', icon: 'DocumentText', action: 'report', position: 'center' }
     ]
   },
   {
@@ -88,12 +96,12 @@ export const ROUTES: RouteMetadataProps[] = [
     contextualActions: [
       { label: 'Novo Ciclo', icon: 'Add', action: 'new-cycle', variant: 'primary', position: 'start' },
       { label: 'Rack Virtual', icon: 'Box1', action: 'rack-virtual', position: 'center' },
-      { label: 'Relatorio', icon: 'DocumentText', action: 'report', position: 'center' },
+      { label: 'Relatório', icon: 'DocumentText', action: 'report', position: 'center' },
       { label: 'Filtros', icon: 'Filter', action: 'filters', position: 'end' }
     ],
     children: [
-      { name: 'Desinfeccao', path: '/ciclos/desinfeccao', icon: 'Refresh2', allowedRoles: allRoles, allowedModules: workflowModules, showInSidebar: true },
-      { name: 'Esterilizacao', path: '/ciclos/esterilizacao', icon: 'Flash', allowedRoles: allRoles, allowedModules: workflowModules, showInSidebar: true }
+      { name: 'Desinfecção', path: '/ciclos/desinfeccao', icon: 'Refresh2', allowedRoles: allRoles, allowedModules: workflowModules, showInSidebar: true },
+      { name: 'Esterilização', path: '/ciclos/esterilizacao', icon: 'Flash', allowedRoles: allRoles, allowedModules: workflowModules, showInSidebar: true }
     ]
   },
   {
@@ -110,7 +118,7 @@ export const ROUTES: RouteMetadataProps[] = [
     ]
   },
   {
-    name: 'Conferencia',
+    name: 'Conferência',
     path: '/conferencia',
     icon: 'TaskSquare',
     allowedRoles: allRoles,
@@ -118,7 +126,7 @@ export const ROUTES: RouteMetadataProps[] = [
     showInSidebar: true
   },
   {
-    name: 'Impressao de Etiquetas',
+    name: 'Impressão de Etiquetas',
     path: '/impressao-de-etiquetas',
     icon: 'Tag',
     allowedRoles: allRoles,
@@ -126,7 +134,7 @@ export const ROUTES: RouteMetadataProps[] = [
     showInSidebar: true
   },
   {
-    name: 'Relatorios',
+    name: 'Relatórios',
     path: '/relatorios',
     icon: 'DocumentText',
     allowedRoles: adminOnly,
@@ -142,7 +150,7 @@ export const ROUTES: RouteMetadataProps[] = [
     showInSidebar: true
   },
   {
-    name: 'Configuracoes',
+    name: 'Configurações',
     path: '/configuracoes',
     icon: 'Setting',
     allowedRoles: nonColabRoles,

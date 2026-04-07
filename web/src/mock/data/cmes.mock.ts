@@ -36,7 +36,7 @@ export const mockCmes: CmeProps[] = [
   {
     id: 3,
     username: 'impressao',
-    corporateName: 'Impressao CME',
+    corporateName: 'Impressão CME',
     cnpj: '33.333.333/0001-33',
     city: 'Belo Horizonte',
     uf: 'MG',

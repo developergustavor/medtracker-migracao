@@ -26,7 +26,7 @@ export const authHandlers = [
         if (!user) {
           return HttpResponse.json({
             statusCode: 404,
-            statusMessage: 'Usuario nao encontrado.',
+            statusMessage: 'Usuário não encontrado.',
             body: []
           })
         }
@@ -34,15 +34,15 @@ export const authHandlers = [
         if (user.settings.auth2FA) {
           return HttpResponse.json({
             statusCode: 206,
-            statusMessage: 'Codigo de confirmacao enviado.',
-            body: [{ userId: user.id }]
+            statusMessage: 'Código de confirmação enviado.',
+            body: [{ userId: user.id, email: user.email }]
           })
         }
 
         return HttpResponse.json({
           statusCode: 200,
           statusMessage: 'Login realizado com sucesso.',
-          body: [user],
+          body: [{ ...user, cmes: [mockCmes[0]] }],
           token: MOCK_TOKEN
         })
       }
@@ -62,15 +62,15 @@ export const authHandlers = [
         if (user.settings.auth2FA) {
           return HttpResponse.json({
             statusCode: 206,
-            statusMessage: 'Codigo de confirmacao enviado.',
-            body: [{ userId: user.id }]
+            statusMessage: 'Código de confirmação enviado.',
+            body: [{ userId: user.id, email: user.email }]
           })
         }
 
         return HttpResponse.json({
           statusCode: 200,
           statusMessage: 'Login realizado com sucesso.',
-          body: [user],
+          body: [{ ...user, cmes: [mockCmes[0]] }],
           token: MOCK_TOKEN
         })
       }
@@ -98,7 +98,7 @@ export const authHandlers = [
       default:
         return HttpResponse.json({
           statusCode: 400,
-          statusMessage: 'Acao invalida.',
+          statusMessage: 'Ação inválida.',
           body: []
         })
     }
@@ -111,7 +111,7 @@ export const authHandlers = [
     if (String(confirmationCode) !== MOCK_2FA_CODE) {
       return HttpResponse.json({
         statusCode: 401,
-        statusMessage: 'Codigo de confirmacao invalido.',
+        statusMessage: 'Código de confirmação inválido.',
         body: []
       })
     }
@@ -121,7 +121,7 @@ export const authHandlers = [
     if (!user) {
       return HttpResponse.json({
         statusCode: 404,
-        statusMessage: 'Usuario nao encontrado.',
+        statusMessage: 'Usuário não encontrado.',
         body: []
       })
     }
@@ -129,7 +129,7 @@ export const authHandlers = [
     return HttpResponse.json({
       statusCode: 200,
       statusMessage: 'Login realizado com sucesso.',
-      body: [user],
+      body: [{ ...user, cmes: [mockCmes[0]] }],
       token: MOCK_TOKEN
     })
   })

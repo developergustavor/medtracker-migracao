@@ -115,7 +115,7 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
             onMouseLeave={e => {
               ;(e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'
             }}
-            title="Fechar"
+
           >
             <CloseCircle size={16} color="currentColor" />
           </button>
@@ -177,7 +177,7 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
                     borderRadius: 'var(--radius-sm)',
                     backgroundColor: isActive ? 'var(--primary-8)' : 'transparent',
                     border: 'none',
-                    color: isActive ? 'var(--primary)' : 'var(--sidebar-foreground)',
+                    color: isActive ? 'var(--primary)' : 'var(--foreground)',
                     fontSize: 'var(--text-sm)',
                     fontWeight: isActive ? 600 : 400,
                     textAlign: 'left',
