@@ -135,17 +135,46 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
   const displayRole = isCmeOnly ? 'CME' : (user?.role ? formatted_user_role[user.role] : '')
   const userInitial = displayName.charAt(0)?.toUpperCase() || 'U'
 
-  // Touch gesture: swipe down to close
+  // Touch gesture: drag sheet up/down, release to close or snap back
   const touchStartY = useRef(0)
+  const touchMovedRef = useRef(false)
+  const [dragY, setDragY] = useState(0)
+  const [activeDrag, setActiveDrag] = useState(false)
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY
+    touchMovedRef.current = false
+    setActiveDrag(true)
+    setDragY(0)
   }, [])
 
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current
-    if (deltaY > 80) onClose()
-  }, [onClose])
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!activeDrag) return
+    touchMovedRef.current = true
+    const deltaY = e.touches[0].clientY - touchStartY.current
+    setDragY(deltaY > 0 ? deltaY : deltaY * 0.2)
+  }, [activeDrag])
+
+  const handleTouchEnd = useCallback(() => {
+    if (!activeDrag) return
+    setActiveDrag(false)
+    if (!touchMovedRef.current) {
+      // No movement — it was a click, not a drag. Reset and let onClick handle it.
+      setDragY(0)
+      return
+    }
+    if (dragY > 80) {
+      // Close with exit animation
+      setDragY(window.innerHeight)
+      setTimeout(() => {
+        onClose()
+        setDragY(0)
+      }, 200)
+    } else {
+      // Snap back
+      setDragY(0)
+    }
+  }, [activeDrag, dragY, onClose])
 
   // Reset view when sheet closes
   const prevOpenRef = useRef(open)
@@ -224,7 +253,6 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
         className="flex items-center justify-center shrink-0"
         style={{ padding: '10px 0 6px' }}
         onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
       >
         <div
           style={{
@@ -238,7 +266,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       </div>
 
       {/* Scrollable content */}
-      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '0 16px 24px', touchAction: 'pan-y' }}>
+      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '0 16px 24px', touchAction: 'pan-y' }}>
         {/* Search input */}
         <button
           onClick={handleSearchClick}
@@ -255,7 +283,23 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           }}
         >
           <SearchNormal1 size={18} color="currentColor" />
-          <span>Buscar...</span>
+          <span className="flex-1" style={{ textAlign: 'left' }}>Buscar...</span>
+          <kbd
+            style={{
+              fontSize: 10,
+              fontWeight: 500,
+              fontFamily: 'inherit',
+              padding: '2px 6px',
+              borderRadius: 'var(--radius-xs)',
+              backgroundColor: 'var(--elevated)',
+              color: 'var(--fg-muted)',
+              border: '1px solid var(--border-subtle)',
+              lineHeight: 1.4,
+              flexShrink: 0
+            }}
+          >
+            {typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.userAgent) ? '⌘K' : 'Ctrl+K'}
+          </kbd>
         </button>
 
         {/* CME Selector card — clickable (hidden in CME-only mode) */}
@@ -536,7 +580,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       </div>
 
       {/* CME list */}
-      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
+      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
         {mockCmes.map(item => {
           const isCurrentCme = cme?.id === item.id
           const moduleColors = getModuleBadgeColors(item.module)
@@ -616,10 +660,26 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
         }
       `}</style>
 
-      <div style={{ position: 'fixed', inset: 0, zIndex: 200, touchAction: 'none', overscrollBehavior: 'contain' }}>
-        <div onClick={handleClose} style={backdropStyle} />
+      <div
+        style={{ position: 'fixed', inset: 0, zIndex: 200, touchAction: 'none', overscrollBehavior: 'contain' }}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          onTouchStart={handleTouchStart}
+          onClick={() => { if (!touchMovedRef.current) handleClose() }}
+          style={{
+            ...backdropStyle,
+            opacity: dragY > 0 ? Math.max(0, 1 - dragY / 300) : undefined
+          }}
+        />
 
-        <div style={sheetStyle}>
+        <div style={{
+          ...sheetStyle,
+          transform: `translateY(${Math.max(0, dragY)}px)`,
+          transition: activeDrag ? 'none' : 'transform 250ms cubic-bezier(0.16, 1, 0.3, 1)',
+          animation: dragY === 0 && !activeDrag ? sheetStyle.animation : 'none'
+        }}>
           <div
             style={{
               display: 'flex',

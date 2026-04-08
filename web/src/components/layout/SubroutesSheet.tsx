@@ -69,21 +69,41 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
     }
   }, [route])
 
-  // Touch gesture: swipe down or swipe right to close
-  const touchStartX = useRef(0)
+  // Touch gesture: drag sheet, release to close or snap back
   const touchStartY = useRef(0)
+  const touchMovedRef = useRef(false)
+  const [dragY, setDragY] = useState(0)
+  const [activeDrag, setActiveDrag] = useState(false)
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
     touchStartY.current = e.touches[0].clientY
+    touchMovedRef.current = false
+    setActiveDrag(true)
+    setDragY(0)
   }, [])
 
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    const deltaX = e.changedTouches[0].clientX - touchStartX.current
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current
-    if (deltaY > 80) { handleClose(); return }
-    if (deltaX > 80 && Math.abs(deltaY) < 40) handleClose()
-  }, [handleClose])
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!activeDrag) return
+    touchMovedRef.current = true
+    const deltaY = e.touches[0].clientY - touchStartY.current
+    setDragY(deltaY > 0 ? deltaY : deltaY * 0.2)
+  }, [activeDrag])
+
+  const handleTouchEnd = useCallback(() => {
+    if (!activeDrag) return
+    setActiveDrag(false)
+    if (!touchMovedRef.current) {
+      // No movement — it was a click, not a drag. Reset and let onClick handle it.
+      setDragY(0)
+      return
+    }
+    if (dragY > 80) {
+      setDragY(window.innerHeight)
+      setTimeout(() => { handleClose(); setDragY(0) }, 200)
+    } else {
+      setDragY(0)
+    }
+  }, [activeDrag, dragY, handleClose])
 
   const handleItemClick = useCallback(
     (path: string) => {
@@ -109,18 +129,33 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
         }
       `}</style>
 
-      <div style={{ position: 'fixed', inset: 0, zIndex: 200, touchAction: 'none', overscrollBehavior: 'contain' }}>
+      <div
+        style={{ position: 'fixed', inset: 0, zIndex: 200, touchAction: 'none', overscrollBehavior: 'contain' }}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Backdrop */}
-        <div onClick={handleClose} style={backdropStyle} />
+        <div
+          onTouchStart={handleTouchStart}
+          onClick={() => { if (!touchMovedRef.current) handleClose() }}
+          style={{
+            ...backdropStyle,
+            opacity: dragY > 0 ? Math.max(0, 1 - dragY / 300) : undefined
+          }}
+        />
 
         {/* Sheet */}
-        <div style={sheetStyle}>
+        <div style={{
+          ...sheetStyle,
+          transform: `translateY(${Math.max(0, dragY)}px)`,
+          transition: activeDrag ? 'none' : 'transform 250ms cubic-bezier(0.16, 1, 0.3, 1)',
+          animation: dragY === 0 && !activeDrag ? sheetStyle.animation : 'none'
+        }}>
           {/* Handle bar */}
           <div
             className="flex items-center justify-center shrink-0"
             style={{ padding: '10px 0 6px' }}
             onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
           >
             <div
               style={{
@@ -179,7 +214,7 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
           )}
 
           {/* Subroute list */}
-          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
+          <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
             {filteredChildren.map(child => {
               const isActive = location.pathname === child.path || location.pathname.startsWith(child.path + '/')
 

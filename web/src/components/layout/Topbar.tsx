@@ -347,7 +347,23 @@ export function Topbar({ onOpenSpotlight }: TopbarProps) {
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--input-border)' }}
         >
           <SearchNormal1 size={14} color="currentColor" style={{ flexShrink: 0 }} />
-          <span>Buscar...</span>
+          <span className="flex-1">Buscar...</span>
+          <kbd
+            style={{
+              fontSize: 10,
+              fontWeight: 500,
+              fontFamily: 'inherit',
+              padding: '2px 6px',
+              borderRadius: 'var(--radius-xs)',
+              backgroundColor: 'var(--elevated)',
+              color: 'var(--fg-muted)',
+              border: '1px solid var(--border-subtle)',
+              lineHeight: 1.4,
+              flexShrink: 0
+            }}
+          >
+            {typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.userAgent) ? '⌘K' : 'Ctrl+K'}
+          </kbd>
         </div>
 
         {/* CME Selector */}
