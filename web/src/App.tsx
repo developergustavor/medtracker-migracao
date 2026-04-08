@@ -21,7 +21,7 @@ const _loc = '@/App'
 // Pages that have actual implementations use their real component
 // Everything else falls back to Placeholder
 const PAGE_MAP: Record<string, ReturnType<typeof lazy>> = {
-  '/home': lazy(() => import('@/pages/Home').then(m => ({ default: m.Home }))),
+  '/home': lazy(() => import('@/pages/home').then(m => ({ default: m.Home }))),
   // Add more as pages are implemented:
   // '/dashboard': lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard }))),
 }

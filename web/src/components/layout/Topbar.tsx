@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { createPortal } from 'react-dom'
-import { SearchNormal1, ArrowRight2, ArrowDown2 } from 'iconsax-react'
+import { SearchNormal1, ArrowRight2, ArrowDown2, Notification, Book1 } from 'iconsax-react'
 
 // store
 import { useAuthStore } from '@/store'
@@ -14,7 +14,7 @@ import { ROUTES } from '@/constants'
 import { formatted_cme_module, cme_module } from '@/entities'
 
 // mock
-import { mockCmes } from '@/mock/data'
+import { mockCmes, mockNotifications, mockSupportLinks } from '@/mock/data'
 
 // types
 import type { CmeProps } from '@/entities'
@@ -61,6 +61,229 @@ function buildBreadcrumbs(pathname: string): BreadcrumbSegment[] {
 
   return segments
 }
+
+/* ─── Notifications Popover ─── */
+
+function NotificationsPopover() {
+  const [open, setOpen] = useState(false)
+  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        popoverRef.current && !popoverRef.current.contains(e.target as Node) &&
+        buttonRef.current && !buttonRef.current.contains(e.target as Node)
+      ) {
+        setOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [open])
+
+  const handleToggle = () => {
+    if (!open && buttonRef.current) {
+      setButtonRect(buttonRef.current.getBoundingClientRect())
+    }
+    setOpen(prev => !prev)
+  }
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        onClick={handleToggle}
+        className="relative flex items-center justify-center cursor-pointer"
+        style={{
+          width: 34,
+          height: 34,
+          borderRadius: 'var(--radius-sm)',
+          backgroundColor: open ? 'var(--elevated)' : 'transparent',
+          border: 'none',
+          transition: 'background-color 150ms ease',
+          color: 'var(--foreground)'
+        }}
+        onMouseEnter={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+        onMouseLeave={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+      >
+        <Notification size={18} color="currentColor" variant="Linear" />
+        {mockNotifications.length > 0 && (
+          <span
+            className="absolute flex items-center justify-center"
+            style={{
+              top: 4,
+              right: 4,
+              minWidth: 16,
+              height: 16,
+              padding: '0 4px',
+              borderRadius: '50%',
+              background: 'var(--destructive)',
+              color: '#ffffff',
+              fontSize: 9,
+              fontWeight: 700,
+              lineHeight: 1
+            }}
+          >
+            {mockNotifications.length}
+          </span>
+        )}
+      </button>
+
+      {open && buttonRect && createPortal(
+        <div
+          ref={popoverRef}
+          style={{
+            position: 'fixed',
+            top: buttonRect.bottom + 8,
+            right: window.innerWidth - buttonRect.right,
+            zIndex: 200,
+            width: 320,
+            maxHeight: 360,
+            overflowY: 'auto',
+            backgroundColor: 'var(--popover)',
+            border: '1px solid var(--popover-border)',
+            borderRadius: 'var(--radius-md)',
+            boxShadow: 'var(--shadow-popover)',
+            padding: 8
+          }}
+        >
+          <div style={{ padding: '8px 10px 6px', marginBottom: 4 }}>
+            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)' }}>
+              Notificações
+            </span>
+          </div>
+          {mockNotifications.map(notification => (
+            <div
+              key={notification.id}
+              className="flex flex-col cursor-pointer"
+              style={{
+                padding: '10px 12px',
+                borderRadius: 'var(--radius-sm)',
+                transition: 'background-color 150ms ease'
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+            >
+              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--foreground)', lineHeight: 1.4 }}>
+                {notification.title}
+              </span>
+              <span style={{ fontSize: 'var(--text-xxs)', color: 'var(--muted-foreground)', marginTop: 2 }}>
+                {notification.time}
+              </span>
+            </div>
+          ))}
+        </div>,
+        document.body
+      )}
+    </>
+  )
+}
+
+/* ─── Support Popover ─── */
+
+function SupportPopover() {
+  const [open, setOpen] = useState(false)
+  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        popoverRef.current && !popoverRef.current.contains(e.target as Node) &&
+        buttonRef.current && !buttonRef.current.contains(e.target as Node)
+      ) {
+        setOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [open])
+
+  const handleToggle = () => {
+    if (!open && buttonRef.current) {
+      setButtonRect(buttonRef.current.getBoundingClientRect())
+    }
+    setOpen(prev => !prev)
+  }
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        onClick={handleToggle}
+        className="flex items-center justify-center cursor-pointer"
+        style={{
+          width: 34,
+          height: 34,
+          borderRadius: 'var(--radius-sm)',
+          backgroundColor: open ? 'var(--elevated)' : 'transparent',
+          border: 'none',
+          transition: 'background-color 150ms ease',
+          color: 'var(--foreground)'
+        }}
+        onMouseEnter={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+        onMouseLeave={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+      >
+        <Book1 size={18} color="currentColor" variant="Linear" />
+      </button>
+
+      {open && buttonRect && createPortal(
+        <div
+          ref={popoverRef}
+          style={{
+            position: 'fixed',
+            top: buttonRect.bottom + 8,
+            right: window.innerWidth - buttonRect.right,
+            zIndex: 200,
+            width: 280,
+            maxHeight: 320,
+            overflowY: 'auto',
+            backgroundColor: 'var(--popover)',
+            border: '1px solid var(--popover-border)',
+            borderRadius: 'var(--radius-md)',
+            boxShadow: 'var(--shadow-popover)',
+            padding: 8
+          }}
+        >
+          <div style={{ padding: '8px 10px 6px', marginBottom: 4 }}>
+            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)' }}>
+              Apoio
+            </span>
+          </div>
+          {mockSupportLinks.map(link => (
+            <div
+              key={link.id}
+              className="flex items-center gap-sm cursor-pointer"
+              style={{
+                padding: '10px 12px',
+                borderRadius: 'var(--radius-sm)',
+                transition: 'background-color 150ms ease'
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+            >
+              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--foreground)' }}>
+                {link.label}
+              </span>
+            </div>
+          ))}
+        </div>,
+        document.body
+      )}
+    </>
+  )
+}
+
+/* ─── CME Selector ─── */
 
 function CmeSelector() {
   const { user, cme, setCme } = useAuthStore()
@@ -120,6 +343,8 @@ function CmeSelector() {
     }
   }
 
+  const currentModuleColors = cme ? getModuleColors(cme.module) : null
+
   return (
     <>
       <button
@@ -153,6 +378,22 @@ function CmeSelector() {
         <span className="truncate" style={{ maxWidth: 140 }}>
           {cme?.corporateName || 'Selecionar CME'}
         </span>
+        {cme && currentModuleColors && (
+          <span
+            style={{
+              fontSize: 9,
+              fontWeight: 600,
+              color: currentModuleColors.color,
+              backgroundColor: currentModuleColors.bg,
+              padding: '1px 6px',
+              borderRadius: 'var(--radius-pill)',
+              flexShrink: 0,
+              lineHeight: 1.4
+            }}
+          >
+            {formatted_cme_module[cme.module]}
+          </span>
+        )}
         {canExpand && (
           <ArrowDown2
             size={14}
@@ -260,6 +501,8 @@ function CmeSelector() {
   )
 }
 
+/* ─── Topbar ─── */
+
 type TopbarProps = {
   onOpenSpotlight: () => void
 }
@@ -327,7 +570,7 @@ export function Topbar({ onOpenSpotlight }: TopbarProps) {
         ))}
       </nav>
 
-      {/* Right: Search + CME */}
+      {/* Right: Search + Notifications + Support + CME */}
       <div className="flex items-center gap-md shrink-0">
         {/* Search trigger */}
         <div
@@ -365,6 +608,12 @@ export function Topbar({ onOpenSpotlight }: TopbarProps) {
             {typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.userAgent) ? '⌘K' : 'Ctrl+K'}
           </kbd>
         </div>
+
+        {/* Notifications */}
+        <NotificationsPopover />
+
+        {/* Support */}
+        <SupportPopover />
 
         {/* CME Selector */}
         <CmeSelector />

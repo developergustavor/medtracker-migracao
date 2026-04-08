@@ -1,0 +1,261 @@
+<h2>Tela Home — Medtracker v2</h2>
+<p class="subtitle">Hub central com saudação, notas, métricas, workflows por aba, material de apoio e helpdesk flutuante. Layout em grid responsivo.</p>
+
+<div class="section">
+  <h3>1. Desktop — Layout Completo</h3>
+  <p class="subtitle">3 colunas principais: conteúdo principal (2/3) + sidebar de apoio (1/3). Helpdesk flutuante no canto inferior direito.</p>
+
+  <div class="mockup">
+    <div class="mockup-header">Desktop — Light Mode (1280px+)</div>
+    <div class="mockup-body" style="height:720px;background:var(--bg);border-radius:12px;overflow-y:auto;font-family:'Inter',system-ui,sans-serif;padding:24px 28px;display:flex;flex-direction:column;gap:20px;position:relative">
+
+      <!-- Row 1: Saudação + CME -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-size:24px;font-weight:700;color:var(--foreground)">Bom dia, Gustavo</div>
+          <div style="font-size:13px;color:var(--muted-foreground);margin-top:4px;display:flex;align-items:center;gap:6px">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--primary)"></div>
+            <span class="truncate" style="max-width:300px">Medtracker LTDA — Módulo Completo</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted-foreground)">07 de Abril, 2026</div>
+      </div>
+
+      <!-- Row 2: Mini-dashboard métricas -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <div style="background:var(--card);border-radius:12px;padding:14px 16px;border:1px solid var(--border)">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground)">Hoje</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-top:6px">
+            <span style="font-size:22px;font-weight:700;color:var(--foreground)">12</span>
+            <span style="font-size:11px;color:var(--muted-foreground)">ciclos</span>
+          </div>
+          <div style="font-size:10px;color:var(--primary);margin-top:4px">+3 vs ontem</div>
+        </div>
+        <div style="background:var(--card);border-radius:12px;padding:14px 16px;border:1px solid var(--border)">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground)">Hoje</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-top:6px">
+            <span style="font-size:22px;font-weight:700;color:var(--foreground)">8</span>
+            <span style="font-size:11px;color:var(--muted-foreground)">etiquetas</span>
+          </div>
+          <div style="font-size:10px;color:var(--primary);margin-top:4px">+2 vs ontem</div>
+        </div>
+        <div style="background:var(--card);border-radius:12px;padding:14px 16px;border:1px solid var(--border)">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground)">Semana</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-top:6px">
+            <span style="font-size:22px;font-weight:700;color:var(--foreground)">47</span>
+            <span style="font-size:11px;color:var(--muted-foreground)">ciclos</span>
+          </div>
+          <div style="font-size:10px;color:var(--warning);margin-top:4px">-5 vs semana anterior</div>
+        </div>
+        <div style="background:var(--card);border-radius:12px;padding:14px 16px;border:1px solid var(--border)">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground)">Mês</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-top:6px">
+            <span style="font-size:22px;font-weight:700;color:var(--foreground)">189</span>
+            <span style="font-size:11px;color:var(--muted-foreground)">ciclos</span>
+          </div>
+          <div style="font-size:10px;color:var(--primary);margin-top:4px">+12% vs mês anterior</div>
+        </div>
+      </div>
+
+      <!-- Row 3: Notas de atualização (card destacado) -->
+      <div style="background:linear-gradient(135deg,rgba(33,85,252,0.06),rgba(75,123,255,0.03));border-radius:12px;padding:14px 18px;border:1px solid var(--primary-15);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--primary-10);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5"><path d="M8 2v3M16 2v3M3.5 9.09h17M21 8.5V17c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V8.5c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5z"/></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;color:var(--foreground)">Novidades v2.1 — Novo módulo de conferência</div>
+          <div style="font-size:11px;color:var(--muted-foreground);margin-top:2px" class="truncate">Conferência de materiais agora conta com scan automático e verificação por foto. Saiba mais...</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted-foreground)" stroke-width="2" style="flex-shrink:0"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+
+      <!-- Row 4: Content grid (main + sidebar) -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;flex:1;min-height:0">
+
+        <!-- Main: Workflow tabs -->
+        <div style="display:flex;flex-direction:column;gap:0;min-height:0">
+          <!-- Tab bar with bottom indicator -->
+          <div style="display:flex;gap:0;border-bottom:1px solid var(--border)">
+            <div style="padding:10px 16px;font-size:12px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);cursor:pointer">Dashboard</div>
+            <div style="padding:10px 16px;font-size:12px;color:var(--muted-foreground);cursor:pointer">Entrada</div>
+            <div style="padding:10px 16px;font-size:12px;color:var(--muted-foreground);cursor:pointer">Ciclos</div>
+            <div style="padding:10px 16px;font-size:12px;color:var(--muted-foreground);cursor:pointer">Saída</div>
+            <div style="padding:10px 16px;font-size:12px;color:var(--muted-foreground);cursor:pointer">Conferência</div>
+          </div>
+
+          <!-- Tab content: Dashboard -->
+          <div style="flex:1;overflow-y:auto;padding:16px 0">
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <!-- Image mock -->
+              <div style="width:180px;height:120px;border-radius:10px;background:linear-gradient(135deg,var(--primary-8),var(--primary-15));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1" opacity="0.5"><path d="M22 22H2M21 22V6l-6-4-6 4v16M9 22V10H3v12"/></svg>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:15px;font-weight:600;color:var(--foreground)">Dashboard</div>
+                <div style="font-size:12px;color:var(--muted-foreground);margin-top:4px;line-height:1.6">Painel analítico com KPIs de inventário, movimentações, ciclos por período, gráficos de indicadores e ocorrências.</div>
+                <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="font-size:10px;padding:4px 10px;border-radius:var(--radius-pill);background:var(--elevated);color:var(--foreground)">KPIs de inventário</span>
+                  <span style="font-size:10px;padding:4px 10px;border-radius:var(--radius-pill);background:var(--elevated);color:var(--foreground)">Gráficos por período</span>
+                  <span style="font-size:10px;padding:4px 10px;border-radius:var(--radius-pill);background:var(--elevated);color:var(--foreground)">Exportar PDF</span>
+                </div>
+                <button style="margin-top:12px;padding:8px 16px;border-radius:var(--radius-sm);background:var(--primary);color:white;font-size:12px;font-weight:500;border:none;cursor:pointer">Acessar Dashboard</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar: Apoio + Notificações + Relatórios -->
+        <div style="display:flex;flex-direction:column;gap:12px;min-height:0;overflow-y:auto">
+
+          <!-- Notificações -->
+          <div style="background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border)">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+              Notificações
+              <span style="font-size:10px;padding:2px 8px;border-radius:var(--radius-pill);background:var(--destructive-10);color:var(--destructive);font-weight:600">3</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="padding:8px 10px;border-radius:8px;background:var(--elevated);font-size:11px;color:var(--foreground);cursor:pointer">
+                <div style="font-weight:500">Ciclo #812 pendente de finalização</div>
+                <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Há 2 horas</div>
+              </div>
+              <div style="padding:8px 10px;border-radius:8px;font-size:11px;color:var(--foreground);cursor:pointer">
+                <div style="font-weight:500">3 materiais com validade próxima</div>
+                <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Hoje</div>
+              </div>
+              <div style="padding:8px 10px;border-radius:8px;font-size:11px;color:var(--foreground);cursor:pointer">
+                <div style="font-weight:500">Nova ocorrência registrada</div>
+                <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px">Ontem</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Material de apoio -->
+          <div style="background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border)">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground);margin-bottom:8px">Material de apoio</div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--foreground);cursor:pointer;display:flex;align-items:center;gap:8px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+                Manual do sistema
+              </div>
+              <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--foreground);cursor:pointer;display:flex;align-items:center;gap:8px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/></svg>
+                Treinamentos
+              </div>
+              <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--foreground);cursor:pointer;display:flex;align-items:center;gap:8px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="1.5"><path d="M8 2v3M16 2v3M3.5 9.09h17"/></svg>
+                Relatórios rápidos
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Helpdesk flutuante -->
+      <div style="position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:9999px;background:linear-gradient(135deg,#2155FC,#4B7BFF);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(33,85,252,0.35);cursor:pointer;z-index:50">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M8.5 19H8c-4 0-6-1-6-6V8c0-4 2-6 6-6h8c4 0 6 2 6 6v5c0 4-2 6-6 6h-.5c-.31 0-.61.15-.8.4l-1.5 2c-.66.88-1.74.88-2.4 0l-1.5-2c-.16-.22-.53-.4-.8-.4z"/><path d="M12 11v.01M8 11v.01M16 11v.01"/></svg>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. Mobile</h3>
+  <p class="subtitle">Layout single-column. Métricas em 2x2 grid. Sem sidebar de apoio (vira cards abaixo). Helpdesk flutuante acima da tab bar.</p>
+
+  <div class="mockup">
+    <div class="mockup-header">Mobile (375px)</div>
+    <div class="mockup-body" style="width:320px;margin:0 auto;height:600px;background:var(--bg);border-radius:16px;overflow-y:auto;font-family:'Inter',system-ui,sans-serif;padding:16px;display:flex;flex-direction:column;gap:14px;border:2px solid var(--border)">
+
+      <!-- Saudação -->
+      <div>
+        <div style="font-size:20px;font-weight:700;color:var(--foreground)">Bom dia, Gustavo</div>
+        <div style="font-size:11px;color:var(--muted-foreground);margin-top:3px;display:flex;align-items:center;gap:4px">
+          <div style="width:5px;height:5px;border-radius:50%;background:var(--primary)"></div>
+          <span class="truncate" style="max-width:250px">Medtracker LTDA</span>
+        </div>
+      </div>
+
+      <!-- Métricas 2x2 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:var(--card);border-radius:10px;padding:10px 12px;border:1px solid var(--border)">
+          <div style="font-size:9px;text-transform:uppercase;color:var(--muted-foreground)">Hoje</div>
+          <div style="font-size:18px;font-weight:700;color:var(--foreground);margin-top:3px">12 <span style="font-size:10px;font-weight:400;color:var(--muted-foreground)">ciclos</span></div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:10px 12px;border:1px solid var(--border)">
+          <div style="font-size:9px;text-transform:uppercase;color:var(--muted-foreground)">Hoje</div>
+          <div style="font-size:18px;font-weight:700;color:var(--foreground);margin-top:3px">8 <span style="font-size:10px;font-weight:400;color:var(--muted-foreground)">etiquetas</span></div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:10px 12px;border:1px solid var(--border)">
+          <div style="font-size:9px;text-transform:uppercase;color:var(--muted-foreground)">Semana</div>
+          <div style="font-size:18px;font-weight:700;color:var(--foreground);margin-top:3px">47 <span style="font-size:10px;font-weight:400;color:var(--muted-foreground)">ciclos</span></div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:10px 12px;border:1px solid var(--border)">
+          <div style="font-size:9px;text-transform:uppercase;color:var(--muted-foreground)">Mês</div>
+          <div style="font-size:18px;font-weight:700;color:var(--foreground);margin-top:3px">189 <span style="font-size:10px;font-weight:400;color:var(--muted-foreground)">ciclos</span></div>
+        </div>
+      </div>
+
+      <!-- Nota de atualização -->
+      <div style="background:var(--primary-7);border-radius:10px;padding:10px 14px;border:1px solid var(--primary-15);display:flex;align-items:center;gap:10px;cursor:pointer">
+        <div style="width:28px;height:28px;border-radius:8px;background:var(--primary-10);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5"><path d="M8 2v3M16 2v3"/></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--foreground)" class="truncate">Novidades v2.1</div>
+          <div style="font-size:10px;color:var(--muted-foreground)" class="truncate">Conferência com scan automático</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted-foreground)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+
+      <!-- Workflow tabs (horizontal scroll) -->
+      <div>
+        <div style="display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto">
+          <div style="padding:8px 14px;font-size:11px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);white-space:nowrap">Dashboard</div>
+          <div style="padding:8px 14px;font-size:11px;color:var(--muted-foreground);white-space:nowrap">Entrada</div>
+          <div style="padding:8px 14px;font-size:11px;color:var(--muted-foreground);white-space:nowrap">Ciclos</div>
+          <div style="padding:8px 14px;font-size:11px;color:var(--muted-foreground);white-space:nowrap">Saída</div>
+          <div style="padding:8px 14px;font-size:11px;color:var(--muted-foreground);white-space:nowrap">Conferência</div>
+        </div>
+        <!-- Tab content compact -->
+        <div style="padding:12px 0">
+          <div style="width:100%;height:100px;border-radius:10px;background:linear-gradient(135deg,var(--primary-8),var(--primary-15));display:flex;align-items:center;justify-content:center;margin-bottom:10px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1" opacity="0.5"><path d="M22 22H2M21 22V6l-6-4-6 4v16"/></svg>
+          </div>
+          <div style="font-size:14px;font-weight:600;color:var(--foreground)">Dashboard</div>
+          <div style="font-size:11px;color:var(--muted-foreground);margin-top:4px;line-height:1.5">KPIs, gráficos, indicadores e ocorrências.</div>
+          <button style="margin-top:10px;padding:8px 14px;border-radius:var(--radius-sm);background:var(--primary);color:white;font-size:11px;font-weight:500;border:none;cursor:pointer;width:100%">Acessar Dashboard</button>
+        </div>
+      </div>
+
+      <!-- Notificações compact -->
+      <div style="background:var(--card);border-radius:10px;padding:12px;border:1px solid var(--border)">
+        <div style="font-size:10px;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:6px;display:flex;justify-content:space-between">
+          Notificações
+          <span style="font-size:9px;padding:1px 6px;border-radius:var(--radius-pill);background:var(--destructive-10);color:var(--destructive);font-weight:600">3</span>
+        </div>
+        <div style="padding:6px 0;font-size:11px;color:var(--foreground);border-bottom:1px solid var(--border-separator)">Ciclo #812 pendente</div>
+        <div style="padding:6px 0;font-size:11px;color:var(--foreground);border-bottom:1px solid var(--border-separator)">3 materiais com validade próxima</div>
+        <div style="padding:6px 0;font-size:11px;color:var(--foreground)">Nova ocorrência registrada</div>
+      </div>
+
+      <!-- Padding for bottom tab bar -->
+      <div style="height:64px;flex-shrink:0"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Componentes e comportamentos</h3>
+  <ul style="font-size:13px;color:var(--foreground);line-height:1.8;list-style:disc;padding-left:20px">
+    <li><strong>Saudação</strong>: "Bom dia/Boa tarde/Boa noite" dinâmico + nome do usuário. CME abaixo com dot primary + nome + módulo. Truncate + line-clamp por breakpoint.</li>
+    <li><strong>Métricas</strong>: 4 cards em grid (4 cols desktop, 2x2 mobile). Dados mock: ciclos/etiquetas hoje, semana, mês. Comparativo com período anterior (verde positivo, amarelo negativo).</li>
+    <li><strong>Nota de atualização</strong>: Card destacado com bg primary gradient sutil. Click abre detalhes (futuramente). Mock com título + descrição truncada. Condicional (só aparece se houver nota).</li>
+    <li><strong>Workflow tabs</strong>: Bottom-indicator tabs (Dashboard, Entrada, Ciclos, Saída, Conferência). Filtradas por módulo CME. Conteúdo por aba: imagem mock + título + descrição + tópicos em pills + botão "Acessar". Subrotas como lista clicável se muitas (Cadastros), cards se poucas (Ciclos com 2 subrotas).</li>
+    <li><strong>Sidebar de apoio</strong> (desktop only): Notificações (badge count, lista clicável), Material de apoio (Manual, Treinamentos, Relatórios rápidos). Mobile: cards abaixo do conteúdo principal.</li>
+    <li><strong>Helpdesk flutuante</strong>: Botão circular fixo no canto inferior direito (acima da tab bar no mobile). Icone de chat. Click abre widget (placeholder por hora).</li>
+    <li><strong>Responsividade</strong>: Desktop 3 colunas → Tablet 2 colunas → Mobile single column. Tabs com scroll horizontal no mobile.</li>
+    <li><strong>Dados</strong>: Todos mockados em @/mock para facilitar futura conexão com API.</li>
+  </ul>
+</div>

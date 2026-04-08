@@ -10,7 +10,9 @@ import {
   Lock1,
   Building,
   Book1,
-  ArrowLeft2
+  ArrowLeft2,
+  Notification,
+  ArrowDown2
 } from 'iconsax-react'
 
 // store
@@ -26,7 +28,7 @@ import { ROUTES } from '@/constants'
 import { user_role, formatted_user_role, formatted_cme_module, cme_module } from '@/entities'
 
 // mock
-import { mockCmes } from '@/mock/data'
+import { mockCmes, mockNotifications, mockSupportLinks } from '@/mock/data'
 
 // utils
 import { getRouteIcon, canToggleTheme as checkCanToggleTheme, isNonColab as checkIsNonColab, isRoleIn } from '@/utils'
@@ -114,6 +116,8 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
   const { theme, toggleTheme } = useTheme()
 
   const [view, setView] = useState<SheetView>('main')
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [supportOpen, setSupportOpen] = useState(false)
 
   // Lock body scroll when sheet is open
   useEffect(() => {
@@ -301,6 +305,130 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
             {typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.userAgent) ? '⌘K' : 'Ctrl+K'}
           </kbd>
         </button>
+
+        {/* Notificações accordion */}
+        <div style={{ marginBottom: 8 }}>
+          <button
+            onClick={() => setNotificationsOpen(prev => !prev)}
+            className="flex items-center gap-sm w-full cursor-pointer"
+            style={{
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--background)',
+              border: '1px solid var(--border)',
+              color: 'var(--foreground)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              textAlign: 'left',
+              transition: 'background-color 150ms ease'
+            }}
+          >
+            <Notification size={18} color="currentColor" style={{ flexShrink: 0 }} />
+            <span style={{ flex: 1 }}>Notificações</span>
+            {mockNotifications.length > 0 && (
+              <span
+                className="flex items-center justify-center"
+                style={{
+                  minWidth: 20,
+                  height: 20,
+                  padding: '0 6px',
+                  borderRadius: 'var(--radius-pill)',
+                  background: 'var(--destructive)',
+                  color: '#ffffff',
+                  fontSize: 10,
+                  fontWeight: 700,
+                  lineHeight: 1,
+                  flexShrink: 0
+                }}
+              >
+                {mockNotifications.length}
+              </span>
+            )}
+            <ArrowDown2
+              size={14}
+              color="currentColor"
+              style={{
+                flexShrink: 0,
+                color: 'var(--muted-foreground)',
+                transform: notificationsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 200ms ease'
+              }}
+            />
+          </button>
+          {notificationsOpen && (
+            <div style={{ marginTop: 4 }}>
+              {mockNotifications.map(notification => (
+                <div
+                  key={notification.id}
+                  className="flex flex-col"
+                  style={{
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-sm)',
+                    transition: 'background-color 150ms ease'
+                  }}
+                >
+                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--foreground)', lineHeight: 1.4 }}>
+                    {notification.title}
+                  </span>
+                  <span style={{ fontSize: 'var(--text-xxs)', color: 'var(--muted-foreground)', marginTop: 2 }}>
+                    {notification.time}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Material de apoio accordion */}
+        <div style={{ marginBottom: 16 }}>
+          <button
+            onClick={() => setSupportOpen(prev => !prev)}
+            className="flex items-center gap-sm w-full cursor-pointer"
+            style={{
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'var(--background)',
+              border: '1px solid var(--border)',
+              color: 'var(--foreground)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              textAlign: 'left',
+              transition: 'background-color 150ms ease'
+            }}
+          >
+            <Book1 size={18} color="currentColor" style={{ flexShrink: 0 }} />
+            <span style={{ flex: 1 }}>Material de apoio</span>
+            <ArrowDown2
+              size={14}
+              color="currentColor"
+              style={{
+                flexShrink: 0,
+                color: 'var(--muted-foreground)',
+                transform: supportOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 200ms ease'
+              }}
+            />
+          </button>
+          {supportOpen && (
+            <div style={{ marginTop: 4 }}>
+              {mockSupportLinks.map(link => (
+                <div
+                  key={link.id}
+                  className="flex items-center gap-sm"
+                  style={{
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-sm)',
+                    transition: 'background-color 150ms ease'
+                  }}
+                >
+                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--foreground)' }}>
+                    {link.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* CME Selector card — clickable (hidden in CME-only mode) */}
         {cme && !isCmeOnly && (

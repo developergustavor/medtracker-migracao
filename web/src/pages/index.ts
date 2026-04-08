@@ -1,4 +1,4 @@
-export { Home } from './Home'
+export { Home } from './home'
 export { Login } from './login'
 export { NotFound } from './NotFound'
 export { Unauthorized } from './Unauthorized'
