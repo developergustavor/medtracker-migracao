@@ -78,7 +78,7 @@ export function Home() {
         </div>
       )}
 
-      {/* Row 3: Workflow tabs (full width) */}
+      {/* Row 3: Workflow cards (full width) */}
       <HomeWorkflowTabs />
 
       {/* Floating helpdesk */}

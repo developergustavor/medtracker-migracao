@@ -1,6 +1,6 @@
 // packages
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 // components
 import { Sidebar } from '@/components/layout/Sidebar'
@@ -9,6 +9,7 @@ import { Topbar } from '@/components/layout/Topbar'
 import { ContextualBar } from '@/components/layout/ContextualBar'
 import { BottomTabBar } from '@/components/layout/BottomTabBar'
 import { SpotlightSearch } from '@/components/layout/SpotlightSearch'
+import { PageTransition } from '@/components/layout/PageTransition'
 
 // hooks
 import { useIsMobile } from '@/hooks'
@@ -104,7 +105,7 @@ export function AppLayout() {
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto" style={isMobile ? { paddingBottom: 64 } : undefined}>
-          <Outlet />
+          <PageTransition />
         </main>
       </div>
 

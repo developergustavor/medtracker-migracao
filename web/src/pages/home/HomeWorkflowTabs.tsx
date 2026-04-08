@@ -54,7 +54,6 @@ export function HomeWorkflowTabs() {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
   const { user, cme } = useAuthStore()
-
   const isCmeOnly = !user && !!cme
 
   const workflowCards = useMemo(() => {

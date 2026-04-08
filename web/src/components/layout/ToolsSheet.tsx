@@ -11,8 +11,7 @@ import {
   Building,
   Book1,
   ArrowLeft2,
-  Notification,
-  ArrowDown2
+  Notification
 } from 'iconsax-react'
 
 // store
@@ -46,7 +45,7 @@ type ToolsSheetProps = {
   onOpenSpotlight: () => void
 }
 
-type SheetView = 'main' | 'cme-selector'
+type SheetView = 'main' | 'cme-selector' | 'notifications' | 'support'
 
 /** Routes shown in the navigation grid: workflow routes + others not in tab bar */
 const TAB_BAR_PATHS = ['/home', '/dashboard', '/cadastros', '/ciclos', '/entrada-de-materiais', '/saida-de-materiais']
@@ -116,8 +115,6 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
   const { theme, toggleTheme } = useTheme()
 
   const [view, setView] = useState<SheetView>('main')
-  const [notificationsOpen, setNotificationsOpen] = useState(false)
-  const [supportOpen, setSupportOpen] = useState(false)
 
   // Lock body scroll when sheet is open
   useEffect(() => {
@@ -306,130 +303,6 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           </kbd>
         </button>
 
-        {/* Notificações accordion */}
-        <div style={{ marginBottom: 8 }}>
-          <button
-            onClick={() => setNotificationsOpen(prev => !prev)}
-            className="flex items-center gap-sm w-full cursor-pointer"
-            style={{
-              padding: '10px 14px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--background)',
-              border: '1px solid var(--border)',
-              color: 'var(--foreground)',
-              fontSize: 'var(--text-sm)',
-              fontWeight: 500,
-              textAlign: 'left',
-              transition: 'background-color 150ms ease'
-            }}
-          >
-            <Notification size={18} color="currentColor" style={{ flexShrink: 0 }} />
-            <span style={{ flex: 1 }}>Notificações</span>
-            {mockNotifications.length > 0 && (
-              <span
-                className="flex items-center justify-center"
-                style={{
-                  minWidth: 20,
-                  height: 20,
-                  padding: '0 6px',
-                  borderRadius: 'var(--radius-pill)',
-                  background: 'var(--destructive)',
-                  color: '#ffffff',
-                  fontSize: 10,
-                  fontWeight: 700,
-                  lineHeight: 1,
-                  flexShrink: 0
-                }}
-              >
-                {mockNotifications.length}
-              </span>
-            )}
-            <ArrowDown2
-              size={14}
-              color="currentColor"
-              style={{
-                flexShrink: 0,
-                color: 'var(--muted-foreground)',
-                transform: notificationsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 200ms ease'
-              }}
-            />
-          </button>
-          {notificationsOpen && (
-            <div style={{ marginTop: 4 }}>
-              {mockNotifications.map(notification => (
-                <div
-                  key={notification.id}
-                  className="flex flex-col"
-                  style={{
-                    padding: '10px 14px',
-                    borderRadius: 'var(--radius-sm)',
-                    transition: 'background-color 150ms ease'
-                  }}
-                >
-                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--foreground)', lineHeight: 1.4 }}>
-                    {notification.title}
-                  </span>
-                  <span style={{ fontSize: 'var(--text-xxs)', color: 'var(--muted-foreground)', marginTop: 2 }}>
-                    {notification.time}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Material de apoio accordion */}
-        <div style={{ marginBottom: 16 }}>
-          <button
-            onClick={() => setSupportOpen(prev => !prev)}
-            className="flex items-center gap-sm w-full cursor-pointer"
-            style={{
-              padding: '10px 14px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--background)',
-              border: '1px solid var(--border)',
-              color: 'var(--foreground)',
-              fontSize: 'var(--text-sm)',
-              fontWeight: 500,
-              textAlign: 'left',
-              transition: 'background-color 150ms ease'
-            }}
-          >
-            <Book1 size={18} color="currentColor" style={{ flexShrink: 0 }} />
-            <span style={{ flex: 1 }}>Material de apoio</span>
-            <ArrowDown2
-              size={14}
-              color="currentColor"
-              style={{
-                flexShrink: 0,
-                color: 'var(--muted-foreground)',
-                transform: supportOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 200ms ease'
-              }}
-            />
-          </button>
-          {supportOpen && (
-            <div style={{ marginTop: 4 }}>
-              {mockSupportLinks.map(link => (
-                <div
-                  key={link.id}
-                  className="flex items-center gap-sm"
-                  style={{
-                    padding: '10px 14px',
-                    borderRadius: 'var(--radius-sm)',
-                    transition: 'background-color 150ms ease'
-                  }}
-                >
-                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--foreground)' }}>
-                    {link.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* CME Selector card — clickable (hidden in CME-only mode) */}
         {cme && !isCmeOnly && (
           <button
@@ -512,12 +385,51 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
               )
             })}
 
-            {/* Manual button (static) */}
+            {/* Notificações card */}
             <button
-              onClick={() => {
-                console.log(`[${_loc}] Manual clicked (placeholder)`)
-                onClose()
+              onClick={() => setView('notifications')}
+              className="flex flex-col items-center justify-center cursor-pointer"
+              style={{
+                padding: '14px 8px',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: 'var(--background)',
+                border: '1px solid var(--border)',
+                color: 'var(--foreground)',
+                fontSize: 'var(--text-xxs)',
+                fontWeight: 500,
+                gap: 6,
+                transition: 'background-color 150ms ease',
+                position: 'relative'
               }}
+            >
+              <Notification size={22} variant="Linear" color="currentColor" />
+              <span>Notificações</span>
+              {mockNotifications.length > 0 && (
+                <span
+                  className="flex items-center justify-center"
+                  style={{
+                    position: 'absolute',
+                    top: 6,
+                    right: 6,
+                    minWidth: 18,
+                    height: 18,
+                    padding: '0 5px',
+                    borderRadius: 'var(--radius-pill)',
+                    background: 'var(--destructive)',
+                    color: '#ffffff',
+                    fontSize: 9,
+                    fontWeight: 700,
+                    lineHeight: 1
+                  }}
+                >
+                  {mockNotifications.length}
+                </span>
+              )}
+            </button>
+
+            {/* Material de apoio card */}
+            <button
+              onClick={() => setView('support')}
               className="flex flex-col items-center justify-center cursor-pointer"
               style={{
                 padding: '14px 8px',
@@ -532,7 +444,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
               }}
             >
               <Book1 size={22} variant="Linear" color="currentColor" />
-              <span>Manual</span>
+              <span>Apoio</span>
             </button>
           </div>
         )}
@@ -775,6 +687,76 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
     </div>
   )
 
+  const renderNotificationsView = () => (
+    <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%', overflowX: 'hidden' }}>
+      <div className="shrink-0" style={{ padding: '6px 8px', borderBottom: '1px solid var(--border-separator)' }}>
+        <button
+          onClick={goBackToMain}
+          className="flex items-center gap-sm cursor-pointer w-full"
+          style={{ padding: '8px 8px', borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: 'var(--text-body)', fontWeight: 600, transition: 'background-color 150ms ease', textAlign: 'left' }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+        >
+          <ArrowLeft2 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
+          Notificações
+        </button>
+      </div>
+      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
+        {mockNotifications.length === 0 ? (
+          <div className="flex items-center justify-center py-xl" style={{ color: 'var(--muted-foreground)', fontSize: 'var(--text-sm)' }}>
+            Nenhuma notificação
+          </div>
+        ) : (
+          mockNotifications.map(notification => (
+            <button
+              key={notification.id}
+              onClick={() => { console.log(`[${_loc}] Notification clicked:`, notification.id); onClose() }}
+              className="flex flex-col w-full cursor-pointer"
+              style={{ padding: '10px 12px', borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: 'var(--text-sm)', textAlign: 'left', transition: 'background-color 150ms ease', marginBottom: 2 }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+            >
+              <span style={{ fontWeight: 500, lineHeight: 1.4 }}>{notification.title}</span>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', marginTop: 2 }}>{notification.time}</span>
+            </button>
+          ))
+        )}
+      </div>
+    </div>
+  )
+
+  const renderSupportView = () => (
+    <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%', overflowX: 'hidden' }}>
+      <div className="shrink-0" style={{ padding: '6px 8px', borderBottom: '1px solid var(--border-separator)' }}>
+        <button
+          onClick={goBackToMain}
+          className="flex items-center gap-sm cursor-pointer w-full"
+          style={{ padding: '8px 8px', borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: 'var(--text-body)', fontWeight: 600, transition: 'background-color 150ms ease', textAlign: 'left' }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+        >
+          <ArrowLeft2 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
+          Material de apoio
+        </button>
+      </div>
+      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
+        {mockSupportLinks.map(link => (
+          <button
+            key={link.id}
+            onClick={() => { console.log(`[${_loc}] Support link clicked:`, link.id); onClose() }}
+            className="flex items-center gap-md w-full cursor-pointer"
+            style={{ padding: '10px 12px', borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: 'var(--text-sm)', textAlign: 'left', transition: 'background-color 150ms ease', marginBottom: 2 }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+          >
+            <Book1 size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
+            {link.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+
   return createPortal(
     <>
       <style>{`
@@ -822,7 +804,9 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
               {renderMainView()}
             </div>
             <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              {renderCmeSelectorView()}
+              {view === 'cme-selector' && renderCmeSelectorView()}
+              {view === 'notifications' && renderNotificationsView()}
+              {view === 'support' && renderSupportView()}
             </div>
           </div>
         </div>
