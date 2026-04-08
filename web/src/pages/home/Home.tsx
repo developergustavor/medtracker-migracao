@@ -46,7 +46,7 @@ export function Home() {
   const displayName = user?.name || cme?.corporateName || 'Usuário'
 
   return (
-    <div className="flex flex-col gap-xl p-lg relative">
+    <div className="flex flex-col gap-xl p-lg relative h-full overflow-y-auto">
       {/* Row 1: Greeting + Date */}
       <div className={`flex ${isMobile ? 'flex-col gap-sm' : 'items-center justify-between'}`}>
         <h1 className="text-display font-bold text-foreground truncate">

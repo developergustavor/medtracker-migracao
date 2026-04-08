@@ -12,7 +12,7 @@ export function Placeholder() {
     .join(' / ')
 
   return (
-    <div className="flex flex-col items-center justify-center p-3xl gap-md" style={{ minHeight: 300 }}>
+    <div className="flex flex-col items-center justify-center p-3xl gap-md h-full overflow-y-auto" style={{ minHeight: 300 }}>
       <div
         className="flex items-center justify-center"
         style={{

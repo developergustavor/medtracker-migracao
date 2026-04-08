@@ -7,6 +7,7 @@ export type ContextualActionProps = {
   action: string
   variant?: 'primary' | 'default'
   position?: 'start' | 'center' | 'end'
+  disabled?: boolean
 }
 
 export type RouteMetadataProps = {

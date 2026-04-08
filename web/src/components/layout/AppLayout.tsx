@@ -66,8 +66,10 @@ export function AppLayout() {
   )
 
   const handleOpenSubSidebar = useCallback((route: RouteMetadataProps) => {
+    // Don't open subsidebar for Cadastros when already on a cadastros page (entity sidebar handles it)
+    if (route.path === '/cadastros' && location.pathname.startsWith('/cadastros')) return
     setActiveSubRoute(prev => (prev?.path === route.path ? null : route))
-  }, [])
+  }, [location.pathname])
 
   const handleSubNavigate = useCallback((path: string) => {
     navigate(path)
@@ -101,10 +103,17 @@ export function AppLayout() {
         {!isMobile && <Topbar onOpenSpotlight={handleOpenSpotlight} />}
 
         {/* ContextualBar - both desktop and mobile */}
-        {currentRouteActions && <ContextualBar actions={currentRouteActions} />}
+        {currentRouteActions && (
+          <ContextualBar
+            actions={currentRouteActions}
+            onAction={actionId => {
+              window.dispatchEvent(new CustomEvent('contextual-action', { detail: actionId }))
+            }}
+          />
+        )}
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto" style={isMobile ? { paddingBottom: 64 } : undefined}>
+        <main className="flex-1 min-h-0 overflow-hidden" style={isMobile ? { paddingBottom: 64 } : undefined}>
           <PageTransition />
         </main>
       </div>

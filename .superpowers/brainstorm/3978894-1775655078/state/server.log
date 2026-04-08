@@ -1,0 +1,3 @@
+{"type":"server-started","port":65337,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:65337","screen_dir":"/home/developergustavor/Documents/Medtracker/medtracker-migracao/.superpowers/brainstorm/3978894-1775655078/content","state_dir":"/home/developergustavor/Documents/Medtracker/medtracker-migracao/.superpowers/brainstorm/3978894-1775655078/state"}
+{"type":"screen-added","file":"/home/developergustavor/Documents/Medtracker/medtracker-migracao/.superpowers/brainstorm/3978894-1775655078/content/cadastros-layouts.html"}
+{"type":"server-stopped","reason":"idle timeout"}

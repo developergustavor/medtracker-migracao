@@ -13,38 +13,53 @@ const _loc = '@/components/layout/ContextualBar'
 
 type ContextualBarProps = {
   actions: ContextualActionProps[]
+  onAction?: (actionId: string) => void
 }
 
-function ActionButton({ action, isPrimary }: { action: ContextualActionProps; isPrimary: boolean }) {
+function ActionButton({ action, isPrimary, onAction }: { action: ContextualActionProps; isPrimary: boolean; onAction?: (actionId: string) => void }) {
+  const isDisabled = action.disabled === true
+
   const handleClick = () => {
-    const fullLoc = `${_loc}.ActionButton.handleClick`
-    console.log(`[${fullLoc}] Action triggered: ${action.action}`)
+    if (isDisabled) return
+    if (onAction) {
+      onAction(action.action)
+    } else {
+      const fullLoc = `${_loc}.ActionButton.handleClick`
+      console.log(`[${fullLoc}] Action triggered: ${action.action}`)
+    }
   }
 
   return (
     <button
       onClick={handleClick}
-      className="flex items-center gap-xs cursor-pointer shrink-0"
+      disabled={isDisabled}
+      className="flex items-center gap-xs shrink-0"
       style={{
         padding: '5px 12px',
         borderRadius: 'var(--radius-sm)',
-        backgroundColor: isPrimary ? 'var(--primary-8)' : 'transparent',
-        border: isPrimary ? '1px solid var(--primary-20)' : '1px solid transparent',
-        color: isPrimary ? 'var(--primary)' : 'var(--foreground)',
+        backgroundColor: isPrimary ? 'var(--primary)' : 'transparent',
+        border: isPrimary ? '1px solid var(--primary)' : '1px solid transparent',
+        color: isPrimary ? 'var(--primary-fg)' : 'var(--foreground)',
         fontSize: 'var(--text-xs)',
         fontWeight: isPrimary ? 600 : 400,
-        transition: 'background-color 150ms ease',
-        whiteSpace: 'nowrap'
+        transition: 'background-color 150ms ease, opacity 150ms ease',
+        whiteSpace: 'nowrap',
+        opacity: isDisabled ? 0.5 : 1,
+        cursor: isDisabled ? 'not-allowed' : 'pointer'
       }}
       onMouseEnter={e => {
-        (e.currentTarget as HTMLElement).style.backgroundColor = isPrimary ? 'var(--primary-12)' : 'var(--nav-hover-bg)'
+        if (isDisabled) return
+        ;(e.currentTarget as HTMLElement).style.opacity = isPrimary ? '0.9' : '1'
+        ;(e.currentTarget as HTMLElement).style.backgroundColor = isPrimary ? 'var(--primary)' : 'var(--nav-hover-bg)'
       }}
       onMouseLeave={e => {
-        (e.currentTarget as HTMLElement).style.backgroundColor = isPrimary ? 'var(--primary-8)' : 'transparent'
+        if (isDisabled) return
+        ;(e.currentTarget as HTMLElement).style.opacity = '1'
+        ;(e.currentTarget as HTMLElement).style.backgroundColor = isPrimary ? 'var(--primary)' : 'transparent'
       }}
     >
       {action.icon && (
-        <span className="flex items-center" style={{ color: isPrimary ? 'var(--primary)' : 'var(--foreground)' }}>
+        <span className="flex items-center" style={{ color: isPrimary ? 'var(--primary-fg)' : 'var(--foreground)' }}>
           {getRouteIcon(action.icon, 16, false)}
         </span>
       )}
@@ -157,7 +172,7 @@ function OverflowMenu({ actions }: { actions: ContextualActionProps[] }) {
   )
 }
 
-export function ContextualBar({ actions }: ContextualBarProps) {
+export function ContextualBar({ actions, onAction }: ContextualBarProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const [overflowing, setOverflowing] = useState(false)
@@ -201,43 +216,34 @@ export function ContextualBar({ actions }: ContextualBarProps) {
     >
       <div
         ref={innerRef}
-        className="flex items-center w-full gap-sm"
+        className="flex items-center justify-between w-full gap-sm"
         style={{ minWidth: 0 }}
       >
         {/* Start group */}
         <div className="flex items-center gap-xs shrink-0">
           {firstStartAction && (
-            <ActionButton action={firstStartAction} isPrimary={firstStartAction.variant === 'primary'} />
+            <ActionButton action={firstStartAction} isPrimary={firstStartAction.variant === 'primary'} onAction={onAction} />
           )}
           {!overflowing && remainingStartActions.map(action => (
-            <ActionButton key={action.action} action={action} isPrimary={false} />
+            <ActionButton key={action.action} action={action} isPrimary={false} onAction={onAction} />
           ))}
         </div>
 
-        {/* Center group */}
-        {!overflowing && centerActions.length > 0 && (
-          <div className="flex items-center justify-center gap-xs flex-1">
+        {/* End group (center + end merged) */}
+        {!overflowing && (centerActions.length > 0 || endActions.length > 0) && (
+          <div className="flex items-center gap-xs shrink-0">
             {centerActions.map(action => (
-              <ActionButton key={action.action} action={action} isPrimary={false} />
+              <ActionButton key={action.action} action={action} isPrimary={false} onAction={onAction} />
             ))}
-          </div>
-        )}
-
-        {/* Spacer when overflowing (push end items to right) */}
-        {overflowing && <div className="flex-1" />}
-
-        {/* End group */}
-        {!overflowing && endActions.length > 0 && (
-          <div className="flex items-center gap-xs shrink-0 ml-auto">
             {endActions.map(action => (
-              <ActionButton key={action.action} action={action} isPrimary={false} />
+              <ActionButton key={action.action} action={action} isPrimary={false} onAction={onAction} />
             ))}
           </div>
         )}
 
         {/* Overflow "..." button */}
         {overflowing && overflowActions.length > 0 && (
-          <div className="shrink-0 ml-auto">
+          <div className="shrink-0">
             <OverflowMenu actions={overflowActions} />
           </div>
         )}

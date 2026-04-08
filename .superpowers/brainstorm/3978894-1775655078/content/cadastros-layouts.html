@@ -1,0 +1,206 @@
+<h2>Cadastros — 3 Propostas de Layout</h2>
+<p class="subtitle">Cada proposta mantém tabs segmentadas + DataTable em card. A diferença está na organização visual e na experiência de navegação. Clique para selecionar.</p>
+
+<div class="options">
+
+  <!-- OPCAO A -->
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Master-Detail com Sidebar de Entidades</h3>
+      <p><strong>Recomendado para produtividade.</strong> Sidebar estreita à esquerda com lista vertical de entidades (ícone + nome). Conteúdo principal à direita com a tabela. Sem tabs horizontais — a navegação entre entidades é pela sidebar.</p>
+
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-body" style="display:flex;height:360px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:'Inter',system-ui,sans-serif">
+          <!-- Sidebar de entidades -->
+          <div style="width:200px;background:var(--card);border-right:1px solid var(--border);padding:12px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;flex-shrink:0">
+            <div style="padding:4px 10px;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-foreground);margin-bottom:4px">Cadastros</div>
+            <div style="padding:8px 10px;border-radius:8px;background:var(--primary-8);color:var(--primary);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">&#x2702;</span> Materiais
+            </div>
+            <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--foreground);cursor:pointer;display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">&#x1F464;</span> Colaboradores
+            </div>
+            <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--foreground);cursor:pointer;display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">&#x2699;</span> Equipamentos
+            </div>
+            <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--foreground);cursor:pointer;display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">&#x1F4E6;</span> Embalagens
+            </div>
+            <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--foreground);cursor:pointer;display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">&#x1F504;</span> Tipos de Ciclo
+            </div>
+            <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--foreground);cursor:pointer;display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">&#x26A0;</span> Tipos de Ocorrência
+            </div>
+            <div style="padding:8px 10px;border-radius:8px;font-size:12px;color:var(--muted-foreground);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:11px">
+              + 8 mais...
+            </div>
+          </div>
+          <!-- Main content -->
+          <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+            <!-- Card header -->
+            <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:var(--card)">
+              <span style="font-size:14px;font-weight:600;color:var(--foreground)">Materiais</span>
+              <div style="display:flex;gap:8px;align-items:center">
+                <div style="padding:6px 10px;border-radius:8px;background:var(--input);border:1px solid var(--input-border);font-size:11px;color:var(--muted-foreground);width:160px">&#x1F50D; Buscar...</div>
+                <div style="padding:6px 12px;border-radius:8px;background:var(--primary);color:white;font-size:11px;font-weight:500">+ Novo</div>
+              </div>
+            </div>
+            <!-- Table -->
+            <div style="flex:1;overflow-y:auto;background:var(--card)">
+              <div style="padding:8px 18px;font-size:10px;text-transform:uppercase;color:var(--fg-muted);letter-spacing:0.5px;display:flex;gap:20px;border-bottom:1px solid var(--border-separator)">
+                <span style="width:80px">Código</span><span style="flex:1">Nome</span><span style="width:80px">Tipo</span><span style="width:60px">Status</span>
+              </div>
+              <div style="padding:10px 18px;font-size:12px;color:var(--foreground);display:flex;gap:20px;align-items:center;border-bottom:1px solid var(--border-separator)">
+                <span style="width:80px;color:var(--muted-foreground)">—</span><span style="flex:1">PINÇA BACKAUS</span><span style="width:80px">Avulso</span><span style="width:60px;font-size:10px;padding:2px 6px;border-radius:99px;background:var(--primary-10);color:var(--primary);text-align:center">Ativo</span>
+              </div>
+              <div style="padding:10px 18px;font-size:12px;color:var(--foreground);display:flex;gap:20px;align-items:center;border-bottom:1px solid var(--border-separator)">
+                <span style="width:80px">v1</span><span style="flex:1">CX VASCULAR Nº1</span><span style="width:80px">KIT</span><span style="width:60px;font-size:10px;padding:2px 6px;border-radius:99px;background:var(--primary-10);color:var(--primary);text-align:center">Ativo</span>
+              </div>
+              <div style="padding:10px 18px;font-size:12px;color:var(--foreground);display:flex;gap:20px;align-items:center;border-bottom:1px solid var(--border-separator)">
+                <span style="width:80px;color:var(--muted-foreground)">—</span><span style="flex:1">CAPOTE</span><span style="width:80px">Quantidade</span><span style="width:60px;font-size:10px;padding:2px 6px;border-radius:99px;background:var(--primary-10);color:var(--primary);text-align:center">Ativo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>14 entidades visíveis de uma vez sem scroll horizontal</li><li>Navegação rápida entre entidades (1 clique)</li><li>Padrão master-detail familiar (Notion, Linear)</li><li>Mais espaço para a tabela</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Ocupa ~200px de sidebar (sobrepõe com a sidebar principal)</li><li>Mobile: sidebar vira drawer ou tabs</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPCAO B -->
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Tabs Segmentadas com Filtro e KPIs</h3>
+      <p>Mantém o layout atual (tabs segmentadas + card com tabela) mas adiciona uma barra de KPIs acima da tabela mostrando contadores rápidos (Total, Ativos, Inativos) e filtro por status.</p>
+
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-body" style="height:360px;background:var(--bg);border-radius:12px;overflow:hidden;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;padding:16px">
+          <!-- Segmented tabs -->
+          <div style="display:flex;background:var(--muted);border-radius:10px;padding:3px;gap:2px;overflow:hidden;margin-bottom:14px">
+            <div style="padding:7px 14px;border-radius:8px;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,0.08);font-size:11px;font-weight:600;color:var(--primary);white-space:nowrap">Materiais</div>
+            <div style="padding:7px 14px;border-radius:8px;font-size:11px;color:var(--muted-foreground);white-space:nowrap">Colaboradores</div>
+            <div style="padding:7px 14px;border-radius:8px;font-size:11px;color:var(--muted-foreground);white-space:nowrap">Equipamentos</div>
+            <div style="padding:7px 14px;border-radius:8px;font-size:11px;color:var(--muted-foreground);white-space:nowrap">...</div>
+          </div>
+
+          <!-- KPI bar -->
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <div style="padding:8px 14px;border-radius:8px;background:var(--card);border:1px solid var(--border);flex:1;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:10px;color:var(--muted-foreground)">Total</span>
+              <span style="font-size:16px;font-weight:700;color:var(--foreground)">12</span>
+            </div>
+            <div style="padding:8px 14px;border-radius:8px;background:var(--primary-8);border:1px solid var(--primary-15);flex:1;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:10px;color:var(--primary)">Ativos</span>
+              <span style="font-size:16px;font-weight:700;color:var(--primary)">10</span>
+            </div>
+            <div style="padding:8px 14px;border-radius:8px;background:var(--destructive-8);border:1px solid rgba(239,68,68,0.15);flex:1;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:10px;color:var(--destructive)">Inativos</span>
+              <span style="font-size:16px;font-weight:700;color:var(--destructive)">2</span>
+            </div>
+          </div>
+
+          <!-- Card with table -->
+          <div style="flex:1;background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column">
+            <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-separator)">
+              <span style="font-size:13px;font-weight:600;color:var(--foreground)">Materiais</span>
+              <div style="display:flex;gap:6px">
+                <div style="padding:5px 10px;border-radius:6px;background:var(--input);border:1px solid var(--input-border);font-size:10px;color:var(--muted-foreground);width:140px">&#x1F50D; Buscar...</div>
+                <div style="padding:5px 10px;border-radius:6px;background:var(--primary);color:white;font-size:10px;font-weight:500">+ Novo</div>
+              </div>
+            </div>
+            <div style="flex:1;overflow-y:auto">
+              <div style="padding:8px 16px;font-size:9px;text-transform:uppercase;color:var(--fg-muted);display:flex;gap:16px;border-bottom:1px solid var(--border-separator)">
+                <span style="width:20px">☐</span><span style="width:70px">Código</span><span style="flex:1">Nome</span><span style="width:70px">Tipo</span><span style="width:50px">Status</span>
+              </div>
+              <div style="padding:9px 16px;font-size:11px;color:var(--foreground);display:flex;gap:16px;align-items:center;border-bottom:1px solid var(--border-separator)">
+                <span style="width:20px">☐</span><span style="width:70px;color:var(--muted-foreground)">—</span><span style="flex:1">PINÇA BACKAUS</span><span style="width:70px">Avulso</span><span style="width:50px;font-size:9px;padding:2px 6px;border-radius:99px;background:var(--primary-10);color:var(--primary);text-align:center">Ativo</span>
+              </div>
+              <div style="padding:9px 16px;font-size:11px;color:var(--foreground);display:flex;gap:16px;align-items:center;border-bottom:1px solid var(--border-separator)">
+                <span style="width:20px">☐</span><span style="width:70px">v1</span><span style="flex:1">CX VASCULAR Nº1</span><span style="width:70px">KIT</span><span style="width:50px;font-size:9px;padding:2px 6px;border-radius:99px;background:var(--primary-10);color:var(--primary);text-align:center">Ativo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>KPIs dão contexto rápido por entidade</li><li>Filtro por status é útil operacionalmente</li><li>Layout limpo e vertical</li><li>Mobile-friendly</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>KPIs ocupam espaço vertical</li><li>Scroll horizontal nas tabs continua necessário</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPCAO C -->
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Grid de Cards + Tabela Expandida</h3>
+      <p>Em vez de tabs, as entidades são exibidas como cards em grid. Clicar num card expande a seção mostrando a tabela inline abaixo, com animação accordion. Permite ver múltiplas entidades ao mesmo tempo.</p>
+
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-body" style="height:360px;background:var(--bg);border-radius:12px;overflow-y:auto;font-family:'Inter',system-ui,sans-serif;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <!-- Entity cards grid -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <div style="padding:12px;border-radius:10px;background:var(--primary-8);border:2px solid var(--primary-20);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <span style="font-size:18px">&#x2702;</span>
+              <span style="font-size:11px;font-weight:600;color:var(--primary)">Materiais</span>
+              <span style="font-size:10px;color:var(--primary)">12 registros</span>
+            </div>
+            <div style="padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--border);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <span style="font-size:18px">&#x1F464;</span>
+              <span style="font-size:11px;font-weight:500;color:var(--foreground)">Colaboradores</span>
+              <span style="font-size:10px;color:var(--muted-foreground)">6 registros</span>
+            </div>
+            <div style="padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--border);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <span style="font-size:18px">&#x2699;</span>
+              <span style="font-size:11px;font-weight:500;color:var(--foreground)">Equipamentos</span>
+              <span style="font-size:10px;color:var(--muted-foreground)">10 registros</span>
+            </div>
+            <div style="padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--border);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <span style="font-size:18px">&#x1F4E6;</span>
+              <span style="font-size:11px;font-weight:500;color:var(--foreground)">Embalagens</span>
+              <span style="font-size:10px;color:var(--muted-foreground)">5 registros</span>
+            </div>
+          </div>
+
+          <!-- Expanded section: Materiais -->
+          <div style="background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden">
+            <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-separator)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:14px">&#x2702;</span>
+                <span style="font-size:13px;font-weight:600;color:var(--foreground)">Materiais</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:99px;background:var(--elevated);color:var(--muted-foreground)">12</span>
+              </div>
+              <div style="display:flex;gap:6px">
+                <div style="padding:5px 10px;border-radius:6px;background:var(--input);font-size:10px;color:var(--muted-foreground);width:140px">&#x1F50D; Buscar...</div>
+                <div style="padding:5px 10px;border-radius:6px;background:var(--primary);color:white;font-size:10px;font-weight:500">+ Novo</div>
+              </div>
+            </div>
+            <div style="padding:8px 16px;font-size:9px;text-transform:uppercase;color:var(--fg-muted);display:flex;gap:16px;border-bottom:1px solid var(--border-separator)">
+              <span style="flex:1">Nome</span><span style="width:70px">Tipo</span><span style="width:50px">Status</span>
+            </div>
+            <div style="padding:9px 16px;font-size:11px;color:var(--foreground);display:flex;gap:16px;border-bottom:1px solid var(--border-separator)">
+              <span style="flex:1">PINÇA BACKAUS</span><span style="width:70px">Avulso</span><span style="width:50px;font-size:9px;padding:2px 6px;border-radius:99px;background:var(--primary-10);color:var(--primary);text-align:center">Ativo</span>
+            </div>
+            <div style="padding:9px 16px;font-size:11px;color:var(--foreground);display:flex;gap:16px;border-bottom:1px solid var(--border-separator)">
+              <span style="flex:1">CX VASCULAR Nº1</span><span style="width:70px">KIT</span><span style="width:50px;font-size:9px;padding:2px 6px;border-radius:99px;background:var(--primary-10);color:var(--primary);text-align:center">Ativo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:12px">
+        <div class="pros"><h4>Pros</h4><ul><li>Visão geral de todas as entidades + contadores</li><li>Pode abrir múltiplas ao mesmo tempo</li><li>Accordion é touch-friendly</li><li>Visual mais moderno</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Cards + tabela expandida = mais scroll vertical</li><li>Pode ficar confuso com muitas expandidas</li><li>Perde a sensação de "uma tela por entidade"</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>

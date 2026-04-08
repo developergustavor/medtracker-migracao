@@ -50,7 +50,7 @@ export const ROUTES: RouteMetadataProps[] = [
     mobileTabRoles: nonColabRoles,
     contextualActions: [
       { label: 'Novo Registro', icon: 'Add', action: 'new-record', variant: 'primary', position: 'start' },
-      { label: 'Exportar', icon: 'DocumentDownload', action: 'export', position: 'center' },
+      { label: 'Exportar', icon: 'DocumentDownload', action: 'export', position: 'end', disabled: true },
       { label: 'Filtros', icon: 'Filter', action: 'filters', position: 'end' }
     ],
     children: [

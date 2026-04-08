@@ -1,5 +1,6 @@
 export { Home } from './home'
 export { Login } from './login'
+export { Cadastros } from './cadastros'
 export { NotFound } from './NotFound'
 export { Unauthorized } from './Unauthorized'
 export { Forbidden } from './Forbidden'

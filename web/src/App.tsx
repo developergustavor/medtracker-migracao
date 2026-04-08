@@ -20,8 +20,25 @@ const _loc = '@/App'
 // Page registry: maps route paths to lazy-loaded components
 // Pages that have actual implementations use their real component
 // Everything else falls back to Placeholder
+const LazyCadastros = lazy(() => import('@/pages/cadastros').then(m => ({ default: m.Cadastros })))
+
 const PAGE_MAP: Record<string, ReturnType<typeof lazy>> = {
   '/home': lazy(() => import('@/pages/home').then(m => ({ default: m.Home }))),
+  '/cadastros': LazyCadastros,
+  '/cadastros/materiais': LazyCadastros,
+  '/cadastros/colaboradores': LazyCadastros,
+  '/cadastros/equipamentos': LazyCadastros,
+  '/cadastros/embalagens': LazyCadastros,
+  '/cadastros/tipos-de-ciclo': LazyCadastros,
+  '/cadastros/tipos-de-ocorrencia': LazyCadastros,
+  '/cadastros/indicadores': LazyCadastros,
+  '/cadastros/insumos': LazyCadastros,
+  '/cadastros/terceiros': LazyCadastros,
+  '/cadastros/setores': LazyCadastros,
+  '/cadastros/medicos': LazyCadastros,
+  '/cadastros/pacientes': LazyCadastros,
+  '/cadastros/checklists': LazyCadastros,
+  '/cadastros/modelos': LazyCadastros,
   // Add more as pages are implemented:
   // '/dashboard': lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard }))),
 }
