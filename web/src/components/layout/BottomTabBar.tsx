@@ -87,11 +87,9 @@ export function BottomTabBar({ onOpenSpotlight }: BottomTabBarProps) {
   return (
     <>
       <div
-        className="fixed bottom-0 left-0 right-0 flex items-end justify-around"
+        className="fixed bottom-0 left-0 right-0 flex items-end justify-around bg-card border-t border-border"
         style={{
           height: 64,
-          backgroundColor: 'var(--card)',
-          borderTop: '1px solid var(--border)',
           zIndex: 50,
           paddingBottom: 4
         }}

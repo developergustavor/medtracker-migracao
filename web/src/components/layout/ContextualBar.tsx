@@ -33,14 +33,12 @@ function ActionButton({ action, isPrimary, onAction }: { action: ContextualActio
     <button
       onClick={handleClick}
       disabled={isDisabled}
-      className="flex items-center gap-xs shrink-0"
+      className="flex items-center gap-xs shrink-0 rounded-sm text-xs"
       style={{
         padding: '5px 12px',
-        borderRadius: 'var(--radius-sm)',
         backgroundColor: isPrimary ? 'var(--primary)' : 'transparent',
         border: isPrimary ? '1px solid var(--primary)' : '1px solid transparent',
         color: isPrimary ? 'var(--primary-fg)' : 'var(--foreground)',
-        fontSize: 'var(--text-xs)',
         fontWeight: isPrimary ? 600 : 400,
         transition: 'background-color 150ms ease, opacity 150ms ease',
         whiteSpace: 'nowrap',
@@ -102,14 +100,12 @@ function OverflowMenu({ actions }: { actions: ContextualActionProps[] }) {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="flex items-center justify-center cursor-pointer shrink-0"
+        className="flex items-center justify-center cursor-pointer shrink-0 rounded-sm text-muted-foreground"
         style={{
           width: 32,
           height: 32,
-          borderRadius: 'var(--radius-sm)',
           backgroundColor: open ? 'var(--elevated)' : 'transparent',
           border: 'none',
-          color: 'var(--muted-foreground)',
           transition: 'background-color 150ms ease'
         }}
         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
@@ -121,16 +117,14 @@ function OverflowMenu({ actions }: { actions: ContextualActionProps[] }) {
       {open && buttonRect && createPortal(
         <div
           ref={popoverRef}
+          className="bg-popover rounded-md shadow-popover"
           style={{
             position: 'fixed',
             top: buttonRect.bottom + 4,
             right: window.innerWidth - buttonRect.right,
             zIndex: 200,
             minWidth: 180,
-            backgroundColor: 'var(--popover)',
             border: '1px solid var(--popover-border)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-popover)',
             padding: 4
           }}
         >
@@ -141,14 +135,11 @@ function OverflowMenu({ actions }: { actions: ContextualActionProps[] }) {
                 console.log(`[${_loc}.OverflowMenu] Action triggered: ${action.action}`)
                 setOpen(false)
               }}
-              className="flex items-center gap-sm w-full cursor-pointer"
+              className="flex items-center gap-sm w-full cursor-pointer rounded-sm text-foreground text-xs"
               style={{
                 padding: '8px 12px',
-                borderRadius: 'var(--radius-sm)',
                 backgroundColor: 'transparent',
                 border: 'none',
-                color: 'var(--foreground)',
-                fontSize: 'var(--text-xs)',
                 fontWeight: 400,
                 transition: 'background-color 150ms ease',
                 textAlign: 'left',
@@ -207,11 +198,10 @@ export function ContextualBar({ actions, onAction }: ContextualBarProps) {
   return (
     <div
       ref={containerRef}
-      className="shrink-0 flex items-center px-xl overflow-hidden"
+      className="shrink-0 flex items-center px-xl overflow-hidden bg-background"
       style={{
         height: 44,
-        borderBottom: '1px solid var(--border-separator)',
-        backgroundColor: 'var(--background)'
+        borderBottom: '1px solid var(--border-separator)'
       }}
     >
       <div

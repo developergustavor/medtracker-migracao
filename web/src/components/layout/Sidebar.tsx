@@ -57,18 +57,14 @@ function PortalTooltip({ state }: { state: TooltipState }) {
 
   return createPortal(
     <div
+      className="rounded-xs bg-popover shadow-popover text-xs text-foreground"
       style={{
         position: 'fixed',
         top: state.top,
         left: state.left,
         padding: '6px 10px',
-        borderRadius: 'var(--radius-xs)',
-        backgroundColor: 'var(--popover)',
         border: '1px solid var(--popover-border)',
-        boxShadow: 'var(--shadow-popover)',
-        fontSize: 'var(--text-xs)',
         fontWeight: 500,
-        color: 'var(--foreground)',
         whiteSpace: 'nowrap',
         zIndex: 9999,
         pointerEvents: 'none',
@@ -149,12 +145,11 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
             setHoveredItem(null)
             hideTooltip()
           }}
-          className="flex items-center justify-center w-full cursor-pointer"
+          className="flex items-center justify-center w-full cursor-pointer rounded-md"
           style={{
             width: 44,
             height: 44,
             margin: '0 auto 2px auto',
-            borderRadius: 'var(--radius-md)',
             backgroundColor: active ? 'var(--primary-8)' : isHovered ? 'var(--nav-hover-bg)' : 'transparent',
             border: 'none',
             position: 'relative',
@@ -164,13 +159,13 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
         >
           {active && (
             <div
+              className="bg-primary"
               style={{
                 position: 'absolute',
                 left: -2,
                 top: 10,
                 bottom: 10,
                 width: 2.5,
-                backgroundColor: 'var(--primary)',
                 borderRadius: 2
               }}
             />
@@ -178,6 +173,7 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
           {route.icon && getRouteIcon(route.icon, 20, active)}
           {hasChildren && (
             <div
+              className="bg-primary"
               style={{
                 position: 'absolute',
                 right: 2,
@@ -185,7 +181,6 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
                 width: 6,
                 height: 6,
                 borderRadius: '50%',
-                backgroundColor: 'var(--primary)',
                 opacity: 0.6
               }}
             />
@@ -198,11 +193,9 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
   return (
     <>
       <aside
-        className="flex flex-col h-full shrink-0 overflow-hidden"
+        className="flex flex-col h-full shrink-0 overflow-hidden bg-sidebar border-r border-sidebar-border"
         style={{
-          width: 68,
-          backgroundColor: 'var(--sidebar-bg)',
-          borderRight: '1px solid var(--sidebar-border)'
+          width: 68
         }}
       >
         {/* Logo */}
@@ -243,13 +236,12 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
               hideTooltip()
             }}
             className="flex items-center justify-center cursor-pointer"
+            className="rounded-pill text-sm"
             style={{
               width: 36,
               height: 36,
-              borderRadius: 'var(--radius-pill)',
               background: 'linear-gradient(135deg, #2155FC, #4B7BFF)',
               border: hoveredItem === 'avatar' ? '2px solid var(--primary)' : '2px solid transparent',
-              fontSize: 'var(--text-sm)',
               fontWeight: 700,
               color: '#ffffff',
               transition: 'border-color 150ms ease'

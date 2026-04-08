@@ -30,35 +30,22 @@ function FormDialog({ open, onClose, title, description, children, onSubmit, loa
   return (
     <Dialog open={open} onOpenChange={val => !val && onClose()}>
       <DialogContent
-        style={{
-          maxWidth,
-          borderRadius: 'var(--radius-md)'
-        }}
+        className="rounded-md"
+        style={{ maxWidth }}
       >
         <DialogHeader>
-          <DialogTitle
-            style={{
-              fontSize: 'var(--text-heading)',
-              color: 'var(--fg)'
-            }}
-          >
+          <DialogTitle className="text-heading" style={{ color: 'var(--fg)' }}>
             {title}
           </DialogTitle>
           {description && (
-            <DialogDescription
-              style={{
-                fontSize: 'var(--text-body)',
-                color: 'var(--fg-muted)',
-                marginTop: 'var(--space-xs)'
-              }}
-            >
+            <DialogDescription className="text-body mt-xs" style={{ color: 'var(--fg-muted)' }}>
               {description}
             </DialogDescription>
           )}
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-4" style={{ marginTop: 'var(--space-sm)' }}>
+          <div className="flex flex-col gap-4 mt-sm">
             {children}
           </div>
 
@@ -69,14 +56,11 @@ function FormDialog({ open, onClose, title, description, children, onSubmit, loa
               disabled={loading}
               className={cn(
                 'inline-flex items-center justify-center font-medium transition-colors',
-                'hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed'
+                'hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed',
+                'rounded-sm text-body bg-transparent px-lg'
               )}
               style={{
                 height: 36,
-                padding: '0 var(--space-lg)',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: 'var(--text-body)',
-                backgroundColor: 'transparent',
                 border: '1px solid var(--border-subtle)',
                 color: 'var(--fg-secondary)'
               }}
@@ -88,16 +72,13 @@ function FormDialog({ open, onClose, title, description, children, onSubmit, loa
               disabled={loading}
               className={cn(
                 'inline-flex items-center justify-center gap-2 font-medium transition-colors',
-                'hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                'hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed',
+                'rounded-sm text-body px-lg border-none'
               )}
               style={{
                 height: 36,
-                padding: '0 var(--space-lg)',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: 'var(--text-body)',
                 background: 'linear-gradient(135deg, var(--primary), var(--primary-70))',
-                color: 'var(--primary-fg)',
-                border: 'none'
+                color: 'var(--primary-fg)'
               }}
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}

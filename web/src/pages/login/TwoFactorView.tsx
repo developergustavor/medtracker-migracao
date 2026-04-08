@@ -247,10 +247,10 @@ export function TwoFactorView({ userId, email, onBack }: TwoFactorViewProps) {
 
       {/* Title */}
       <div className="flex flex-col items-center gap-[4px]">
-        <h2 className="text-base font-semibold" style={{ color: 'var(--foreground)' }}>
+        <h2 className="text-base font-semibold text-foreground">
           Verificação em duas etapas
         </h2>
-        <p className="text-xs text-center" style={{ color: 'var(--muted-foreground)' }}>
+        <p className="text-xs text-center text-muted-foreground">
           Enviamos um código para {maskEmail(email)}
         </p>
       </div>
@@ -286,7 +286,7 @@ export function TwoFactorView({ userId, email, onBack }: TwoFactorViewProps) {
 
       {/* Error */}
       {errorMsg && (
-        <p className="text-xs" style={{ color: 'var(--destructive)' }}>
+        <p className="text-xs text-destructive">
           {errorMsg}
         </p>
       )}

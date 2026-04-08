@@ -157,7 +157,7 @@ function Cadastros() {
 
   if (visibleTabs.length === 0) {
     return (
-      <div className="flex items-center justify-center w-full h-full" style={{ color: 'var(--fg-muted)', fontSize: 'var(--text-body)' }}>
+      <div className="flex items-center justify-center w-full h-full text-body" style={{ color: 'var(--fg-muted)' }}>
         Nenhuma aba disponível para o seu perfil.
       </div>
     )
@@ -177,15 +177,12 @@ function Cadastros() {
                 key={tabKey}
                 type="button"
                 onClick={() => handleTabChange(tabKey)}
-                className="flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer border-none outline-none"
+                className="flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer border-none outline-none rounded-[20px] text-xs transition-all duration-150 ease-in-out"
                 style={{
                   padding: '6px 12px',
-                  borderRadius: 20,
-                  fontSize: 'var(--text-xs)',
                   fontWeight: isActive ? 600 : 400,
                   backgroundColor: isActive ? 'var(--primary-8)' : 'var(--muted)',
-                  color: isActive ? 'var(--primary)' : 'var(--muted-foreground)',
-                  transition: 'all 150ms ease'
+                  color: isActive ? 'var(--primary)' : 'var(--muted-foreground)'
                 }}
               >
                 {tab.icon && getRouteIcon(tab.icon, 14, isActive)}
@@ -203,13 +200,11 @@ function Cadastros() {
               value={search}
               onChange={handleSearchChange}
               placeholder="Filtrar..."
-              className="pl-8 pr-7 !text-[14px]"
+              className="pl-8 pr-7 !text-[14px] bg-card rounded-sm"
               style={{
                 height: 32,
                 fontSize: 'var(--text-sm)',
-                backgroundColor: 'var(--card)',
-                borderColor: 'var(--input-border)',
-                borderRadius: 'var(--radius-sm)'
+                borderColor: 'var(--input-border)'
               }}
             />
             {search && (
@@ -226,7 +221,7 @@ function Cadastros() {
         </div>
 
         {/* Table — fills rest */}
-        <div className="flex-1 overflow-hidden" style={{ backgroundColor: 'var(--card)' }}>
+        <div className="flex-1 overflow-hidden bg-card">
           {activeTabMeta && (
             <CadastroTab tabKey={activeTab} tabName={activeTabMeta.name} externalSearch={debouncedSearch} hideHeader fullHeight loading={isLoading} forceEmpty={noData} hiddenColumns={hiddenColumns} />
           )}
@@ -240,8 +235,8 @@ function Cadastros() {
     <div className="flex h-full overflow-hidden">
       {/* Entity sidebar — bg background, no card */}
       <div
-        className="flex flex-col shrink-0 h-full"
-        style={{ width: 200, borderRight: '1px solid var(--border)', backgroundColor: 'var(--bg)' }}
+        className="flex flex-col shrink-0 h-full border-r border-border"
+        style={{ width: 200, backgroundColor: 'var(--bg)' }}
       >
         {/* Filter input */}
         <div className="shrink-0" style={{ padding: '10px 10px 6px' }}>
@@ -251,13 +246,11 @@ function Cadastros() {
               value={search}
               onChange={handleSearchChange}
               placeholder="Filtrar..."
-              className="pl-8 pr-7"
+              className="pl-8 pr-7 text-xs rounded-sm"
               style={{
                 height: 32,
-                fontSize: 'var(--text-xs)',
                 backgroundColor: 'var(--input-bg)',
-                borderColor: 'var(--input-border)',
-                borderRadius: 'var(--radius-sm)'
+                borderColor: 'var(--input-border)'
               }}
             />
             {search && (
@@ -284,16 +277,13 @@ function Cadastros() {
                 key={tabKey}
                 type="button"
                 onClick={() => handleTabChange(tabKey)}
-                className={cn('flex items-center gap-2 w-full text-left cursor-pointer border-none outline-none transition-colors duration-150')}
+                className={cn('flex items-center gap-2 w-full text-left cursor-pointer border-none outline-none transition-colors duration-150 rounded-sm text-sm whitespace-nowrap')}
                 style={{
                   padding: '9px 12px',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: 'var(--text-sm)',
                   fontWeight: isActive ? 600 : 400,
                   backgroundColor: isActive ? 'var(--primary-8)' : 'transparent',
                   color: isActive ? 'var(--primary)' : 'var(--foreground)',
-                  borderLeft: isActive ? '2px solid var(--primary)' : '2px solid transparent',
-                  whiteSpace: 'nowrap'
+                  borderLeft: isActive ? '2px solid var(--primary)' : '2px solid transparent'
                 }}
                 onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
                 onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
@@ -324,15 +314,11 @@ function Cadastros() {
           <button
             type="button"
             onClick={() => setIsLoading(prev => !prev)}
-            className="w-full cursor-pointer border-none outline-none"
+            className="w-full cursor-pointer border-none outline-none rounded-sm text-xs font-medium transition-all duration-150 ease-in-out"
             style={{
               padding: '6px 10px',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: 'var(--text-xs)',
-              fontWeight: 500,
               backgroundColor: isLoading ? 'var(--destructive)' : 'var(--elevated)',
-              color: isLoading ? 'var(--primary-fg)' : 'var(--muted-foreground)',
-              transition: 'all 150ms ease'
+              color: isLoading ? 'var(--primary-fg)' : 'var(--muted-foreground)'
             }}
           >
             {isLoading ? 'Stop Loading' : 'Toggle Loading'}
@@ -340,15 +326,11 @@ function Cadastros() {
           <button
             type="button"
             onClick={() => setNoData(prev => !prev)}
-            className="w-full cursor-pointer border-none outline-none"
+            className="w-full cursor-pointer border-none outline-none rounded-sm text-xs font-medium transition-all duration-150 ease-in-out"
             style={{
               padding: '6px 10px',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: 'var(--text-xs)',
-              fontWeight: 500,
               backgroundColor: noData ? 'var(--destructive)' : 'var(--elevated)',
-              color: noData ? 'var(--primary-fg)' : 'var(--muted-foreground)',
-              transition: 'all 150ms ease'
+              color: noData ? 'var(--primary-fg)' : 'var(--muted-foreground)'
             }}
           >
             {noData ? 'Stop No Data' : 'Toggle No Data'}
@@ -357,7 +339,7 @@ function Cadastros() {
       </div>
 
       {/* Table card — full height, internal scroll */}
-      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden" style={{ backgroundColor: 'var(--card)' }}>
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-card">
         {activeTabMeta && (
           <CadastroTab
             tabKey={activeTab}
@@ -425,7 +407,7 @@ function ColumnFilterSidebar({ tabKey, hiddenColumns, onToggleColumn, onClose }:
           style={{ padding: '14px 16px', borderBottom: '1px solid var(--border-separator)' }}
         >
           <div className="flex items-center gap-sm">
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)' }}>Colunas</span>
+            <span className="text-sm font-semibold text-foreground">Colunas</span>
             <span
               style={{
                 fontSize: 10,
@@ -442,8 +424,8 @@ function ColumnFilterSidebar({ tabKey, hiddenColumns, onToggleColumn, onClose }:
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center justify-center cursor-pointer border-none outline-none"
-            style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', color: 'var(--foreground)', transition: 'background-color 150ms ease' }}
+            className="flex items-center justify-center cursor-pointer border-none outline-none rounded-sm bg-transparent text-foreground transition-[background-color] duration-150 ease-in-out"
+            style={{ width: 28, height: 28 }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
           >
@@ -458,8 +440,8 @@ function ColumnFilterSidebar({ tabKey, hiddenColumns, onToggleColumn, onClose }:
             return (
               <label
                 key={col.key}
-                className="flex items-center gap-md cursor-pointer"
-                style={{ padding: '8px 8px', borderRadius: 'var(--radius-sm)', transition: 'background-color 150ms ease' }}
+                className="flex items-center gap-md cursor-pointer rounded-sm transition-[background-color] duration-150 ease-in-out"
+                style={{ padding: '8px 8px' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
               >
@@ -467,10 +449,9 @@ function ColumnFilterSidebar({ tabKey, hiddenColumns, onToggleColumn, onClose }:
                   type="checkbox"
                   checked={isVisible}
                   onChange={() => onToggleColumn(col.key)}
-                  className="w-4 h-4 cursor-pointer accent-[#2155FC]"
-                  style={{ borderRadius: 'var(--radius-xs)' }}
+                  className="w-4 h-4 cursor-pointer accent-[#2155FC] rounded-xs"
                 />
-                <span style={{ fontSize: 'var(--text-sm)', color: isVisible ? 'var(--foreground)' : 'var(--muted-foreground)', fontWeight: isVisible ? 500 : 400 }}>
+                <span className={cn('text-sm', isVisible ? 'text-foreground font-medium' : 'text-muted-foreground font-normal')}>
                   {col.header}
                 </span>
               </label>
@@ -487,16 +468,16 @@ function ColumnFilterSidebar({ tabKey, hiddenColumns, onToggleColumn, onClose }:
                 if (hiddenColumns.has(col.key)) onToggleColumn(col.key)
               })
             }}
-            className="flex-1 cursor-pointer border-none outline-none"
-            style={{ padding: '8px', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--elevated)', color: 'var(--foreground)', fontSize: 'var(--text-xs)', fontWeight: 500, transition: 'background-color 150ms ease' }}
+            className="flex-1 cursor-pointer border-none outline-none rounded-sm bg-elevated text-foreground text-xs font-medium transition-[background-color] duration-150 ease-in-out"
+            style={{ padding: '8px' }}
           >
             Mostrar todas
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 cursor-pointer border-none outline-none"
-            style={{ padding: '8px', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--primary)', color: 'var(--primary-fg)', fontSize: 'var(--text-xs)', fontWeight: 500 }}
+            className="flex-1 cursor-pointer border-none outline-none rounded-sm bg-primary text-primary-foreground text-xs font-medium"
+            style={{ padding: '8px' }}
           >
             Aplicar
           </button>

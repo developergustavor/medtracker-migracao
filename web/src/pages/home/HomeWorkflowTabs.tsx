@@ -11,6 +11,9 @@ import { useIsMobile } from '@/hooks'
 // constants
 import { ROUTES } from '@/constants'
 
+// libs
+import { cn } from '@/libs/shadcn.utils'
+
 // utils
 import { getRouteIcon } from '@/utils/routes.utils'
 import { isRoleIn, isNonColab, isAdminOrAbove } from '@/utils/roles.utils'
@@ -146,16 +149,10 @@ function QuickActionButton({ icon, label, onClick }: { icon: string; label: stri
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-sm cursor-pointer"
+      className="flex items-center gap-sm cursor-pointer rounded-pill bg-elevated text-foreground text-xs font-medium transition-all duration-150 ease-in-out"
       style={{
         padding: '6px 14px',
-        borderRadius: 'var(--radius-pill)',
-        backgroundColor: 'var(--elevated)',
         border: '1px solid var(--border-subtle)',
-        color: 'var(--foreground)',
-        fontSize: 'var(--text-xs)',
-        fontWeight: 500,
-        transition: 'all 150ms ease'
       }}
       onMouseEnter={e => {
         (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary-8)'
@@ -168,7 +165,7 @@ function QuickActionButton({ icon, label, onClick }: { icon: string; label: stri
         ;(e.currentTarget as HTMLElement).style.color = 'var(--foreground)'
       }}
     >
-      <span style={{ display: 'flex', alignItems: 'center' }}>
+      <span className="flex items-center">
         {getRouteIcon(icon, 14, false)}
       </span>
       {label}
@@ -192,15 +189,11 @@ function WorkflowCard({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex flex-col items-center text-center rounded-[14px] border transition-all"
-      style={{
-        padding: '20px 14px',
-        backgroundColor: disabled ? 'var(--muted)' : 'var(--card)',
-        borderColor: disabled ? 'var(--border)' : 'var(--border)',
-        opacity: disabled ? 0.5 : 1,
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        gap: 10
-      }}
+      className={cn(
+        'flex flex-col items-center text-center rounded-[14px] border border-border transition-all gap-[10px]',
+        disabled ? 'bg-muted opacity-50 cursor-not-allowed' : 'bg-card cursor-pointer'
+      )}
+      style={{ padding: '20px 14px' }}
       onMouseEnter={e => {
         if (!disabled) {
           (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary-20)'
@@ -230,22 +223,14 @@ function WorkflowCard({
 
       {/* Name */}
       <span
-        className="text-sm font-semibold truncate w-full"
-        style={{ color: disabled ? 'var(--muted-foreground)' : 'var(--foreground)' }}
+        className={cn('text-sm font-semibold truncate w-full', disabled ? 'text-muted-foreground' : 'text-foreground')}
       >
         {route.name}
       </span>
 
       {/* Description */}
       <span
-        className="text-xs leading-relaxed"
-        style={{
-          color: 'var(--muted-foreground)',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden'
-        }}
+        className="text-xs leading-relaxed text-muted-foreground line-clamp-2"
       >
         {description}
       </span>
@@ -253,10 +238,9 @@ function WorkflowCard({
       {/* Disabled badge */}
       {disabled && (
         <span
-          className="text-xs font-medium"
+          className="text-xs font-medium rounded-pill"
           style={{
             padding: '2px 8px',
-            borderRadius: 'var(--radius-pill)',
             backgroundColor: 'var(--warning-10)',
             color: 'var(--warning)',
             fontSize: 10

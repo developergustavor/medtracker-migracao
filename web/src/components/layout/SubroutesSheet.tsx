@@ -176,7 +176,7 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
               borderBottom: '1px solid var(--border-separator)'
             }}
           >
-            <span style={{ fontSize: 'var(--text-body)', fontWeight: 600, color: 'var(--foreground)' }}>
+            <span className="text-body text-foreground" style={{ fontWeight: 600 }}>
               {route.name}
             </span>
           </div>
@@ -185,12 +185,10 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
           {showFilter && (
             <div className="shrink-0" style={{ padding: '12px 16px 8px' }}>
               <div
-                className="flex items-center gap-sm"
+                className="flex items-center gap-sm rounded-md border border-border"
                 style={{
                   padding: '8px 12px',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'var(--muted-8)',
-                  border: '1px solid var(--border)'
+                  backgroundColor: 'var(--muted-8)'
                 }}
               >
                 <SearchNormal1 size={16} color="var(--muted-foreground)" />
@@ -200,13 +198,12 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
                   placeholder="Filtrar..."
                   value={filterText}
                   onChange={e => setFilterText(e.target.value)}
+                  className="text-sm text-foreground"
                   style={{
                     flex: 1,
                     backgroundColor: 'transparent',
                     border: 'none',
-                    outline: 'none',
-                    fontSize: 'var(--text-sm)',
-                    color: 'var(--foreground)'
+                    outline: 'none'
                   }}
                 />
               </div>
@@ -222,14 +219,12 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
                 <button
                   key={child.path}
                   onClick={() => handleItemClick(child.path)}
-                  className="flex items-center gap-md w-full cursor-pointer"
+                  className="flex items-center gap-md w-full cursor-pointer rounded-sm text-sm"
                   style={{
                     padding: '10px 12px',
-                    borderRadius: 'var(--radius-sm)',
                     backgroundColor: isActive ? 'var(--primary-8)' : 'transparent',
                     border: 'none',
                     color: isActive ? 'var(--primary)' : 'var(--foreground)',
-                    fontSize: 'var(--text-sm)',
                     fontWeight: isActive ? 600 : 400,
                     textAlign: 'left',
                     transition: 'background-color 150ms ease',
@@ -244,11 +239,9 @@ export function SubroutesSheet({ route, onClose, onNavigate }: SubroutesSheetPro
 
             {filteredChildren.length === 0 && filterText.trim() && (
               <div
-                className="flex items-center justify-center"
+                className="flex items-center justify-center text-sm text-muted-foreground"
                 style={{
-                  padding: '20px 0',
-                  fontSize: 'var(--text-sm)',
-                  color: 'var(--muted-foreground)'
+                  padding: '20px 0'
                 }}
               >
                 Nenhum resultado encontrado

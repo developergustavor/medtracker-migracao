@@ -22,11 +22,7 @@ export function HomeNotifications() {
       <div className="relative">
         <Notification size={22} color="var(--foreground)" variant="Linear" />
         <span
-          className="absolute -top-[4px] -right-[6px] flex items-center justify-center min-w-[16px] h-[16px] px-[4px] rounded-full text-[9px] font-bold"
-          style={{
-            background: 'var(--destructive)',
-            color: '#ffffff'
-          }}
+          className="absolute -top-[4px] -right-[6px] flex items-center justify-center min-w-[16px] h-[16px] px-[4px] rounded-full text-[9px] font-bold bg-destructive text-white"
         >
           {mockNotifications.length}
         </span>

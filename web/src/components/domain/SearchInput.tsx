@@ -66,12 +66,11 @@ function SearchInput({ value, onChange, placeholder = 'Buscar...', debounceMs = 
         value={internalValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className="pl-9 pr-8"
+        className="pl-9 pr-8 rounded-sm"
         style={{
           height: 36,
           backgroundColor: 'var(--input-bg)',
-          borderColor: 'var(--input-border)',
-          borderRadius: 'var(--radius-sm)'
+          borderColor: 'var(--input-border)'
         }}
       />
       {internalValue && (

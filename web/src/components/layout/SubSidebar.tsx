@@ -63,7 +63,7 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
       {/* SubSidebar panel */}
       <div
         key={route.path}
-        className="animate-slide-in-left"
+        className={`animate-slide-in-left border-r border-border flex flex-col overflow-hidden ${isOverlay ? 'bg-popover' : 'bg-card'}`}
         style={{
           width: panelWidth,
           flexShrink: 0,
@@ -74,16 +74,9 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
                 top: 0,
                 bottom: 0,
                 zIndex: 20,
-                boxShadow: '4px 0 24px rgba(0,0,0,0.08)',
-                backgroundColor: 'var(--popover)'
+                boxShadow: '4px 0 24px rgba(0,0,0,0.08)'
               }
-            : {
-                backgroundColor: 'var(--card)'
-              }),
-          borderRight: '1px solid var(--border)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden'
+            : {})
         }}
       >
         {/* Header */}
@@ -92,21 +85,18 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
           style={{ height: 48, borderBottom: '1px solid var(--border)' }}
         >
           <span
-            className="text-sm font-semibold truncate"
-            style={{ color: 'var(--foreground)' }}
+            className="text-sm font-semibold truncate text-foreground"
           >
             {route.name}
           </span>
           <button
             onClick={onClose}
-            className="flex items-center justify-center shrink-0 cursor-pointer"
+            className="flex items-center justify-center shrink-0 cursor-pointer text-muted-foreground rounded-sm"
             style={{
               width: 24,
               height: 24,
               backgroundColor: 'transparent',
               border: 'none',
-              color: 'var(--muted-foreground)',
-              borderRadius: 'var(--radius-sm)',
               transition: 'background-color 150ms ease'
             }}
             onMouseEnter={e => {
@@ -125,12 +115,9 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
         {showFilter && (
           <div className="shrink-0 px-sm py-sm">
             <div
-              className="flex items-center gap-xs px-sm"
+              className="flex items-center gap-xs px-sm rounded-sm border border-border bg-input"
               style={{
-                height: 32,
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--border)',
-                backgroundColor: 'var(--input)'
+                height: 32
               }}
             >
               <SearchNormal1 size={14} color="currentColor" style={{ color: 'var(--muted-foreground)', flexShrink: 0 }} />
@@ -139,13 +126,11 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
                 value={filter}
                 onChange={e => setFilter(e.target.value)}
                 placeholder="Filtrar..."
-                className="flex-1 min-w-0"
+                className="flex-1 min-w-0 text-xs text-foreground"
                 style={{
                   border: 'none',
                   outline: 'none',
                   backgroundColor: 'transparent',
-                  fontSize: 'var(--text-xs)',
-                  color: 'var(--foreground)',
                   padding: 0
                 }}
               />
@@ -157,8 +142,7 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-sm py-xs" style={{ scrollbarWidth: 'thin' }}>
           {filteredChildren.length === 0 ? (
             <div
-              className="flex items-center justify-center py-lg"
-              style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}
+              className="flex items-center justify-center py-lg text-xs text-muted-foreground"
             >
               Nenhum resultado
             </div>
@@ -170,15 +154,13 @@ export function SubSidebar({ route, onClose, onNavigate, isOverlay }: SubSidebar
                 <button
                   key={child.path}
                   onClick={() => handleNavigate(child.path)}
-                  className="flex items-center gap-sm w-full cursor-pointer"
+                  className="flex items-center gap-sm w-full cursor-pointer rounded-sm text-sm"
                   style={{
                     padding: '7px 10px',
                     marginBottom: 2,
-                    borderRadius: 'var(--radius-sm)',
                     backgroundColor: isActive ? 'var(--primary-8)' : 'transparent',
                     border: 'none',
                     color: isActive ? 'var(--primary)' : 'var(--foreground)',
-                    fontSize: 'var(--text-sm)',
                     fontWeight: isActive ? 600 : 400,
                     textAlign: 'left',
                     transition: 'background-color 150ms ease',

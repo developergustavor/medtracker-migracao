@@ -40,14 +40,10 @@ const variantStyles: Record<StatusBadgeVariant, React.CSSProperties> = {
 function StatusBadge({ status, variant = 'default', className }: StatusBadgeProps) {
   return (
     <span
-      className={cn('inline-flex items-center font-medium select-none', className)}
+      className={cn('inline-flex items-center font-medium select-none rounded-pill text-xs leading-normal', className)}
       style={{
         ...variantStyles[variant],
-        borderRadius: 'var(--radius-pill)',
-        padding: '2px 8px',
-        fontSize: 'var(--text-xs)',
-        fontWeight: 500,
-        lineHeight: 1.5
+        padding: '2px 8px'
       }}
     >
       {status}

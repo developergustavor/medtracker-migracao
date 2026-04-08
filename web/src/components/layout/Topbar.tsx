@@ -98,15 +98,13 @@ function NotificationsPopover() {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="relative flex items-center justify-center cursor-pointer"
+        className="relative flex items-center justify-center cursor-pointer rounded-sm text-foreground"
         style={{
           width: 34,
           height: 34,
-          borderRadius: 'var(--radius-sm)',
           backgroundColor: open ? 'var(--elevated)' : 'transparent',
           border: 'none',
-          transition: 'background-color 150ms ease',
-          color: 'var(--foreground)'
+          transition: 'background-color 150ms ease'
         }}
         onMouseEnter={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
         onMouseLeave={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
@@ -137,6 +135,7 @@ function NotificationsPopover() {
       {open && buttonRect && createPortal(
         <div
           ref={popoverRef}
+          className="bg-popover rounded-md shadow-popover"
           style={{
             position: 'fixed',
             top: buttonRect.bottom + 8,
@@ -145,31 +144,27 @@ function NotificationsPopover() {
             width: 320,
             maxHeight: 360,
             overflowY: 'auto',
-            backgroundColor: 'var(--popover)',
             border: '1px solid var(--popover-border)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-popover)',
             padding: 8
           }}
         >
           <div style={{ padding: '8px 10px 6px', marginBottom: 4 }}>
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)' }}>
+            <span className="text-sm text-foreground" style={{ fontWeight: 600 }}>
               Notificações
             </span>
           </div>
           {mockNotifications.map(notification => (
             <div
               key={notification.id}
-              className="flex flex-col cursor-pointer"
+              className="flex flex-col cursor-pointer rounded-sm"
               style={{
                 padding: '10px 12px',
-                borderRadius: 'var(--radius-sm)',
                 transition: 'background-color 150ms ease'
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
             >
-              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--foreground)', lineHeight: 1.4 }}>
+              <span className="text-sm text-foreground" style={{ fontWeight: 500, lineHeight: 1.4 }}>
                 {notification.title}
               </span>
               <span style={{ fontSize: 'var(--text-xxs)', color: 'var(--muted-foreground)', marginTop: 2 }}>
@@ -220,15 +215,13 @@ function SupportPopover() {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="flex items-center justify-center cursor-pointer"
+        className="flex items-center justify-center cursor-pointer rounded-sm text-foreground"
         style={{
           width: 34,
           height: 34,
-          borderRadius: 'var(--radius-sm)',
           backgroundColor: open ? 'var(--elevated)' : 'transparent',
           border: 'none',
-          transition: 'background-color 150ms ease',
-          color: 'var(--foreground)'
+          transition: 'background-color 150ms ease'
         }}
         onMouseEnter={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
         onMouseLeave={e => { if (!open) (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
@@ -239,6 +232,7 @@ function SupportPopover() {
       {open && buttonRect && createPortal(
         <div
           ref={popoverRef}
+          className="bg-popover rounded-md shadow-popover"
           style={{
             position: 'fixed',
             top: buttonRect.bottom + 8,
@@ -247,31 +241,27 @@ function SupportPopover() {
             width: 280,
             maxHeight: 320,
             overflowY: 'auto',
-            backgroundColor: 'var(--popover)',
             border: '1px solid var(--popover-border)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-popover)',
             padding: 8
           }}
         >
           <div style={{ padding: '8px 10px 6px', marginBottom: 4 }}>
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)' }}>
+            <span className="text-sm text-foreground" style={{ fontWeight: 600 }}>
               Apoio
             </span>
           </div>
           {mockSupportLinks.map(link => (
             <div
               key={link.id}
-              className="flex items-center gap-sm cursor-pointer"
+              className="flex items-center gap-sm cursor-pointer rounded-sm"
               style={{
                 padding: '10px 12px',
-                borderRadius: 'var(--radius-sm)',
                 transition: 'background-color 150ms ease'
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
             >
-              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--foreground)' }}>
+              <span className="text-sm text-foreground" style={{ fontWeight: 500 }}>
                 {link.label}
               </span>
             </div>
@@ -350,14 +340,11 @@ function CmeSelector() {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="flex items-center gap-sm"
+        className="flex items-center gap-sm rounded-pill text-foreground text-xs"
         style={{
           padding: '6px 12px',
-          borderRadius: 'var(--radius-pill)',
           backgroundColor: open ? 'var(--elevated)' : 'var(--nav-hover-bg)',
           border: '1px solid var(--border-subtle)',
-          color: 'var(--foreground)',
-          fontSize: 'var(--text-xs)',
           fontWeight: 500,
           transition: 'background-color 150ms ease',
           whiteSpace: 'nowrap',
@@ -411,6 +398,7 @@ function CmeSelector() {
       {open && buttonRect && createPortal(
         <div
           ref={popoverRef}
+          className="bg-popover rounded-md shadow-popover"
           style={{
             position: 'fixed',
             top: buttonRect.bottom + 8,
@@ -419,10 +407,7 @@ function CmeSelector() {
             width: 280,
             maxHeight: 320,
             overflowY: 'auto',
-            backgroundColor: 'var(--popover)',
             border: '1px solid var(--popover-border)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-popover)',
             padding: 6
           }}
         >
@@ -434,14 +419,11 @@ function CmeSelector() {
               <button
                 key={item.id}
                 onClick={() => handleCmeSelect(item)}
-                className="flex flex-col w-full cursor-pointer"
+                className="flex flex-col w-full cursor-pointer rounded-sm text-foreground text-sm"
                 style={{
                   padding: '10px 12px',
-                  borderRadius: 'var(--radius-sm)',
                   backgroundColor: isCurrentCme ? 'var(--primary-8)' : 'transparent',
                   border: isCurrentCme ? '1px solid var(--primary-20)' : '1px solid transparent',
-                  color: 'var(--foreground)',
-                  fontSize: 'var(--text-sm)',
                   transition: 'background-color 150ms ease',
                   textAlign: 'left',
                   marginBottom: 2
@@ -538,11 +520,9 @@ export function Topbar({ onOpenSpotlight }: TopbarProps) {
             )}
             {segment.isLast ? (
               <span
-                className="truncate"
+                className="truncate text-sm text-foreground"
                 style={{
-                  fontSize: 'var(--text-sm)',
                   fontWeight: 600,
-                  color: 'var(--foreground)',
                   minWidth: 0
                 }}
               >
@@ -551,11 +531,9 @@ export function Topbar({ onOpenSpotlight }: TopbarProps) {
             ) : (
               <Link
                 to={segment.path}
-                className="truncate"
+                className="truncate text-sm text-muted-foreground"
                 style={{
-                  fontSize: 'var(--text-sm)',
                   fontWeight: 400,
-                  color: 'var(--muted-foreground)',
                   textDecoration: 'none',
                   transition: 'color 150ms ease',
                   minWidth: 0
@@ -574,15 +552,12 @@ export function Topbar({ onOpenSpotlight }: TopbarProps) {
       <div className="flex items-center gap-md shrink-0">
         {/* Search trigger */}
         <div
-          className="flex items-center gap-sm cursor-pointer"
+          className="flex items-center gap-sm cursor-pointer rounded-sm bg-input text-xs"
           onClick={onOpenSpotlight}
           style={{
             padding: '6px 12px',
-            borderRadius: 'var(--radius-sm)',
-            backgroundColor: 'var(--input)',
             border: '1px solid var(--input-border)',
             color: 'var(--fg-muted)',
-            fontSize: 'var(--text-xs)',
             minWidth: 160,
             transition: 'border-color 150ms ease'
           }}

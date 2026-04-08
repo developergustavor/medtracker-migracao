@@ -89,13 +89,12 @@ export function CpfForm({ onTwoFactor }: CpfFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-[16px] w-full">
       <div className="flex flex-col gap-[6px]">
-        <label className="text-xs font-medium" style={{ color: 'var(--foreground)' }}>
+        <label className="text-xs font-medium text-foreground">
           CPF
         </label>
         <div className="relative">
           <span
-            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center"
-            style={{ color: 'var(--muted-foreground)' }}
+            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center text-muted-foreground"
           >
             <Personalcard size={18} color="currentColor" />
           </span>
@@ -104,14 +103,8 @@ export function CpfForm({ onTwoFactor }: CpfFormProps) {
             type="text"
             placeholder="000.000.000-00"
             autoComplete="off"
-            className="w-full rounded-[10px] border outline-none text-sm pl-[40px] pr-[14px]"
-            style={{
-              height: 44,
-              backgroundColor: 'var(--input)',
-              borderColor: 'var(--border)',
-              color: 'var(--foreground)',
-              transition: 'border-color 150ms ease'
-            }}
+            className="w-full rounded-[10px] border border-border outline-none text-sm pl-[40px] pr-[14px] bg-input text-foreground transition-[border-color] duration-150 ease-in-out"
+            style={{ height: 44 }}
             onFocus={e => { e.currentTarget.style.borderColor = 'var(--primary)' }}
             onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
           />
@@ -119,13 +112,12 @@ export function CpfForm({ onTwoFactor }: CpfFormProps) {
       </div>
 
       <div className="flex flex-col gap-[6px]">
-        <label className="text-xs font-medium" style={{ color: 'var(--foreground)' }}>
+        <label className="text-xs font-medium text-foreground">
           Senha
         </label>
         <div className="relative">
           <span
-            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center"
-            style={{ color: 'var(--muted-foreground)' }}
+            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center text-muted-foreground"
           >
             <Lock1 size={18} color="currentColor" />
           </span>
@@ -134,22 +126,15 @@ export function CpfForm({ onTwoFactor }: CpfFormProps) {
             type={showPassword ? 'text' : 'password'}
             placeholder="Digite sua senha"
             autoComplete="current-password"
-            className="w-full rounded-[10px] border outline-none text-sm pl-[40px] pr-[44px]"
-            style={{
-              height: 44,
-              backgroundColor: 'var(--input)',
-              borderColor: 'var(--border)',
-              color: 'var(--foreground)',
-              transition: 'border-color 150ms ease'
-            }}
+            className="w-full rounded-[10px] border border-border outline-none text-sm pl-[40px] pr-[44px] bg-input text-foreground transition-[border-color] duration-150 ease-in-out"
+            style={{ height: 44 }}
             onFocus={e => { e.currentTarget.style.borderColor = 'var(--primary)' }}
             onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
           />
           <button
             type="button"
             onClick={() => setShowPassword(prev => !prev)}
-            className="absolute right-[12px] top-1/2 -translate-y-1/2 flex items-center border-none bg-transparent cursor-pointer p-0"
-            style={{ color: 'var(--muted-foreground)' }}
+            className="absolute right-[12px] top-1/2 -translate-y-1/2 flex items-center border-none bg-transparent cursor-pointer p-0 text-muted-foreground"
           >
             {showPassword ? <EyeSlash size={18} color="currentColor" /> : <Eye size={18} color="currentColor" />}
           </button>
@@ -161,13 +146,13 @@ export function CpfForm({ onTwoFactor }: CpfFormProps) {
           type="checkbox"
           className="w-[16px] h-[16px] rounded-[4px] cursor-pointer accent-[#2155FC]"
         />
-        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+        <span className="text-xs text-muted-foreground">
           Lembrar de mim
         </span>
       </label>
 
       {errorMsg && (
-        <p className="text-xs" style={{ color: 'var(--destructive)' }}>
+        <p className="text-xs text-destructive">
           {errorMsg}
         </p>
       )}
@@ -196,8 +181,7 @@ export function CpfForm({ onTwoFactor }: CpfFormProps) {
 
       <a
         href="/recuperacao-senha"
-        className="text-xs text-center no-underline"
-        style={{ color: 'var(--primary)', transition: 'opacity 150ms ease' }}
+        className="text-xs text-center no-underline text-primary transition-opacity duration-150 ease-in-out"
         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.7' }}
         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
       >

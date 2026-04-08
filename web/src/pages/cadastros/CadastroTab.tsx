@@ -68,23 +68,16 @@ function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => 
         <button
           type="button"
           onClick={e => { e.stopPropagation(); onEdit() }}
-          className="inline-flex items-center justify-center shrink-0 cursor-pointer outline-none"
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: 'var(--radius-sm)',
-            backgroundColor: 'transparent',
-            border: '1px solid var(--border)',
-            transition: 'background-color 150ms ease'
-          }}
+          className="inline-flex items-center justify-center shrink-0 cursor-pointer outline-none rounded-sm bg-transparent border border-border transition-[background-color] duration-150 ease-in-out"
+          style={{ width: 28, height: 28 }}
           onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--elevated)' }}
           onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent' }}
         >
           <Edit2 size={16} color="var(--foreground)" variant="Linear" />
         </button>
         <span
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-          style={{ background: 'var(--popover)', border: '1px solid var(--popover-border)', color: 'var(--foreground)', fontSize: 'var(--text-xs)', borderRadius: 'var(--radius-xs)' }}
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-popover text-foreground text-xs rounded-xs"
+          style={{ border: '1px solid var(--popover-border)' }}
         >
           Editar
         </span>
@@ -93,28 +86,18 @@ function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => 
         <button
           type="button"
           onClick={e => { e.stopPropagation(); onDelete() }}
-          className="inline-flex items-center justify-center shrink-0 cursor-pointer outline-none"
-          style={{
-            width: 28,
-            height: 28,
-            borderRadius: 'var(--radius-sm)',
-            backgroundColor: 'transparent',
-            border: '1px solid var(--destructive)',
-            transition: 'background-color 150ms ease'
-          }}
+          className="inline-flex items-center justify-center shrink-0 cursor-pointer outline-none rounded-sm bg-transparent border border-destructive transition-[background-color] duration-150 ease-in-out"
+          style={{ width: 28, height: 28 }}
           onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--elevated)' }}
           onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent' }}
         >
           <Trash size={16} color="var(--destructive)" variant="Linear" />
         </button>
         <span
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-destructive text-xs rounded-xs"
           style={{
             background: 'var(--destructive-10)',
-            border: '1px solid var(--destructive)',
-            color: 'var(--destructive)',
-            fontSize: 'var(--text-xs)',
-            borderRadius: 'var(--radius-xs)'
+            border: '1px solid var(--destructive)'
           }}
         >
           Excluir
@@ -354,27 +337,16 @@ function CadastroTab({ tabKey, tabName, externalSearch, hideHeader, fullHeight, 
 
   return (
     <div
-      className="flex flex-col w-full overflow-hidden"
-      style={{
-        backgroundColor: 'var(--card)',
-        borderRadius: 12,
-        border: '1px solid var(--border)'
-      }}
+      className="flex flex-col w-full overflow-hidden bg-card rounded-[12px] border border-border"
     >
       {/* Card header */}
       <div
-        className="flex items-center justify-between gap-3 flex-wrap"
-        style={{
-          padding: '12px 16px',
-          borderBottom: '1px solid var(--border)'
-        }}
+        className="flex items-center justify-between gap-3 flex-wrap border-b border-border"
+        style={{ padding: '12px 16px' }}
       >
         <span
-          style={{
-            fontSize: 'var(--text-sm)',
-            fontWeight: 600,
-            color: 'var(--fg)'
-          }}
+          className="text-sm font-semibold"
+          style={{ color: 'var(--fg)' }}
         >
           {tabName}
         </span>
@@ -389,17 +361,8 @@ function CadastroTab({ tabKey, tabName, externalSearch, hideHeader, fullHeight, 
 
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 shrink-0 cursor-pointer border-none outline-none"
-            style={{
-              height: 36,
-              padding: '0 14px',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: 'var(--primary)',
-              color: 'var(--primary-fg)',
-              fontSize: 'var(--text-caption)',
-              fontWeight: 600,
-              transition: 'opacity 150ms ease'
-            }}
+            className="inline-flex items-center gap-1.5 shrink-0 cursor-pointer border-none outline-none rounded-sm bg-primary text-primary-foreground text-caption font-semibold transition-opacity duration-150 ease-in-out"
+            style={{ height: 36, padding: '0 14px' }}
             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.9' }}
             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '1' }}
           >

@@ -16,8 +16,7 @@ const tabs: { key: LoginTab; label: string }[] = [
 export function LoginTabs({ activeTab, onTabChange }: LoginTabsProps) {
   return (
     <div
-      className="flex w-full rounded-[10px] p-[3px] gap-[2px]"
-      style={{ backgroundColor: 'var(--muted)' }}
+      className="flex w-full rounded-[10px] p-[3px] gap-[2px] bg-muted"
     >
       {tabs.map(tab => {
         const isActive = activeTab === tab.key

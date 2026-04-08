@@ -48,7 +48,6 @@ type DataTableProps<T> = {
   onRowClick?: (row: T) => void
   actions?: (row: T) => React.ReactNode
   headerActions?: React.ReactNode
-  className?: string
 }
 
 type SortDirection = 'asc' | 'desc' | null
@@ -82,7 +81,6 @@ function DataTable<T>({
   onRowClick,
   actions,
   headerActions,
-  className
 }: DataTableProps<T>) {
   const isMobile = useIsMobile()
   const [search, setSearch] = useState('')
@@ -509,8 +507,8 @@ function DataTable<T>({
                         <button
                           type="button"
                           onClick={e => { e.stopPropagation(); handleOpenFilter(col.key, col.header) }}
-                          className="inline-flex items-center justify-center shrink-0 cursor-pointer border-none outline-none bg-transparent relative"
-                          style={{ width: 18, height: 18, borderRadius: 'var(--radius-xs)', padding: 0 }}
+                          className="inline-flex items-center justify-center shrink-0 cursor-pointer border-none outline-none bg-transparent relative rounded-xs p-0"
+                          style={{ width: 18, height: 18 }}
                         >
                           <FilterIcon size={12} color={hasActiveFilter ? 'var(--primary)' : 'var(--fg-dim)'} variant="Linear" />
                           {hasActiveFilter && (
@@ -610,14 +608,12 @@ function DataTable<T>({
                   style={{ padding: 0 }}
                 >
                   <div
-                    className="flex flex-col items-center justify-center gap-2"
+                    className="flex flex-col items-center justify-center gap-2 rounded-md m-md"
                     style={{
                       height: autoFitRows ? autoPageSize * 53 : 200,
                       minHeight: 200,
                       color: 'var(--fg-muted)',
-                      border: '2px dashed var(--border)',
-                      borderRadius: 'var(--radius-md)',
-                      margin: 'var(--space-md)'
+                      border: '2px dashed var(--border)'
                     }}
                   >
                     {emptyIcon || <DocumentText size={40} color="var(--fg-dim)" variant="Linear" />}
@@ -733,24 +729,14 @@ function DataTable<T>({
             e.stopPropagation()
             setTooltipCell(null)
           }}
+          className="fixed z-[9999] rounded-sm bg-popover shadow-popover text-foreground text-xs leading-normal break-words whitespace-pre-wrap cursor-pointer"
           style={{
-            position: 'fixed',
             top: tooltipCell.rect.bottom + 4,
             left: tooltipCell.rect.left,
-            zIndex: 9999,
             maxWidth: 360,
             padding: '8px 12px',
-            borderRadius: 'var(--radius-sm)',
-            backgroundColor: 'var(--popover)',
             border: '1px solid var(--popover-border)',
-            boxShadow: 'var(--shadow-popover)',
-            backdropFilter: 'blur(8px)',
-            color: 'var(--foreground)',
-            fontSize: 'var(--text-xs)',
-            lineHeight: 1.5,
-            wordBreak: 'break-word',
-            whiteSpace: 'pre-wrap',
-            cursor: 'pointer'
+            backdropFilter: 'blur(8px)'
           }}
         >
           {tooltipCell.content}
@@ -772,24 +758,10 @@ function DataTable<T>({
             }}
           />
           <div
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              zIndex: 101,
-              width: 280,
-              backgroundColor: 'var(--card)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-md)',
-              boxShadow: 'var(--shadow-popover)',
-              padding: 'var(--space-lg)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--space-md)'
-            }}
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] flex flex-col gap-md p-lg bg-card border border-border rounded-md shadow-popover"
+            style={{ width: 280 }}
           >
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)' }}>
+            <span className="text-sm font-semibold text-foreground">
               Filtrar: {activeFilter.header}
             </span>
             <input
@@ -798,46 +770,27 @@ function DataTable<T>({
               onKeyDown={e => { if (e.key === 'Enter') handleApplyFilter() }}
               placeholder="Digite para filtrar..."
               autoFocus
+              className="w-full text-sm rounded-sm text-foreground outline-none px-md"
               style={{
-                width: '100%',
                 height: 36,
-                fontSize: 'var(--text-sm)',
-                padding: '0 var(--space-md)',
-                borderRadius: 'var(--radius-sm)',
                 border: '1px solid var(--input-border)',
-                backgroundColor: 'var(--input-bg)',
-                color: 'var(--foreground)',
-                outline: 'none'
+                backgroundColor: 'var(--input-bg)'
               }}
             />
             <div className="flex items-center gap-2 justify-end">
               <button
                 type="button"
                 onClick={handleClearFilter}
-                className="cursor-pointer border-none outline-none"
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: 'var(--radius-sm)',
-                  backgroundColor: 'var(--elevated)',
-                  color: 'var(--foreground)',
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 500
-                }}
+                className="cursor-pointer border-none outline-none rounded-sm bg-elevated text-foreground text-xs font-medium"
+                style={{ padding: '6px 14px' }}
               >
                 Limpar
               </button>
               <button
                 type="button"
                 onClick={handleApplyFilter}
-                className="cursor-pointer border-none outline-none"
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: 'var(--radius-sm)',
-                  backgroundColor: 'var(--primary)',
-                  color: 'var(--primary-fg)',
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 500
-                }}
+                className="cursor-pointer border-none outline-none rounded-sm bg-primary text-primary-foreground text-xs font-medium"
+                style={{ padding: '6px 14px' }}
               >
                 Aplicar
               </button>

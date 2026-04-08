@@ -80,13 +80,12 @@ export function CmeForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-[16px] w-full">
       <div className="flex flex-col gap-[6px]">
-        <label className="text-xs font-medium" style={{ color: 'var(--foreground)' }}>
+        <label className="text-xs font-medium text-foreground">
           Usuário
         </label>
         <div className="relative">
           <span
-            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center"
-            style={{ color: 'var(--muted-foreground)' }}
+            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center text-muted-foreground"
           >
             <Building size={18} color="currentColor" />
           </span>
@@ -99,14 +98,8 @@ export function CmeForm() {
             type="text"
             placeholder="Digite o usuário da CME"
             autoComplete="off"
-            className="w-full rounded-[10px] border outline-none text-sm pl-[40px] pr-[14px]"
-            style={{
-              height: 44,
-              backgroundColor: 'var(--input)',
-              borderColor: 'var(--border)',
-              color: 'var(--foreground)',
-              transition: 'border-color 150ms ease'
-            }}
+            className="w-full rounded-[10px] border border-border outline-none text-sm pl-[40px] pr-[14px] bg-input text-foreground transition-[border-color] duration-150 ease-in-out"
+            style={{ height: 44 }}
             onFocus={e => { e.currentTarget.style.borderColor = 'var(--primary)' }}
             onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
           />
@@ -114,13 +107,12 @@ export function CmeForm() {
       </div>
 
       <div className="flex flex-col gap-[6px]">
-        <label className="text-xs font-medium" style={{ color: 'var(--foreground)' }}>
+        <label className="text-xs font-medium text-foreground">
           Senha
         </label>
         <div className="relative">
           <span
-            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center"
-            style={{ color: 'var(--muted-foreground)' }}
+            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center text-muted-foreground"
           >
             <Lock1 size={18} color="currentColor" />
           </span>
@@ -129,22 +121,15 @@ export function CmeForm() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Digite a senha"
             autoComplete="current-password"
-            className="w-full rounded-[10px] border outline-none text-sm pl-[40px] pr-[44px]"
-            style={{
-              height: 44,
-              backgroundColor: 'var(--input)',
-              borderColor: 'var(--border)',
-              color: 'var(--foreground)',
-              transition: 'border-color 150ms ease'
-            }}
+            className="w-full rounded-[10px] border border-border outline-none text-sm pl-[40px] pr-[44px] bg-input text-foreground transition-[border-color] duration-150 ease-in-out"
+            style={{ height: 44 }}
             onFocus={e => { e.currentTarget.style.borderColor = 'var(--primary)' }}
             onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
           />
           <button
             type="button"
             onClick={() => setShowPassword(prev => !prev)}
-            className="absolute right-[12px] top-1/2 -translate-y-1/2 flex items-center border-none bg-transparent cursor-pointer p-0"
-            style={{ color: 'var(--muted-foreground)' }}
+            className="absolute right-[12px] top-1/2 -translate-y-1/2 flex items-center border-none bg-transparent cursor-pointer p-0 text-muted-foreground"
           >
             {showPassword ? <EyeSlash size={18} color="currentColor" /> : <Eye size={18} color="currentColor" />}
           </button>
@@ -152,7 +137,7 @@ export function CmeForm() {
       </div>
 
       {errorMsg && (
-        <p className="text-xs" style={{ color: 'var(--destructive)' }}>
+        <p className="text-xs text-destructive">
           {errorMsg}
         </p>
       )}

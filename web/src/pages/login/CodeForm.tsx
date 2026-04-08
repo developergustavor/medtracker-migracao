@@ -102,13 +102,12 @@ export function CodeForm({ onTwoFactor }: CodeFormProps) {
   return (
     <form className="flex flex-col gap-[16px] w-full">
       <div className="flex flex-col gap-[6px]">
-        <label className="text-xs font-medium" style={{ color: 'var(--foreground)' }}>
+        <label className="text-xs font-medium text-foreground">
           Código
         </label>
         <div className="relative">
           <span
-            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center"
-            style={{ color: 'var(--muted-foreground)' }}
+            className="absolute left-[12px] top-1/2 -translate-y-1/2 flex items-center text-muted-foreground"
           >
             <ScanBarcode size={18} color="currentColor" />
           </span>
@@ -121,14 +120,8 @@ export function CodeForm({ onTwoFactor }: CodeFormProps) {
             type="password"
             placeholder="Digite seu código"
             autoComplete="off"
-            className="w-full rounded-[10px] border outline-none text-sm pl-[40px] pr-[14px]"
-            style={{
-              height: 44,
-              backgroundColor: 'var(--input)',
-              borderColor: 'var(--border)',
-              color: 'var(--foreground)',
-              transition: 'border-color 150ms ease'
-            }}
+            className="w-full rounded-[10px] border border-border outline-none text-sm pl-[40px] pr-[14px] bg-input text-foreground transition-[border-color] duration-150 ease-in-out"
+            style={{ height: 44 }}
             onFocus={e => { e.currentTarget.style.borderColor = 'var(--primary)' }}
             onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
             onKeyDown={e => { if (e.key === 'Enter') e.preventDefault() }}
@@ -142,14 +135,14 @@ export function CodeForm({ onTwoFactor }: CodeFormProps) {
             className="inline-block w-[18px] h-[18px] rounded-full border-2 border-t-transparent animate-spin"
             style={{ borderColor: 'var(--primary)', borderTopColor: 'transparent' }}
           />
-          <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+          <span className="text-xs text-muted-foreground">
             Acessando...
           </span>
         </div>
       )}
 
       {errorMsg && (
-        <p className="text-xs" style={{ color: 'var(--destructive)' }}>
+        <p className="text-xs text-destructive">
           {errorMsg}
         </p>
       )}

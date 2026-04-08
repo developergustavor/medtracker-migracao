@@ -57,14 +57,12 @@ function MenuButton({ onClick, children, destructive = false }: { onClick: () =>
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-md w-full cursor-pointer"
+      className="flex items-center gap-md w-full cursor-pointer rounded-sm text-sm"
       style={{
         padding: '10px 12px',
-        borderRadius: 'var(--radius-sm)',
         backgroundColor: 'transparent',
         border: 'none',
         color: destructive ? 'var(--destructive)' : 'var(--foreground)',
-        fontSize: 'var(--text-sm)',
         fontWeight: destructive ? 500 : 400,
         transition: 'background-color 150ms ease',
         textAlign: 'left'
@@ -87,14 +85,11 @@ function ViewHeader({ title, onBack }: { title: string; onBack: () => void }) {
     >
       <button
         onClick={onBack}
-        className="flex items-center gap-sm cursor-pointer w-full"
+        className="flex items-center gap-sm cursor-pointer w-full rounded-sm text-foreground text-body"
         style={{
           padding: '8px 8px',
-          borderRadius: 'var(--radius-sm)',
           backgroundColor: 'transparent',
           border: 'none',
-          color: 'var(--foreground)',
-          fontSize: 'var(--text-body)',
           fontWeight: 600,
           transition: 'background-color 150ms ease',
           textAlign: 'left'
@@ -154,13 +149,11 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
         }}
       >
         <div
-          className="flex items-center justify-center shrink-0"
+          className="flex items-center justify-center shrink-0 rounded-pill text-body"
           style={{
             width: 40,
             height: 40,
-            borderRadius: 'var(--radius-pill)',
             background: 'linear-gradient(135deg, #2155FC, #4B7BFF)',
-            fontSize: 'var(--text-body)',
             fontWeight: 700,
             color: '#ffffff'
           }}
@@ -169,14 +162,13 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div
-            className="truncate"
-            style={{ fontSize: 'var(--text-body)', fontWeight: 600, color: 'var(--foreground)' }}
+            className="truncate text-body text-foreground"
+            style={{ fontWeight: 600 }}
           >
             {displayName}
           </div>
           <div
-            className="truncate"
-            style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}
+            className="truncate text-xs text-muted-foreground"
           >
             {displayRole}{displayEmail ? ` \u2022 ${displayEmail}` : ''}
           </div>
@@ -272,14 +264,11 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
             <button
               key={item.id}
               onClick={() => handleCmeSelect(item)}
-              className="flex flex-col w-full cursor-pointer"
+              className="flex flex-col w-full cursor-pointer rounded-sm text-foreground text-sm"
               style={{
                 padding: '10px 12px',
-                borderRadius: 'var(--radius-sm)',
                 backgroundColor: isCurrentCme ? 'var(--primary-8)' : 'transparent',
                 border: isCurrentCme ? '1px solid var(--primary-20)' : '1px solid transparent',
-                color: 'var(--foreground)',
-                fontSize: 'var(--text-sm)',
                 transition: 'background-color 150ms ease',
                 textAlign: 'left',
                 marginBottom: 2
@@ -354,18 +343,16 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
       <ViewHeader title="Alterar Senha" onBack={goBack} />
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
-        <p style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', marginBottom: 16 }}>
+        <p className="text-xs text-muted-foreground" style={{ marginBottom: 16 }}>
           Formulário de alteração de senha (placeholder)
         </p>
 
         <div className="flex flex-col gap-sm">
           <div>
             <label
+              className="block text-xs text-foreground"
               style={{
-                display: 'block',
-                fontSize: 'var(--text-xs)',
                 fontWeight: 500,
-                color: 'var(--foreground)',
                 marginBottom: 4
               }}
             >
@@ -375,14 +362,11 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
               type="password"
               disabled
               placeholder="********"
+              className="rounded-sm border border-border text-muted-foreground text-sm"
               style={{
                 width: '100%',
                 padding: '8px 12px',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--border)',
                 backgroundColor: 'var(--muted-8)',
-                color: 'var(--muted-foreground)',
-                fontSize: 'var(--text-sm)',
                 outline: 'none'
               }}
             />
@@ -390,11 +374,9 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
 
           <div>
             <label
+              className="block text-xs text-foreground"
               style={{
-                display: 'block',
-                fontSize: 'var(--text-xs)',
                 fontWeight: 500,
-                color: 'var(--foreground)',
                 marginBottom: 4
               }}
             >
@@ -404,14 +386,11 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
               type="password"
               disabled
               placeholder="********"
+              className="rounded-sm border border-border text-muted-foreground text-sm"
               style={{
                 width: '100%',
                 padding: '8px 12px',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--border)',
                 backgroundColor: 'var(--muted-8)',
-                color: 'var(--muted-foreground)',
-                fontSize: 'var(--text-sm)',
                 outline: 'none'
               }}
             />
@@ -419,11 +398,9 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
 
           <div>
             <label
+              className="block text-xs text-foreground"
               style={{
-                display: 'block',
-                fontSize: 'var(--text-xs)',
                 fontWeight: 500,
-                color: 'var(--foreground)',
                 marginBottom: 4
               }}
             >
@@ -433,14 +410,11 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
               type="password"
               disabled
               placeholder="********"
+              className="rounded-sm border border-border text-muted-foreground text-sm"
               style={{
                 width: '100%',
                 padding: '8px 12px',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--border)',
                 backgroundColor: 'var(--muted-8)',
-                color: 'var(--muted-foreground)',
-                fontSize: 'var(--text-sm)',
                 outline: 'none'
               }}
             />
@@ -469,6 +443,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
 
       {/* Dialog */}
       <div
+        className="bg-card rounded-lg border border-border shadow-popover"
         style={{
           position: 'fixed',
           top: '50%',
@@ -477,10 +452,6 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
           zIndex: 101,
           width: 320,
           maxHeight: '85vh',
-          backgroundColor: 'var(--card)',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border)',
-          boxShadow: 'var(--shadow-popover)',
           overflowY: 'auto',
           overflowX: 'hidden'
         }}

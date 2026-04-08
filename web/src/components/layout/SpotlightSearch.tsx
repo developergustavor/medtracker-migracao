@@ -237,15 +237,13 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
 
         {/* Card */}
         <div
+          className="bg-card border border-border shadow-popover"
           style={{
             position: 'relative',
             width: '100%',
             maxWidth: 520,
             margin: '0 16px',
-            backgroundColor: 'var(--card)',
-            border: '1px solid var(--border)',
             borderRadius: 14,
-            boxShadow: 'var(--shadow-popover)',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
@@ -269,27 +267,25 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
               value={query}
               onChange={e => handleQueryChange(e.target.value)}
               placeholder="Buscar..."
+              className="text-foreground"
               style={{
                 flex: 1,
                 border: 'none',
                 outline: 'none',
                 backgroundColor: 'transparent',
-                color: 'var(--foreground)',
                 fontSize: 15,
                 fontFamily: 'inherit',
                 minWidth: 0
               }}
             />
             <div
+              className="rounded-xs border border-border text-muted-foreground"
               style={{
                 flexShrink: 0,
                 padding: '2px 6px',
-                borderRadius: 'var(--radius-xs)',
                 backgroundColor: 'var(--muted-8)',
-                border: '1px solid var(--border)',
                 fontSize: 11,
                 fontWeight: 500,
-                color: 'var(--muted-foreground)',
                 lineHeight: '16px'
               }}
             >
@@ -310,11 +306,9 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
             >
               {!hasResults && (
                 <div
-                  className="flex items-center justify-center"
+                  className="flex items-center justify-center text-muted-foreground text-sm"
                   style={{
-                    padding: '24px 16px',
-                    color: 'var(--muted-foreground)',
-                    fontSize: 'var(--text-sm)'
+                    padding: '24px 16px'
                   }}
                 >
                   Nenhum resultado para &apos;{debouncedQuery}&apos;
@@ -343,14 +337,11 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
                         key={`page-${i}`}
                         data-spotlight-index={flatIndex}
                         onClick={() => handleSelect(result)}
-                        className="flex items-center gap-sm w-full cursor-pointer"
+                        className="flex items-center gap-sm w-full cursor-pointer rounded-sm text-foreground text-sm"
                         style={{
                           padding: '8px 10px',
-                          borderRadius: 'var(--radius-sm)',
                           backgroundColor: isSelected ? 'var(--primary-8)' : 'transparent',
                           border: 'none',
-                          color: 'var(--foreground)',
-                          fontSize: 'var(--text-sm)',
                           textAlign: 'left',
                           transition: 'background-color 100ms ease',
                           marginBottom: 1
@@ -397,14 +388,11 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
                         key={`mat-${i}`}
                         data-spotlight-index={flatIndex}
                         onClick={() => handleSelect(result)}
-                        className="flex items-center gap-sm w-full cursor-pointer"
+                        className="flex items-center gap-sm w-full cursor-pointer rounded-sm text-foreground text-sm"
                         style={{
                           padding: '8px 10px',
-                          borderRadius: 'var(--radius-sm)',
                           backgroundColor: isSelected ? 'var(--primary-8)' : 'transparent',
                           border: 'none',
-                          color: 'var(--foreground)',
-                          fontSize: 'var(--text-sm)',
                           textAlign: 'left',
                           transition: 'background-color 100ms ease',
                           marginBottom: 1
@@ -433,11 +421,9 @@ function SpotlightSearchContent({ onClose }: { onClose: () => void }) {
           {/* Empty state when no query */}
           {!hasQuery && (
             <div
-              className="flex items-center justify-center"
+              className="flex items-center justify-center text-muted-foreground text-sm"
               style={{
-                padding: '20px 16px',
-                color: 'var(--muted-foreground)',
-                fontSize: 'var(--text-sm)'
+                padding: '20px 16px'
               }}
             >
               Busque por materiais, páginas, ações...

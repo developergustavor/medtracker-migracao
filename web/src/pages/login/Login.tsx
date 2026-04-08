@@ -99,13 +99,10 @@ export function Login() {
       }}
     >
       <div
-        className="flex flex-col items-center gap-[24px] w-full smAndDown:max-w-none smAndDown:rounded-none smAndDown:shadow-none smAndDown:bg-transparent smAndDown:border-0 smAndDown:p-0"
+        className="flex flex-col items-center gap-[24px] w-full bg-card border border-border rounded-[16px] smAndDown:max-w-none smAndDown:rounded-none smAndDown:shadow-none smAndDown:bg-transparent smAndDown:border-0 smAndDown:p-0"
         style={{
           maxWidth: 420,
           padding: 32,
-          borderRadius: 16,
-          backgroundColor: 'var(--card)',
-          border: '1px solid var(--border)',
           boxShadow: '0 4px 24px rgba(0,0,0,0.06)'
         }}
       >
@@ -115,7 +112,7 @@ export function Login() {
             alt="Medtracker"
             style={{ height: 64 }}
           />
-          <p className="text-xs text-center" style={{ color: 'var(--muted-foreground)' }}>
+          <p className="text-xs text-center text-muted-foreground">
             Insira seus dados para acessar a plataforma
           </p>
         </div>

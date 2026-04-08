@@ -271,14 +271,10 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
         {/* Search input */}
         <button
           onClick={handleSearchClick}
-          className="flex items-center gap-sm w-full cursor-pointer"
+          className="flex items-center gap-sm w-full cursor-pointer rounded-md border border-border text-muted-foreground text-sm"
           style={{
             padding: '10px 14px',
-            borderRadius: 'var(--radius-md)',
             backgroundColor: 'var(--muted-8)',
-            border: '1px solid var(--border)',
-            color: 'var(--muted-foreground)',
-            fontSize: 'var(--text-sm)',
             textAlign: 'left',
             marginBottom: 16
           }}
@@ -307,12 +303,9 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
         {cme && !isCmeOnly && (
           <button
             onClick={goToCmeSelector}
-            className="flex flex-col w-full cursor-pointer"
+            className="flex flex-col w-full cursor-pointer rounded-md bg-background border border-border"
             style={{
               padding: '12px 14px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--background)',
-              border: '1px solid var(--border)',
               marginBottom: 16,
               textAlign: 'left',
               transition: 'background-color 150ms ease'
@@ -321,8 +314,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
             <div className="flex items-center gap-sm">
               <Building size={18} color="var(--foreground)" style={{ flexShrink: 0 }} />
               <span
-                className="truncate"
-                style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)', flex: 1 }}
+                className="truncate text-sm text-foreground" style={{ fontWeight: 600, flex: 1 }}
               >
                 {cme.corporateName}
               </span>
@@ -366,12 +358,10 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
                 <button
                   key={route.path}
                   onClick={() => handleGridRouteClick(route)}
-                  className="flex flex-col items-center justify-center cursor-pointer"
+                  className="flex flex-col items-center justify-center cursor-pointer rounded-md border border-border"
                   style={{
                     padding: '14px 8px',
-                    borderRadius: 'var(--radius-md)',
                     backgroundColor: active ? 'var(--primary-8)' : 'var(--background)',
-                    border: '1px solid var(--border)',
                     color: active ? 'var(--primary)' : 'var(--foreground)',
                     fontSize: 'var(--text-xxs)',
                     fontWeight: active ? 600 : 500,
@@ -388,13 +378,9 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
             {/* Notificações card */}
             <button
               onClick={() => setView('notifications')}
-              className="flex flex-col items-center justify-center cursor-pointer"
+              className="flex flex-col items-center justify-center cursor-pointer rounded-md bg-background border border-border text-foreground"
               style={{
                 padding: '14px 8px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--background)',
-                border: '1px solid var(--border)',
-                color: 'var(--foreground)',
                 fontSize: 'var(--text-xxs)',
                 fontWeight: 500,
                 gap: 6,
@@ -430,13 +416,9 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
             {/* Material de apoio card */}
             <button
               onClick={() => setView('support')}
-              className="flex flex-col items-center justify-center cursor-pointer"
+              className="flex flex-col items-center justify-center cursor-pointer rounded-md bg-background border border-border text-foreground"
               style={{
                 padding: '14px 8px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--background)',
-                border: '1px solid var(--border)',
-                color: 'var(--foreground)',
                 fontSize: 'var(--text-xxs)',
                 fontWeight: 500,
                 gap: 6,
@@ -461,13 +443,12 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           }}
         >
           <div
-            className="flex items-center justify-center shrink-0"
+            className="flex items-center justify-center shrink-0 text-sm"
             style={{
               width: 36,
               height: 36,
               borderRadius: 9999,
               background: 'linear-gradient(135deg, #2155FC, #4B7BFF)',
-              fontSize: 'var(--text-sm)',
               fontWeight: 700,
               color: '#ffffff'
             }}
@@ -476,14 +457,14 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div
-              className="truncate"
-              style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--foreground)' }}
+              className="truncate text-sm text-foreground"
+              style={{ fontWeight: 600 }}
             >
               {displayName}
             </div>
             <div
-              className="truncate"
-              style={{ fontSize: 'var(--text-xxs)', color: 'var(--muted-foreground)' }}
+              className="truncate text-muted-foreground"
+              style={{ fontSize: 'var(--text-xxs)' }}
             >
               {displayRole}
             </div>
@@ -497,19 +478,16 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
             <button
               key={route.path}
               onClick={() => handleNavigate(route.path)}
-              className="flex items-center gap-md w-full cursor-pointer"
+              className="flex items-center gap-md w-full cursor-pointer rounded-sm text-foreground text-sm"
               style={{
                 padding: '10px 12px',
-                borderRadius: 'var(--radius-sm)',
                 backgroundColor: 'transparent',
                 border: 'none',
-                color: 'var(--foreground)',
-                fontSize: 'var(--text-sm)',
                 textAlign: 'left',
                 transition: 'background-color 150ms ease'
               }}
             >
-              {route.icon && <span style={{ color: 'var(--foreground)', display: 'flex', flexShrink: 0 }}>{getRouteIcon(route.icon, 18, false)}</span>}
+              {route.icon && <span className="text-foreground" style={{ display: 'flex', flexShrink: 0 }}>{getRouteIcon(route.icon, 18, false)}</span>}
               {route.name}
             </button>
           ))}
@@ -520,14 +498,11 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
               console.log(`[${_loc}] Alterar Senha clicked (placeholder)`)
               onClose()
             }}
-            className="flex items-center gap-md w-full cursor-pointer"
+            className="flex items-center gap-md w-full cursor-pointer rounded-sm text-foreground text-sm"
             style={{
               padding: '10px 12px',
-              borderRadius: 'var(--radius-sm)',
               backgroundColor: 'transparent',
               border: 'none',
-              color: 'var(--foreground)',
-              fontSize: 'var(--text-sm)',
               textAlign: 'left',
               transition: 'background-color 150ms ease'
             }}
@@ -540,14 +515,11 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           {showThemeToggle && (
             <button
               onClick={toggleTheme}
-              className="flex items-center gap-md w-full cursor-pointer"
+              className="flex items-center gap-md w-full cursor-pointer rounded-sm text-foreground text-sm"
               style={{
                 padding: '10px 12px',
-                borderRadius: 'var(--radius-sm)',
                 backgroundColor: 'transparent',
                 border: 'none',
-                color: 'var(--foreground)',
-                fontSize: 'var(--text-sm)',
                 textAlign: 'left',
                 transition: 'background-color 150ms ease'
               }}
@@ -566,14 +538,11 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           {/* Logout */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-md w-full cursor-pointer"
+            className="flex items-center gap-md w-full cursor-pointer rounded-sm text-destructive text-sm"
             style={{
               padding: '10px 12px',
-              borderRadius: 'var(--radius-sm)',
               backgroundColor: 'transparent',
               border: 'none',
-              color: 'var(--destructive)',
-              fontSize: 'var(--text-sm)',
               fontWeight: 500,
               textAlign: 'left',
               transition: 'background-color 150ms ease'
@@ -599,14 +568,11 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       >
         <button
           onClick={goBackToMain}
-          className="flex items-center gap-sm cursor-pointer w-full"
+          className="flex items-center gap-sm cursor-pointer w-full rounded-sm text-foreground text-body"
           style={{
             padding: '8px 8px',
-            borderRadius: 'var(--radius-sm)',
             backgroundColor: 'transparent',
             border: 'none',
-            color: 'var(--foreground)',
-            fontSize: 'var(--text-body)',
             fontWeight: 600,
             transition: 'background-color 150ms ease',
             textAlign: 'left'
@@ -629,14 +595,11 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
             <button
               key={item.id}
               onClick={() => handleCmeSelect(item)}
-              className="flex flex-col w-full cursor-pointer"
+              className="flex flex-col w-full cursor-pointer rounded-sm text-foreground text-sm"
               style={{
                 padding: '10px 12px',
-                borderRadius: 'var(--radius-sm)',
                 backgroundColor: isCurrentCme ? 'var(--primary-8)' : 'transparent',
                 border: isCurrentCme ? '1px solid var(--primary-20)' : '1px solid transparent',
-                color: 'var(--foreground)',
-                fontSize: 'var(--text-sm)',
                 transition: 'background-color 150ms ease',
                 textAlign: 'left',
                 marginBottom: 2
@@ -648,13 +611,12 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
                 </span>
                 {isCurrentCme && (
                   <span
+                    className="text-primary rounded-xs"
                     style={{
                       fontSize: 'var(--text-xxs)',
                       fontWeight: 600,
-                      color: 'var(--primary)',
                       backgroundColor: 'var(--primary-8)',
                       padding: '2px 6px',
-                      borderRadius: 'var(--radius-xs)',
                       flexShrink: 0
                     }}
                   >
@@ -664,19 +626,19 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
               </div>
               <div className="flex items-center gap-sm" style={{ marginTop: 4 }}>
                 <span
+                  className="rounded-pill"
                   style={{
                     fontSize: 10,
                     fontWeight: 600,
                     color: moduleColors.color,
                     backgroundColor: moduleColors.bg,
                     padding: '2px 8px',
-                    borderRadius: 'var(--radius-pill)',
                     letterSpacing: '0.02em'
                   }}
                 >
                   {formatted_cme_module[item.module]}
                 </span>
-                <span style={{ fontSize: 'var(--text-xxs)', color: 'var(--muted-foreground)' }}>
+                <span className="text-muted-foreground" style={{ fontSize: 'var(--text-xxs)' }}>
                   {item.city}/{item.uf}
                 </span>
               </div>
@@ -692,8 +654,8 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       <div className="shrink-0" style={{ padding: '6px 8px', borderBottom: '1px solid var(--border-separator)' }}>
         <button
           onClick={goBackToMain}
-          className="flex items-center gap-sm cursor-pointer w-full"
-          style={{ padding: '8px 8px', borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: 'var(--text-body)', fontWeight: 600, transition: 'background-color 150ms ease', textAlign: 'left' }}
+          className="flex items-center gap-sm cursor-pointer w-full rounded-sm text-foreground text-body"
+          style={{ padding: '8px 8px', backgroundColor: 'transparent', border: 'none', fontWeight: 600, transition: 'background-color 150ms ease', textAlign: 'left' }}
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
         >
@@ -703,7 +665,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       </div>
       <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
         {mockNotifications.length === 0 ? (
-          <div className="flex items-center justify-center py-xl" style={{ color: 'var(--muted-foreground)', fontSize: 'var(--text-sm)' }}>
+          <div className="flex items-center justify-center py-xl text-muted-foreground text-sm">
             Nenhuma notificação
           </div>
         ) : (
@@ -711,13 +673,13 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
             <button
               key={notification.id}
               onClick={() => { console.log(`[${_loc}] Notification clicked:`, notification.id); onClose() }}
-              className="flex flex-col w-full cursor-pointer"
-              style={{ padding: '10px 12px', borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: 'var(--text-sm)', textAlign: 'left', transition: 'background-color 150ms ease', marginBottom: 2 }}
+              className="flex flex-col w-full cursor-pointer rounded-sm text-foreground text-sm"
+              style={{ padding: '10px 12px', backgroundColor: 'transparent', border: 'none', textAlign: 'left', transition: 'background-color 150ms ease', marginBottom: 2 }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
             >
               <span style={{ fontWeight: 500, lineHeight: 1.4 }}>{notification.title}</span>
-              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', marginTop: 2 }}>{notification.time}</span>
+              <span className="text-xs text-muted-foreground" style={{ marginTop: 2 }}>{notification.time}</span>
             </button>
           ))
         )}
@@ -730,8 +692,8 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       <div className="shrink-0" style={{ padding: '6px 8px', borderBottom: '1px solid var(--border-separator)' }}>
         <button
           onClick={goBackToMain}
-          className="flex items-center gap-sm cursor-pointer w-full"
-          style={{ padding: '8px 8px', borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: 'var(--text-body)', fontWeight: 600, transition: 'background-color 150ms ease', textAlign: 'left' }}
+          className="flex items-center gap-sm cursor-pointer w-full rounded-sm text-foreground text-body"
+          style={{ padding: '8px 8px', backgroundColor: 'transparent', border: 'none', fontWeight: 600, transition: 'background-color 150ms ease', textAlign: 'left' }}
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
         >
@@ -744,8 +706,8 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           <button
             key={link.id}
             onClick={() => { console.log(`[${_loc}] Support link clicked:`, link.id); onClose() }}
-            className="flex items-center gap-md w-full cursor-pointer"
-            style={{ padding: '10px 12px', borderRadius: 'var(--radius-sm)', backgroundColor: 'transparent', border: 'none', color: 'var(--foreground)', fontSize: 'var(--text-sm)', textAlign: 'left', transition: 'background-color 150ms ease', marginBottom: 2 }}
+            className="flex items-center gap-md w-full cursor-pointer rounded-sm text-foreground text-sm"
+            style={{ padding: '10px 12px', backgroundColor: 'transparent', border: 'none', textAlign: 'left', transition: 'background-color 150ms ease', marginBottom: 2 }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
           >
