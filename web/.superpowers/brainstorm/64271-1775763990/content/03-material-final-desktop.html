@@ -1,0 +1,299 @@
+<h2>Material KIT — Desktop/Tablet (final)</h2>
+<p class="subtitle">Form com coluna lateral de imagens + seção inline de composição do kit.<br>
+Fluxo: Preencher dados → Registrar → Tab Submateriais habilita → Adicionar submateriais.</p>
+
+<div style="max-width: 1000px; margin: 0 auto;">
+
+  <!-- STATE 1: New material, type=KIT, not saved yet -->
+  <div class="section">
+    <div class="label">Estado 1 — Novo Material (tipo KIT, ainda não salvo)</div>
+    <div class="mockup">
+      <div class="mockup-header">Cadastrar Materiais — Desktop (1280px)</div>
+      <div class="mockup-body" style="background: #0f1014; padding: 0;">
+        <div style="display: flex; height: 560px;">
+          <!-- Left: Entity sidebar (disabled) -->
+          <div style="width: 140px; border-right: 1px solid #1a1c24; background: #0b0c10; opacity: 0.4; padding: 10px; flex-shrink: 0;">
+            <div style="font-size: 9px; color: #4B7BFF; padding: 6px 8px; background: rgba(75,123,255,0.08); border-radius: 4px; margin-bottom: 4px; border-left: 2px solid #4B7BFF;">Materiais</div>
+            <div style="font-size: 9px; color: #6e6e7a; padding: 6px 8px;">Colaboradores</div>
+            <div style="font-size: 9px; color: #6e6e7a; padding: 6px 8px;">Equipamentos</div>
+            <div style="font-size: 9px; color: #6e6e7a; padding: 6px 8px;">...</div>
+          </div>
+
+          <!-- Center: form + right image column -->
+          <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+            <!-- Tabs -->
+            <div style="display: flex; padding: 16px 24px 0; gap: 0;">
+              <div style="flex: 1; text-align: center; padding: 10px; background: #4B7BFF; color: white; font-size: 11px; font-weight: 600; border-radius: 6px 6px 0 0;">Dados</div>
+              <div style="flex: 1; text-align: center; padding: 10px; background: #171920; color: #4e4e5a; font-size: 11px; border-radius: 6px 6px 0 0; opacity: 0.4; position: relative;">
+                Submateriais
+                <div style="position: absolute; top: 4px; right: 8px; background: #f6b51e; width: 6px; height: 6px; border-radius: 50%;"></div>
+              </div>
+            </div>
+
+            <!-- Content area -->
+            <div style="flex: 1; display: flex; overflow: auto; padding: 20px 24px;">
+              <!-- Form fields -->
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 14px; padding-right: 20px;">
+                <div style="text-align: center; margin-bottom: 4px;">
+                  <div style="color: #f0f0f3; font-size: 15px; font-weight: 700;">Cadastrar Materiais</div>
+                  <div style="color: #6e6e7a; font-size: 11px;">Preencha os campos para cadastrar o material.</div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                  <div style="flex: 4;">
+                    <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Código</div>
+                    <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px;"></div>
+                  </div>
+                  <div style="flex: 8;">
+                    <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Material <span style="color: #ef4444;">*</span></div>
+                    <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px; display: flex; align-items: center; padding: 0 10px;">
+                      <span style="color: #f0f0f3; font-size: 12px;">CX VASCULAR Nº1</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                  <div style="flex: 1;">
+                    <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Tipo <span style="color: #ef4444;">*</span></div>
+                    <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px; display: flex; align-items: center; padding: 0 10px;">
+                      <span style="color: #4B7BFF; font-size: 12px; font-weight: 600;">KIT</span>
+                    </div>
+                  </div>
+                  <div style="flex: 1;">
+                    <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Qtd. Submateriais <span style="color: #ef4444;">*</span></div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      <div style="background: #22242c; border: 1px solid #1a1c24; border-radius: 6px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: #6e6e7a;">−</div>
+                      <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px; flex: 1; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #f0f0f3; font-size: 12px;">0</span>
+                      </div>
+                      <div style="background: #22242c; border: 1px solid #1a1c24; border-radius: 6px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: #6e6e7a;">+</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                  <div style="flex: 1;">
+                    <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Embalagem</div>
+                    <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px;"></div>
+                  </div>
+                  <div style="flex: 1;">
+                    <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Modelo de Etiqueta</div>
+                    <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px;"></div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <div style="flex: 1; display: flex; align-items: center; gap: 8px; padding-top: 6px;">
+                    <div style="width: 16px; height: 16px; border: 1px solid #4e4e5a; border-radius: 3px;"></div>
+                    <span style="color: #f0f0f3; font-size: 12px;">Consignado</span>
+                  </div>
+                  <div style="flex: 1;">
+                    <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Terceiro</div>
+                    <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px; opacity: 0.4;"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Cor</div>
+                  <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px;"></div>
+                </div>
+                <div>
+                  <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Detalhes</div>
+                  <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 64px;"></div>
+                </div>
+              </div>
+
+              <!-- Right: Image column -->
+              <div style="width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;">
+                <div style="color: #8e8e9a; font-size: 10px; font-weight: 600;">IMAGENS</div>
+                <div style="flex: 1; border: 2px dashed #2a2c34; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: rgba(18,20,26,0.5);">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(75,123,255,0.08); display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #4B7BFF; font-size: 20px;">+</span>
+                  </div>
+                  <span style="color: #6e6e7a; font-size: 10px; text-align: center;">Arraste, cole<br>ou clique</span>
+                  <div style="display: flex; gap: 4px;">
+                    <div style="background: rgba(75,123,255,0.08); color: #4B7BFF; font-size: 9px; padding: 4px 8px; border-radius: 4px;">Upload</div>
+                    <div style="background: rgba(75,123,255,0.08); color: #4B7BFF; font-size: 9px; padding: 4px 8px; border-radius: 4px;">Camera</div>
+                  </div>
+                  <span style="color: #4e4e5a; font-size: 9px;">0/3</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="padding: 10px 24px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: flex-end; gap: 8px; background: #171920;">
+              <div style="background: linear-gradient(135deg, #2155FC, #4B7BFF); color: white; font-size: 12px; padding: 8px 18px; border-radius: 6px; font-weight: 500;">Registrar ✓</div>
+              <div style="border: 1px solid rgba(75,123,255,0.2); color: #4B7BFF; font-size: 12px; padding: 8px 18px; border-radius: 6px;">Cancelar ✕</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="color: #8e8e9a; font-size: 12px; margin-top: 8px;">
+      ● Tab "Submateriais" aparece com <span style="color: #f6b51e;">dot amarelo</span> indicando que está bloqueada (precisa registrar primeiro).<br>
+      ● Qtd. Submateriais mostra 0 (auto-calculado depois).<br>
+      ● Coluna de imagens à direita com drop zone.<br>
+      ● Ao clicar "Registrar", salva o material e habilita a tab Submateriais.
+    </p>
+  </div>
+
+  <!-- STATE 2: Material saved, submateriais tab active -->
+  <div class="section">
+    <div class="label">Estado 2 — Material Salvo, Tab Submateriais Ativa</div>
+    <div class="mockup">
+      <div class="mockup-header">Editar Materiais — Tab Submateriais</div>
+      <div class="mockup-body" style="background: #0f1014; padding: 0;">
+        <div style="display: flex; height: 480px;">
+          <!-- Sidebar -->
+          <div style="width: 140px; border-right: 1px solid #1a1c24; background: #0b0c10; opacity: 0.4; padding: 10px; flex-shrink: 0;">
+            <div style="font-size: 9px; color: #4B7BFF; padding: 6px 8px; background: rgba(75,123,255,0.08); border-radius: 4px; border-left: 2px solid #4B7BFF;">Materiais</div>
+          </div>
+
+          <!-- Content -->
+          <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+            <!-- Tabs -->
+            <div style="display: flex; padding: 16px 24px 0; gap: 0;">
+              <div style="flex: 1; text-align: center; padding: 10px; background: #171920; color: #8e8e9a; font-size: 11px; border-radius: 6px 6px 0 0;">Dados</div>
+              <div style="flex: 1; text-align: center; padding: 10px; background: #4B7BFF; color: white; font-size: 11px; font-weight: 600; border-radius: 6px 6px 0 0;">
+                Submateriais
+                <span style="background: rgba(255,255,255,0.2); font-size: 9px; padding: 1px 6px; border-radius: 9999px; margin-left: 4px;">3</span>
+              </div>
+            </div>
+
+            <!-- Submateriais content -->
+            <div style="flex: 1; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; overflow: auto;">
+              <!-- Section header -->
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <span style="color: #4B7BFF; font-size: 13px; font-weight: 700;">Composição do Kit</span>
+                  <span style="color: #6e6e7a; font-size: 11px; margin-left: 8px;">CX VASCULAR Nº1</span>
+                </div>
+                <span style="color: #6e6e7a; font-size: 11px;">3 itens · 7 un.</span>
+              </div>
+
+              <!-- Inline add form -->
+              <div style="background: #171920; border-radius: 8px; border: 1px solid rgba(75,123,255,0.12); padding: 12px; display: flex; gap: 8px; align-items: flex-end;">
+                <div style="width: 100px;">
+                  <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Código</div>
+                  <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px;"></div>
+                </div>
+                <div style="flex: 1;">
+                  <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Nome <span style="color: #ef4444;">*</span></div>
+                  <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px;"></div>
+                </div>
+                <div style="width: 80px;">
+                  <div style="color: #8e8e9a; font-size: 10px; margin-bottom: 3px;">Qtd <span style="color: #ef4444;">*</span></div>
+                  <div style="display: flex; gap: 4px; align-items: center;">
+                    <div style="background: #22242c; border-radius: 4px; width: 26px; height: 34px; display: flex; align-items: center; justify-content: center; color: #6e6e7a; font-size: 10px;">−</div>
+                    <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 34px; flex: 1; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #f0f0f3; font-size: 11px;">1</span>
+                    </div>
+                    <div style="background: #22242c; border-radius: 4px; width: 26px; height: 34px; display: flex; align-items: center; justify-content: center; color: #6e6e7a; font-size: 10px;">+</div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 4px;">
+                  <div style="background: rgba(75,123,255,0.08); border-radius: 6px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                    <span style="color: #4B7BFF; font-size: 14px;">📷</span>
+                  </div>
+                  <div style="background: #4B7BFF; border-radius: 6px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                    <span style="color: white; font-size: 16px;">+</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- List of submateriais -->
+              <div style="background: #171920; border-radius: 8px; border: 1px solid #1a1c24; overflow: hidden; flex: 1;">
+                <!-- Header -->
+                <div style="display: flex; padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.02);">
+                  <div style="width: 80px; color: #6e6e7a; font-size: 10px; font-weight: 500;">CÓDIGO</div>
+                  <div style="flex: 1; color: #6e6e7a; font-size: 10px; font-weight: 500;">NOME</div>
+                  <div style="width: 50px; text-align: center; color: #6e6e7a; font-size: 10px; font-weight: 500;">QTD</div>
+                  <div style="width: 40px; text-align: center; color: #6e6e7a; font-size: 10px; font-weight: 500;">FOTO</div>
+                  <div style="width: 90px;"></div>
+                </div>
+                <!-- Row 1: with code (individual, qty=1) -->
+                <div style="display: flex; align-items: center; padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,0.02);">
+                  <div style="width: 80px; color: #f0f0f3; font-size: 11px; font-family: monospace;">SUB-01</div>
+                  <div style="flex: 1; color: #f0f0f3; font-size: 12px;">Pinça Backaus</div>
+                  <div style="width: 50px; text-align: center; color: #6e6e7a; font-size: 11px;">1</div>
+                  <div style="width: 40px; text-align: center;">
+                    <div style="width: 22px; height: 22px; border-radius: 4px; background: #2a2c34; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                      <span style="font-size: 8px;">🖼</span>
+                    </div>
+                  </div>
+                  <div style="width: 90px; display: flex; gap: 4px; justify-content: flex-end;">
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #2a2c34; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #8e8e9a; font-size: 10px;">✎</span>
+                    </div>
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #2a2c34; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #8e8e9a; font-size: 10px;">⊕</span>
+                    </div>
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #ef4444; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #ef4444; font-size: 10px;">×</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row 2: without code (grouped, qty=3) -->
+                <div style="display: flex; align-items: center; padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,0.02);">
+                  <div style="width: 80px; color: #4e4e5a; font-size: 11px;">—</div>
+                  <div style="flex: 1; color: #f0f0f3; font-size: 12px;">Tesoura Metzenbaum</div>
+                  <div style="width: 50px; text-align: center; color: #f0f0f3; font-size: 11px; font-weight: 600;">3</div>
+                  <div style="width: 40px; text-align: center; color: #4e4e5a; font-size: 11px;">—</div>
+                  <div style="width: 90px; display: flex; gap: 4px; justify-content: flex-end;">
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #2a2c34; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #8e8e9a; font-size: 10px;">✎</span>
+                    </div>
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #2a2c34; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #8e8e9a; font-size: 10px;">⊕</span>
+                    </div>
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #ef4444; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #ef4444; font-size: 10px;">×</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row 3 -->
+                <div style="display: flex; align-items: center; padding: 8px 14px;">
+                  <div style="width: 80px; color: #f0f0f3; font-size: 11px; font-family: monospace;">SUB-03</div>
+                  <div style="flex: 1; color: #f0f0f3; font-size: 12px;">Porta Agulha Mayo</div>
+                  <div style="width: 50px; text-align: center; color: #6e6e7a; font-size: 11px;">1</div>
+                  <div style="width: 40px; text-align: center;">
+                    <div style="width: 22px; height: 22px; border-radius: 4px; background: #2a2c34; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                      <span style="font-size: 8px;">🖼</span>
+                    </div>
+                  </div>
+                  <div style="width: 90px; display: flex; gap: 4px; justify-content: flex-end;">
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #2a2c34; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #8e8e9a; font-size: 10px;">✎</span>
+                    </div>
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #2a2c34; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #8e8e9a; font-size: 10px;">⊕</span>
+                    </div>
+                    <div style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #ef4444; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #ef4444; font-size: 10px;">×</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="padding: 10px 24px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: flex-end; gap: 8px; background: #171920;">
+              <div style="background: linear-gradient(135deg, #2155FC, #4B7BFF); color: white; font-size: 12px; padding: 8px 18px; border-radius: 6px; font-weight: 500;">Concluir ✓</div>
+              <div style="border: 1px solid rgba(75,123,255,0.2); color: #4B7BFF; font-size: 12px; padding: 8px 18px; border-radius: 6px;">Voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="color: #8e8e9a; font-size: 12px; margin-top: 8px;">
+      ● Tab Submateriais ativa com badge de contagem.<br>
+      ● Form inline no topo: Código (opcional, debounce→focus next) + Nome + Qtd (+/-) + Foto (câmera) + Add (+).<br>
+      ● Quando código preenchido: qtd=1 e disabled.<br>
+      ● Lista com colunas: Código | Nome | Qtd | Foto (thumbnail) | Ações (editar, duplicar, excluir).<br>
+      ● Row sem código: mostra "—", qtd editável. Row com código: mostra código mono, qtd=1.<br>
+      ● Duplicar submaterial: copia tudo exceto código (código vem vazio e focado).<br>
+      ● Footer: "Concluir" (volta pra tabela) + "Voltar" (volta pro tab Dados).
+    </p>
+  </div>
+
+</div>

@@ -6,10 +6,15 @@ export type MockMaterial = {
   id: number
   code: string | null
   name: string
-  type: 'INSTRUMENTAL' | 'TEXTIL' | 'KIT' | 'AVULSO' | 'QUANTIDADE'
+  type: 'KIT' | 'AVULSO' | 'QUANTIDADE'
   amount: number
   submaterialsCount: number | null
   consigned: boolean
+  ownerId: number | null
+  packageId: number | null
+  templateId: number | null
+  color: string | null
+  details: string | null
   status: 'ATIVO' | 'INATIVO'
   createdAt: string
 }
@@ -85,7 +90,7 @@ export type MockOwner = {
 export type MockDepartment = {
   id: number
   name: string
-  code: string | null
+  external: boolean
   status: 'ATIVO' | 'INATIVO'
   createdAt: string
 }
@@ -125,20 +130,20 @@ export type MockTemplate = {
 // -- Data
 
 export const mockMaterials: MockMaterial[] = [
-  { id: 1, code: 'MAT-001', name: 'PINÇA BACKAUS', type: 'INSTRUMENTAL', amount: 1, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-12T10:00:00Z' },
-  { id: 2, code: 'MAT-002', name: 'CX VASCULAR Nº1', type: 'KIT', amount: 1, submaterialsCount: 14, consigned: false, status: 'ATIVO', createdAt: '2025-08-12T10:05:00Z' },
-  { id: 3, code: 'MAT-003', name: 'CAPOTE', type: 'TEXTIL', amount: 50, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-13T08:00:00Z' },
-  { id: 4, code: 'MAT-004', name: 'LAPA', type: 'TEXTIL', amount: 30, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-13T08:10:00Z' },
-  { id: 5, code: 'MAT-005', name: 'CAMPO SIMPLES', type: 'TEXTIL', amount: 100, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-14T09:00:00Z' },
-  { id: 6, code: 'MAT-006', name: 'CX ORTOPÉDICA Nº3', type: 'KIT', amount: 1, submaterialsCount: 22, consigned: true, status: 'ATIVO', createdAt: '2025-08-14T09:30:00Z' },
-  { id: 7, code: 'MAT-007', name: 'TESOURA METZENBAUM', type: 'INSTRUMENTAL', amount: 5, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-15T07:00:00Z' },
-  { id: 8, code: 'MAT-008', name: 'PORTA AGULHA MAYO', type: 'INSTRUMENTAL', amount: 3, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-15T07:15:00Z' },
-  { id: 9, code: null, name: 'COMPRESSA GAZE', type: 'AVULSO', amount: 500, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-16T11:00:00Z' },
-  { id: 10, code: 'MAT-010', name: 'CX CESARIANA', type: 'KIT', amount: 1, submaterialsCount: 18, consigned: false, status: 'INATIVO', createdAt: '2025-08-16T11:30:00Z' },
-  { id: 11, code: 'MAT-011', name: 'AFASTADOR FARABEUF', type: 'INSTRUMENTAL', amount: 8, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-17T14:00:00Z' },
-  { id: 12, code: 'MAT-012', name: 'CABO DE BISTURI Nº4', type: 'INSTRUMENTAL', amount: 10, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-17T14:20:00Z' },
-  { id: 13, code: 'MAT-013', name: 'LENÇOL CIRÚRGICO', type: 'TEXTIL', amount: 40, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-18T08:00:00Z' },
-  { id: 14, code: 'MAT-014', name: 'TRAQUEIA RESPIRADOR', type: 'QUANTIDADE', amount: 20, submaterialsCount: null, consigned: false, status: 'ATIVO', createdAt: '2025-08-18T08:30:00Z' }
+  { id: 1, code: 'MAT-001', name: 'PINÇA BACKAUS', type: 'AVULSO', amount: 1, submaterialsCount: null, consigned: false, ownerId: null, packageId: 1, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-12T10:00:00Z' },
+  { id: 2, code: 'MAT-002', name: 'CX VASCULAR Nº1', type: 'KIT', amount: 1, submaterialsCount: 14, consigned: false, ownerId: null, packageId: 2, templateId: 1, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-12T10:05:00Z' },
+  { id: 3, code: 'MAT-003', name: 'CAPOTE', type: 'QUANTIDADE', amount: 50, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-13T08:00:00Z' },
+  { id: 4, code: 'MAT-004', name: 'LAPA', type: 'QUANTIDADE', amount: 30, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-13T08:10:00Z' },
+  { id: 5, code: 'MAT-005', name: 'CAMPO SIMPLES', type: 'QUANTIDADE', amount: 100, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: 'Branco', details: null, status: 'ATIVO', createdAt: '2025-08-14T09:00:00Z' },
+  { id: 6, code: 'MAT-006', name: 'CX ORTOPÉDICA Nº3', type: 'KIT', amount: 1, submaterialsCount: 22, consigned: true, ownerId: 1, packageId: 3, templateId: 2, color: null, details: 'Material consignado - verificar retorno', status: 'ATIVO', createdAt: '2025-08-14T09:30:00Z' },
+  { id: 7, code: 'MAT-007', name: 'TESOURA METZENBAUM', type: 'AVULSO', amount: 5, submaterialsCount: null, consigned: false, ownerId: null, packageId: 1, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-15T07:00:00Z' },
+  { id: 8, code: 'MAT-008', name: 'PORTA AGULHA MAYO', type: 'AVULSO', amount: 3, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-15T07:15:00Z' },
+  { id: 9, code: null, name: 'COMPRESSA GAZE', type: 'AVULSO', amount: 500, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-16T11:00:00Z' },
+  { id: 10, code: 'MAT-010', name: 'CX CESARIANA', type: 'KIT', amount: 1, submaterialsCount: 18, consigned: false, ownerId: null, packageId: 2, templateId: 1, color: null, details: null, status: 'INATIVO', createdAt: '2025-08-16T11:30:00Z' },
+  { id: 11, code: 'MAT-011', name: 'AFASTADOR FARABEUF', type: 'AVULSO', amount: 8, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-17T14:00:00Z' },
+  { id: 12, code: 'MAT-012', name: 'CABO DE BISTURI Nº4', type: 'AVULSO', amount: 10, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-17T14:20:00Z' },
+  { id: 13, code: 'MAT-013', name: 'LENÇOL CIRÚRGICO', type: 'QUANTIDADE', amount: 40, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: 'Branco', details: null, status: 'ATIVO', createdAt: '2025-08-18T08:00:00Z' },
+  { id: 14, code: 'MAT-014', name: 'TRAQUEIA RESPIRADOR', type: 'QUANTIDADE', amount: 20, submaterialsCount: null, consigned: false, ownerId: null, packageId: null, templateId: null, color: null, details: null, status: 'ATIVO', createdAt: '2025-08-18T08:30:00Z' }
 ]
 
 export const mockCollaborators: MockCollaborator[] = [
@@ -252,18 +257,18 @@ export const mockOwners: MockOwner[] = [
 ]
 
 export const mockDepartments: MockDepartment[] = [
-  { id: 1, name: 'Centro Cirúrgico', code: 'CC', status: 'ATIVO', createdAt: '2025-07-01T08:00:00Z' },
-  { id: 2, name: 'UTI Adulto', code: 'UTIA', status: 'ATIVO', createdAt: '2025-07-01T08:10:00Z' },
-  { id: 3, name: 'UTI Neonatal', code: 'UTIN', status: 'ATIVO', createdAt: '2025-07-02T09:00:00Z' },
-  { id: 4, name: 'Enfermaria', code: 'ENF', status: 'ATIVO', createdAt: '2025-07-02T09:30:00Z' },
-  { id: 5, name: 'Ambulatório', code: 'AMB', status: 'ATIVO', createdAt: '2025-07-03T10:00:00Z' },
-  { id: 6, name: 'Pronto Socorro', code: 'PS', status: 'ATIVO', createdAt: '2025-07-03T10:30:00Z' },
-  { id: 7, name: 'Hemodinâmica', code: 'HEMO', status: 'ATIVO', createdAt: '2025-07-04T08:00:00Z' },
-  { id: 8, name: 'Endoscopia', code: 'ENDO', status: 'ATIVO', createdAt: '2025-07-04T08:30:00Z' },
-  { id: 9, name: 'Obstetrícia', code: 'OBS', status: 'ATIVO', createdAt: '2025-07-05T09:00:00Z' },
-  { id: 10, name: 'Odontologia', code: null, status: 'ATIVO', createdAt: '2025-07-05T09:30:00Z' },
-  { id: 11, name: 'Sala de Recuperação', code: 'SRPA', status: 'ATIVO', createdAt: '2025-07-06T10:00:00Z' },
-  { id: 12, name: 'Lavanderia', code: 'LAV', status: 'INATIVO', createdAt: '2025-07-06T10:30:00Z' }
+  { id: 1, name: 'Centro Cirúrgico', external: false, status: 'ATIVO', createdAt: '2025-07-01T08:00:00Z' },
+  { id: 2, name: 'UTI Adulto', external: false, status: 'ATIVO', createdAt: '2025-07-01T08:10:00Z' },
+  { id: 3, name: 'UTI Neonatal', external: false, status: 'ATIVO', createdAt: '2025-07-02T09:00:00Z' },
+  { id: 4, name: 'Enfermaria', external: false, status: 'ATIVO', createdAt: '2025-07-02T09:30:00Z' },
+  { id: 5, name: 'Ambulatório', external: true, status: 'ATIVO', createdAt: '2025-07-03T10:00:00Z' },
+  { id: 6, name: 'Pronto Socorro', external: false, status: 'ATIVO', createdAt: '2025-07-03T10:30:00Z' },
+  { id: 7, name: 'Hemodinâmica', external: false, status: 'ATIVO', createdAt: '2025-07-04T08:00:00Z' },
+  { id: 8, name: 'Endoscopia', external: false, status: 'ATIVO', createdAt: '2025-07-04T08:30:00Z' },
+  { id: 9, name: 'Obstetrícia', external: false, status: 'ATIVO', createdAt: '2025-07-05T09:00:00Z' },
+  { id: 10, name: 'Odontologia', external: true, status: 'ATIVO', createdAt: '2025-07-05T09:30:00Z' },
+  { id: 11, name: 'Sala de Recuperação', external: false, status: 'ATIVO', createdAt: '2025-07-06T10:00:00Z' },
+  { id: 12, name: 'Lavanderia', external: true, status: 'INATIVO', createdAt: '2025-07-06T10:30:00Z' }
 ]
 
 export const mockDoctors: MockDoctor[] = [

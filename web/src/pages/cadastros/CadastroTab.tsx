@@ -1,6 +1,6 @@
 // packages
 import { useMemo, useState, useCallback } from 'react'
-import { Add, Edit2, Trash } from 'iconsax-react'
+import { Add, Edit2, Trash, Copy } from 'iconsax-react'
 
 // components
 import { DataTable, StatusBadge } from '@/components'
@@ -57,12 +57,13 @@ type CadastroTabProps = {
   hiddenColumns?: Set<string>
   onEdit?: (row: Record<string, unknown>) => void
   onDelete?: (row: Record<string, unknown>) => void
+  onDuplicate?: (row: Record<string, unknown>) => void
   onNew?: () => void
 }
 
 // -- Helpers
 
-function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
+function RowActions({ onEdit, onDelete, onDuplicate }: { onEdit: () => void; onDelete: () => void; onDuplicate?: () => void }) {
   return (
     <div className="flex items-center gap-xs justify-end">
       <div className="relative group">
@@ -74,12 +75,25 @@ function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => 
         >
           <Edit2 size={16} color="var(--foreground)" variant="Linear" />
         </button>
-        <span
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-popover text-foreground text-xs rounded-xs border border-popover"
-        >
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-popover text-foreground text-xs rounded-xs border border-popover">
           Editar
         </span>
       </div>
+      {onDuplicate && (
+        <div className="relative group">
+          <button
+            type="button"
+            onClick={e => { e.stopPropagation(); onDuplicate() }}
+            className="inline-flex items-center justify-center shrink-0 cursor-pointer outline-none rounded-sm bg-transparent border border-border hover-elevated transition-colors duration-150"
+            style={{ width: 28, height: 28 }}
+          >
+            <Copy size={16} color="var(--foreground)" variant="Linear" />
+          </button>
+          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-popover text-foreground text-xs rounded-xs border border-popover">
+            Duplicar
+          </span>
+        </div>
+      )}
       <div className="relative group">
         <button
           type="button"
@@ -89,9 +103,7 @@ function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => 
         >
           <Trash size={16} color="var(--destructive)" variant="Linear" />
         </button>
-        <span
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-destructive text-xs rounded-xs bg-destructive-10 border border-destructive"
-        >
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-destructive text-xs rounded-xs bg-destructive-10 border border-destructive">
           Excluir
         </span>
       </div>
@@ -112,30 +124,32 @@ function statusVariant(status: string) {
 
 // -- Column definitions per entity
 
-function makeActionsColumn<T extends { id: number }>(onEdit: (row: T) => void, onDelete: (row: T) => void): ColumnDef<T> {
+function makeActionsColumn<T extends { id: number }>(onEdit: (row: T) => void, onDelete: (row: T) => void, onDuplicate?: (row: T) => void): ColumnDef<T> {
   return {
     key: 'actions',
     header: '',
-    width: 80,
+    width: onDuplicate ? 110 : 80,
     align: 'right',
     accessorFn: (row: T) => (
       <RowActions
         onEdit={() => onEdit(row)}
         onDelete={() => onDelete(row)}
+        onDuplicate={onDuplicate ? () => onDuplicate(row) : undefined}
       />
     )
   }
 }
 
-function getMaterialColumns(onEdit: (r: MockMaterial) => void, onDelete: (r: MockMaterial) => void): ColumnDef<MockMaterial>[] {
+function getMaterialColumns(onEdit: (r: MockMaterial) => void, onDelete: (r: MockMaterial) => void, onDuplicate: (r: MockMaterial) => void): ColumnDef<MockMaterial>[] {
+  const typeMap: Record<string, string> = { KIT: 'Kit', AVULSO: 'Avulso', QUANTIDADE: 'Quantidade' }
   return [
     { key: 'code', header: 'Código', sortable: true, filterable: true, width: 100, accessorFn: row => row.code ?? '-' },
     { key: 'name', header: 'Nome', sortable: true, filterable: true },
-    { key: 'type', header: 'Tipo', sortable: true, filterable: true, width: 140 },
+    { key: 'type', header: 'Tipo', sortable: true, filterable: true, width: 120, accessorFn: row => typeMap[row.type] ?? row.type },
     { key: 'amount', header: 'Qtd', sortable: true, width: 70, align: 'center' },
     { key: 'consigned', header: 'Consignado', width: 100, align: 'center', accessorFn: row => row.consigned ? 'Sim' : 'Não' },
     { key: 'status', header: 'Status', width: 100, accessorFn: row => <StatusBadge status={row.status} variant={statusVariant(row.status)} /> },
-    makeActionsColumn(onEdit, onDelete)
+    makeActionsColumn(onEdit, onDelete, onDuplicate)
   ]
 }
 
@@ -217,8 +231,8 @@ function getOwnerColumns(onEdit: (r: MockOwner) => void, onDelete: (r: MockOwner
 
 function getDepartmentColumns(onEdit: (r: MockDepartment) => void, onDelete: (r: MockDepartment) => void): ColumnDef<MockDepartment>[] {
   return [
-    { key: 'code', header: 'Código', sortable: true, filterable: true, width: 100, accessorFn: row => row.code ?? '-' },
     { key: 'name', header: 'Nome', sortable: true, filterable: true },
+    { key: 'external', header: 'Externo', width: 100, align: 'center', accessorFn: row => row.external ? 'Sim' : 'Não' },
     { key: 'status', header: 'Status', width: 100, accessorFn: row => <StatusBadge status={row.status} variant={statusVariant(row.status)} /> },
     makeActionsColumn(onEdit, onDelete)
   ]
@@ -276,11 +290,12 @@ type TabConfig = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyCallback = (r: any) => void
 
-function getTabConfig(tabKey: string, tabName: string, onEdit: (r: Record<string, unknown>) => void, onDelete: (r: Record<string, unknown>) => void): TabConfig {
+function getTabConfig(tabKey: string, tabName: string, onEdit: (r: Record<string, unknown>) => void, onDelete: (r: Record<string, unknown>) => void, onDuplicate?: (r: Record<string, unknown>) => void): TabConfig {
   const e = onEdit as AnyCallback
   const d = onDelete as AnyCallback
+  const dup = (onDuplicate || e) as AnyCallback
   const configMap: Record<string, TabConfig> = {
-    materiais: { columns: getMaterialColumns(e, d) as unknown as TabConfig['columns'], data: mockMaterials as unknown as TabConfig['data'], searchPlaceholder: 'Buscar material...', entityLabel: 'Material', icon: 'Scissor' },
+    materiais: { columns: getMaterialColumns(e, d, dup) as unknown as TabConfig['columns'], data: mockMaterials as unknown as TabConfig['data'], searchPlaceholder: 'Buscar material...', entityLabel: 'Material', icon: 'Scissor' },
     colaboradores: { columns: getCollaboratorColumns(e, d) as unknown as TabConfig['columns'], data: mockCollaborators as unknown as TabConfig['data'], searchPlaceholder: 'Buscar colaborador...', entityLabel: 'Colaborador', icon: 'People' },
     equipamentos: { columns: getEquipmentColumns(e, d) as unknown as TabConfig['columns'], data: mockEquipments as unknown as TabConfig['data'], searchPlaceholder: 'Buscar equipamento...', entityLabel: 'Equipamento', icon: 'Cpu' },
     embalagens: { columns: getPackageColumns(e, d) as unknown as TabConfig['columns'], data: mockPackages as unknown as TabConfig['data'], searchPlaceholder: 'Buscar embalagem...', entityLabel: 'Embalagem', icon: 'Box1' },
@@ -306,7 +321,7 @@ function getTabConfig(tabKey: string, tabName: string, onEdit: (r: Record<string
 
 // -- Component
 
-function CadastroTab({ tabKey, tabName, externalSearch, hideHeader, fullHeight, hiddenColumns, onEdit, onDelete, onNew }: CadastroTabProps) {
+function CadastroTab({ tabKey, tabName, externalSearch, hideHeader, fullHeight, hiddenColumns, onEdit, onDelete, onDuplicate, onNew }: CadastroTabProps) {
   const handleEdit = useCallback((row: Record<string, unknown>) => {
     onEdit?.(row)
   }, [onEdit])
@@ -315,7 +330,11 @@ function CadastroTab({ tabKey, tabName, externalSearch, hideHeader, fullHeight, 
     onDelete?.(row)
   }, [onDelete])
 
-  const config = useMemo(() => getTabConfig(tabKey, tabName, handleEdit, handleDelete), [tabKey, tabName, handleEdit, handleDelete])
+  const handleDuplicate = useCallback((row: Record<string, unknown>) => {
+    onDuplicate?.(row)
+  }, [onDuplicate])
+
+  const config = useMemo(() => getTabConfig(tabKey, tabName, handleEdit, handleDelete, handleDuplicate), [tabKey, tabName, handleEdit, handleDelete, handleDuplicate])
   const [internalSearch, setInternalSearch] = useState('')
 
   // Filter columns by hiddenColumns
@@ -421,7 +440,7 @@ function CadastroTab({ tabKey, tabName, externalSearch, hideHeader, fullHeight, 
 /** Get column definitions for a given tab key (for column filter sidebar) */
 function getTabColumns(tabKey: string): { key: string; header: string }[] {
   const noop = () => {}
-  const config = getTabConfig(tabKey, tabKey, noop, noop)
+  const config = getTabConfig(tabKey, tabKey, noop, noop, noop)
   return config.columns.map(col => ({ key: col.key, header: col.header })).filter(c => c.key !== 'actions')
 }
 

@@ -9,7 +9,7 @@ import { ConfirmDialog } from '@/components'
 
 // pages
 import { CadastroTab, getTabColumns } from './CadastroTab'
-import { CadastroFormDialog } from './CadastroFormDialog'
+import { CadastroForm } from './CadastroForm'
 import { formConfigMap } from './cadastros.forms'
 
 // constants
@@ -99,8 +99,8 @@ function Cadastros() {
   const [hiddenColumns, setHiddenColumns] = useState<Set<string>>(new Set())
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Form dialog state
-  const [formOpen, setFormOpen] = useState(false)
+  // Display mode: table or form
+  const [displayType, setDisplayType] = useState<'table' | 'form'>('table')
   const [formEditData, setFormEditData] = useState<Record<string, unknown> | null>(null)
 
   // Confirm delete dialog state
@@ -109,12 +109,35 @@ function Cadastros() {
 
   const handleNew = useCallback(() => {
     setFormEditData(null)
-    setFormOpen(true)
+    setDisplayType('form')
   }, [])
 
   const handleEdit = useCallback((row: Record<string, unknown>) => {
     setFormEditData(row)
-    setFormOpen(true)
+    setDisplayType('form')
+  }, [])
+
+  const handleFormCancel = useCallback(() => {
+    setDisplayType('table')
+    setFormEditData(null)
+  }, [])
+
+  const handleFormSubmit = useCallback((data: Record<string, unknown>) => {
+    const fullLoc = `${_loc}.handleFormSubmit`
+    console.log(`[${fullLoc}] ${formEditData ? 'Edit' : 'Create'}:`, data)
+    setDisplayType('table')
+    setFormEditData(null)
+  }, [formEditData])
+
+  const handleDuplicate = useCallback((row: Record<string, unknown>) => {
+    const clone = { ...row }
+    delete clone.id
+    setFormEditData(null)
+    // Small delay so form resets before opening with clone data
+    setTimeout(() => {
+      setFormEditData(clone)
+      setDisplayType('form')
+    }, 0)
   }, [])
 
   const handleDelete = useCallback((row: Record<string, unknown>) => {
@@ -155,6 +178,8 @@ function Cadastros() {
   }, [location.pathname, visibleTabs])
 
   const handleTabChange = useCallback((value: string) => {
+    setDisplayType('table')
+    setFormEditData(null)
     const tab = visibleTabs.find(t => extractTabKey(t.path) === value)
     if (tab) navigate(tab.path)
   }, [visibleTabs, navigate])
@@ -186,6 +211,7 @@ function Cadastros() {
   }, [])
 
   const activeTabMeta = visibleTabs.find(t => extractTabKey(t.path) === activeTab)
+  const showingForm = displayType === 'form'
 
   if (visibleTabs.length === 0) {
     return (
@@ -199,76 +225,79 @@ function Cadastros() {
   if (isMobile) {
     return (
       <div className="flex flex-col h-full overflow-hidden">
-        {/* Entity pills */}
-        <div className="flex gap-1.5 overflow-x-auto shrink-0 px-md py-sm" style={{ scrollBehavior: 'smooth' }}>
-          {visibleTabs.map(tab => {
-            const tabKey = extractTabKey(tab.path)
-            const isActive = tabKey === activeTab
-            return (
-              <button
-                key={tabKey}
-                type="button"
-                onClick={() => handleTabChange(tabKey)}
-                className="flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer border-none outline-none rounded-[20px] text-xs transition-all duration-150 ease-in-out"
-                style={{
-                  padding: '6px 12px',
-                  fontWeight: isActive ? 600 : 400,
-                  backgroundColor: isActive ? 'var(--primary-8)' : 'var(--muted)',
-                  color: isActive ? 'var(--primary)' : 'var(--muted-foreground)'
-                }}
-              >
-                {tab.icon && getRouteIcon(tab.icon, 14, isActive)}
-                {tab.name}
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Search input */}
-        <div className="px-md pb-sm shrink-0">
-          <div className="relative flex items-center pt-1">
-            <SearchNormal1 size={14} color="var(--fg-muted)" className="absolute left-2.5 pointer-events-none" />
-            <Input
-              value={search}
-              onChange={handleSearchChange}
-              placeholder="Filtrar..."
-              className="pl-8 pr-7 !text-[14px] rounded-sm"
-              style={{
-                height: 32,
-                fontSize: 'var(--text-sm)',
-                borderColor: 'var(--input-border)'
-              }}
-            />
-            {search && (
-              <button
-                type="button"
-                onClick={handleClearSearch}
-                className="absolute right-2 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer border-none outline-none bg-transparent"
-                style={{ color: 'var(--fg-muted)' }}
-              >
-                <CloseCircle size={14} color="currentColor" />
-              </button>
-            )}
+        {/* Entity pills — hidden when form is open */}
+        {!showingForm && (
+          <div className="flex gap-1.5 overflow-x-auto shrink-0 px-md py-sm" style={{ scrollBehavior: 'smooth' }}>
+            {visibleTabs.map(tab => {
+              const tabKey = extractTabKey(tab.path)
+              const isActive = tabKey === activeTab
+              return (
+                <button
+                  key={tabKey}
+                  type="button"
+                  onClick={() => handleTabChange(tabKey)}
+                  className="flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer border-none outline-none rounded-[20px] text-xs transition-all duration-150 ease-in-out"
+                  style={{
+                    padding: '6px 12px',
+                    fontWeight: isActive ? 600 : 400,
+                    backgroundColor: isActive ? 'var(--primary-8)' : 'var(--muted)',
+                    color: isActive ? 'var(--primary)' : 'var(--muted-foreground)'
+                  }}
+                >
+                  {tab.icon && getRouteIcon(tab.icon, 14, isActive)}
+                  {tab.name}
+                </button>
+              )
+            })}
           </div>
-        </div>
+        )}
 
-        {/* Table — fills rest */}
+        {/* Search input — hidden when form is open */}
+        {!showingForm && (
+          <div className="px-md pb-sm shrink-0">
+            <div className="relative flex items-center pt-1">
+              <SearchNormal1 size={14} color="var(--fg-muted)" className="absolute left-2.5 pointer-events-none" />
+              <Input
+                value={search}
+                onChange={handleSearchChange}
+                placeholder="Filtrar..."
+                className="pl-8 pr-7 !text-[14px] rounded-sm"
+                style={{
+                  height: 32,
+                  fontSize: 'var(--text-sm)',
+                  borderColor: 'var(--input-border)'
+                }}
+              />
+              {search && (
+                <button
+                  type="button"
+                  onClick={handleClearSearch}
+                  className="absolute right-2 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer border-none outline-none bg-transparent"
+                  style={{ color: 'var(--fg-muted)' }}
+                >
+                  <CloseCircle size={14} color="currentColor" />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Content area: table or form */}
         <div className="flex-1 overflow-hidden bg-card">
-          {activeTabMeta && (
-            <CadastroTab tabKey={activeTab} tabName={activeTabMeta.name} externalSearch={debouncedSearch} hideHeader fullHeight hiddenColumns={hiddenColumns} onNew={handleNew} onEdit={handleEdit} onDelete={handleDelete} />
+          {showingForm && formConfigMap[activeTab] ? (
+            <CadastroForm
+              config={formConfigMap[activeTab]}
+              entityLabel={activeTabMeta?.name || ''}
+              editData={formEditData}
+              onSubmit={handleFormSubmit}
+              onCancel={handleFormCancel}
+            />
+          ) : (
+            activeTabMeta && (
+              <CadastroTab tabKey={activeTab} tabName={activeTabMeta.name} externalSearch={debouncedSearch} hideHeader fullHeight hiddenColumns={hiddenColumns} onNew={handleNew} onEdit={handleEdit} onDelete={handleDelete} onDuplicate={handleDuplicate} />
+            )
           )}
         </div>
-
-        {/* Form Dialog (Create/Edit) */}
-        {formConfigMap[activeTab] && (
-          <CadastroFormDialog
-            open={formOpen}
-            onClose={() => { setFormOpen(false); setFormEditData(null) }}
-            config={formConfigMap[activeTab]}
-            entityLabel={activeTabMeta?.name || ''}
-            editData={formEditData}
-          />
-        )}
 
         {/* Confirm Delete Dialog */}
         <ConfirmDialog
@@ -287,114 +316,116 @@ function Cadastros() {
   // Desktop layout: master-detail, full height
   return (
     <div className="flex h-full overflow-hidden">
-      {/* Entity sidebar — bg background, no card */}
+      {/* Entity sidebar — disabled when form is open */}
       <div
-        className="flex flex-col shrink-0 h-full border-r border-border"
+        className={cn(
+          'flex flex-col shrink-0 h-full border-r border-border transition-opacity duration-200',
+          showingForm && 'opacity-40 pointer-events-none'
+        )}
         style={{ width: 200, backgroundColor: 'var(--bg)' }}
       >
-        {/* Filter input */}
-        <div className="shrink-0" style={{ padding: '10px 10px 6px' }}>
-          <div className="relative flex items-center">
-            <SearchNormal1 size={14} color="var(--fg-muted)" className="absolute left-2.5 pointer-events-none" />
-            <Input
-              value={search}
-              onChange={handleSearchChange}
-              placeholder="Filtrar..."
-              className="pl-8 pr-7 text-xs rounded-sm"
-              style={{
-                height: 32,
-                backgroundColor: 'var(--input-bg)',
-                borderColor: 'var(--input-border)'
-              }}
-            />
-            {search && (
-              <button
-                type="button"
-                onClick={handleClearSearch}
-                className="absolute right-2 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer border-none outline-none bg-transparent"
-                style={{ color: 'var(--fg-muted)' }}
-              >
-                <CloseCircle size={14} color="currentColor" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Entity list */}
-        <div className="flex flex-col flex-1 overflow-y-auto" style={{ padding: '4px 8px 8px' }}>
-          {visibleTabs.map(tab => {
-            const tabKey = extractTabKey(tab.path)
-            const isActive = tabKey === activeTab
-            const count = ENTITY_COUNTS[tabKey]
-            return (
-              <button
-                key={tabKey}
-                type="button"
-                onClick={() => handleTabChange(tabKey)}
-                className={cn('flex items-center gap-2 w-full text-left cursor-pointer border-none outline-none transition-colors duration-150 rounded-sm text-sm whitespace-nowrap')}
+          {/* Filter input */}
+          <div className="shrink-0" style={{ padding: '10px 10px 6px' }}>
+            <div className="relative flex items-center">
+              <SearchNormal1 size={14} color="var(--fg-muted)" className="absolute left-2.5 pointer-events-none" />
+              <Input
+                value={search}
+                onChange={handleSearchChange}
+                placeholder="Filtrar..."
+                className="pl-8 pr-7 text-xs rounded-sm"
                 style={{
-                  padding: '9px 12px',
-                  fontWeight: isActive ? 600 : 400,
-                  backgroundColor: isActive ? 'var(--primary-8)' : 'transparent',
-                  color: isActive ? 'var(--primary)' : 'var(--foreground)',
-                  borderLeft: isActive ? '2px solid var(--primary)' : '2px solid transparent'
+                  height: 32,
+                  backgroundColor: 'var(--input-bg)',
+                  borderColor: 'var(--input-border)'
                 }}
-                onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
-                onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
-              >
-                {tab.icon && <span className="flex items-center shrink-0">{getRouteIcon(tab.icon, 16, isActive)}</span>}
-                <span className="truncate flex-1">{tab.name}</span>
-                {count !== undefined && (
-                  <span
-                    className="shrink-0"
-                    style={{
-                      backgroundColor: isActive ? 'var(--primary-15)' : 'var(--elevated)',
-                      color: isActive ? 'var(--primary)' : 'var(--muted-foreground)',
-                      fontSize: 10,
-                      padding: '1px 7px',
-                      borderRadius: 9999
-                    }}
-                  >
-                    {count}
-                  </span>
-                )}
-              </button>
-            )
-          })}
-        </div>
+              />
+              {search && (
+                <button
+                  type="button"
+                  onClick={handleClearSearch}
+                  className="absolute right-2 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer border-none outline-none bg-transparent"
+                  style={{ color: 'var(--fg-muted)' }}
+                >
+                  <CloseCircle size={14} color="currentColor" />
+                </button>
+              )}
+            </div>
+          </div>
 
+          {/* Entity list */}
+          <div className="flex flex-col flex-1 overflow-y-auto" style={{ padding: '4px 8px 8px' }}>
+            {visibleTabs.map(tab => {
+              const tabKey = extractTabKey(tab.path)
+              const isActive = tabKey === activeTab
+              const count = ENTITY_COUNTS[tabKey]
+              return (
+                <button
+                  key={tabKey}
+                  type="button"
+                  onClick={() => handleTabChange(tabKey)}
+                  className={cn('flex items-center gap-2 w-full text-left cursor-pointer border-none outline-none transition-colors duration-150 rounded-sm text-sm whitespace-nowrap')}
+                  style={{
+                    padding: '9px 12px',
+                    fontWeight: isActive ? 600 : 400,
+                    backgroundColor: isActive ? 'var(--primary-8)' : 'transparent',
+                    color: isActive ? 'var(--primary)' : 'var(--foreground)',
+                    borderLeft: isActive ? '2px solid var(--primary)' : '2px solid transparent'
+                  }}
+                  onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--nav-hover-bg)' }}
+                  onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+                >
+                  {tab.icon && <span className="flex items-center shrink-0">{getRouteIcon(tab.icon, 16, isActive)}</span>}
+                  <span className="truncate flex-1">{tab.name}</span>
+                  {count !== undefined && (
+                    <span
+                      className="shrink-0"
+                      style={{
+                        backgroundColor: isActive ? 'var(--primary-15)' : 'var(--elevated)',
+                        color: isActive ? 'var(--primary)' : 'var(--muted-foreground)',
+                        fontSize: 10,
+                        padding: '1px 7px',
+                        borderRadius: 9999
+                      }}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
       </div>
 
-      {/* Table card — full height, internal scroll */}
+      {/* Content area: table or form */}
       <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-card">
-        {activeTabMeta && (
-          <CadastroTab
-            tabKey={activeTab}
-            tabName={activeTabMeta.name}
-            externalSearch={debouncedSearch}
-            hideHeader
-            fullHeight
-            hiddenColumns={hiddenColumns}
-            onNew={handleNew}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
+        {showingForm && formConfigMap[activeTab] ? (
+          <CadastroForm
+            config={formConfigMap[activeTab]}
+            entityLabel={activeTabMeta?.name || ''}
+            editData={formEditData}
+            onSubmit={handleFormSubmit}
+            onCancel={handleFormCancel}
           />
+        ) : (
+          activeTabMeta && (
+            <CadastroTab
+              tabKey={activeTab}
+              tabName={activeTabMeta.name}
+              externalSearch={debouncedSearch}
+              hideHeader
+              fullHeight
+              hiddenColumns={hiddenColumns}
+              onNew={handleNew}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onDuplicate={handleDuplicate}
+            />
+          )
         )}
       </div>
 
       {/* Column filter sidebar overlay */}
       {showColumnFilter && <ColumnFilterSidebar tabKey={activeTab} hiddenColumns={hiddenColumns} onToggleColumn={handleToggleColumn} onClose={() => setShowColumnFilter(false)} />}
-
-      {/* Form Dialog (Create/Edit) */}
-      {formConfigMap[activeTab] && (
-        <CadastroFormDialog
-          open={formOpen}
-          onClose={() => { setFormOpen(false); setFormEditData(null) }}
-          config={formConfigMap[activeTab]}
-          entityLabel={activeTabMeta?.name || ''}
-          editData={formEditData}
-        />
-      )}
 
       {/* Confirm Delete Dialog */}
       <ConfirmDialog

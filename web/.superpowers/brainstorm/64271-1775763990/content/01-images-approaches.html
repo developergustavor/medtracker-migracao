@@ -1,0 +1,187 @@
+<h2>Imagens do Material — 3 Abordagens</h2>
+<p class="subtitle">Como integrar fotos de identificação visual no formulário de materiais.<br>
+Considere: desktop, tablet, touch, pressa, câmera, upload — todos os cenários.</p>
+
+<div class="cards">
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 20px; background: #0f1014;">
+      <div style="display: flex; gap: 16px; height: 340px;">
+        <!-- Left: Form fields -->
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: #171920; border-radius: 8px; padding: 12px;">
+            <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Código</div>
+            <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 32px;"></div>
+          </div>
+          <div style="background: #171920; border-radius: 8px; padding: 12px;">
+            <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Material *</div>
+            <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 32px;"></div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <div style="flex: 1; background: #171920; border-radius: 8px; padding: 12px;">
+              <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Tipo *</div>
+              <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 32px;"></div>
+            </div>
+            <div style="flex: 1; background: #171920; border-radius: 8px; padding: 12px;">
+              <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Qtd *</div>
+              <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 32px;"></div>
+            </div>
+          </div>
+          <div style="color: #4e4e5a; font-size: 11px; text-align: center; margin-top: 4px;">... mais campos abaixo (scroll)</div>
+        </div>
+        <!-- Right: Image column -->
+        <div style="width: 200px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
+          <div style="flex: 1; border: 2px dashed #2a2c34; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: #12141a;">
+            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(75,123,255,0.1); display: flex; align-items: center; justify-content: center;">
+              <span style="color: #4B7BFF; font-size: 24px;">+</span>
+            </div>
+            <span style="color: #6e6e7a; font-size: 11px; text-align: center;">Arraste, cole<br>ou clique</span>
+            <div style="display: flex; gap: 6px;">
+              <div style="background: rgba(75,123,255,0.08); color: #4B7BFF; font-size: 10px; padding: 4px 8px; border-radius: 4px;">Upload</div>
+              <div style="background: rgba(75,123,255,0.08); color: #4B7BFF; font-size: 10px; padding: 4px 8px; border-radius: 4px;">Camera</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <div style="width: 60px; height: 44px; border-radius: 6px; background: #2a2c34; display: flex; align-items: center; justify-content: center;">
+              <span style="color: #4e4e5a; font-size: 9px;">vazio</span>
+            </div>
+            <div style="width: 60px; height: 44px; border-radius: 6px; background: #2a2c34; display: flex; align-items: center; justify-content: center;">
+              <span style="color: #4e4e5a; font-size: 9px;">vazio</span>
+            </div>
+            <div style="width: 60px; height: 44px; border-radius: 6px; background: #2a2c34; display: flex; align-items: center; justify-content: center;">
+              <span style="color: #4e4e5a; font-size: 9px;">vazio</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A) Coluna Lateral de Imagens</h3>
+      <p>Formulário à esquerda, coluna de imagens fixa à direita. Drop zone grande com botões Upload + Camera. Thumbnails dos 3 slots embaixo. No mobile vira seção abaixo do form.</p>
+      <div class="pros-cons" style="margin-top: 12px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Imagem sempre visível enquanto preenche</li><li>Não precisa scrollar para ver a foto</li><li>Drop zone grande = fácil de usar em touch</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Reduz largura do form no desktop</li><li>3 slots fixos podem parecer "obrigatórios"</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 20px; background: #0f1014;">
+      <div style="display: flex; flex-direction: column; gap: 12px; height: 340px;">
+        <!-- Top: Image bar -->
+        <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #171920; border-radius: 10px; border: 1px solid #1a1c24;">
+          <div style="width: 64px; height: 64px; border-radius: 8px; border: 2px dashed #2a2c34; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <span style="color: #4B7BFF; font-size: 20px;">+</span>
+          </div>
+          <div style="width: 64px; height: 64px; border-radius: 8px; background: #2a2c34; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+            <span style="color: #4e4e5a; font-size: 9px;">vazio</span>
+          </div>
+          <div style="width: 64px; height: 64px; border-radius: 8px; background: #2a2c34; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+            <span style="color: #4e4e5a; font-size: 9px;">vazio</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 2px; padding-left: 8px;">
+            <span style="color: #f0f0f3; font-size: 12px; font-weight: 600;">Imagens do Material</span>
+            <span style="color: #6e6e7a; font-size: 10px;">0 de 3 • Arraste ou clique no +</span>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <div style="background: rgba(75,123,255,0.08); color: #4B7BFF; font-size: 10px; padding: 6px 10px; border-radius: 6px; cursor: pointer;">Camera</div>
+          </div>
+        </div>
+        <!-- Form below -->
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; gap: 8px;">
+            <div style="flex: 4; background: #171920; border-radius: 8px; padding: 10px;">
+              <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Código</div>
+              <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 30px;"></div>
+            </div>
+            <div style="flex: 8; background: #171920; border-radius: 8px; padding: 10px;">
+              <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Material *</div>
+              <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 30px;"></div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <div style="flex: 1; background: #171920; border-radius: 8px; padding: 10px;">
+              <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Tipo *</div>
+              <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 30px;"></div>
+            </div>
+            <div style="flex: 1; background: #171920; border-radius: 8px; padding: 10px;">
+              <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Quantidade *</div>
+              <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 30px;"></div>
+            </div>
+          </div>
+          <div style="color: #4e4e5a; font-size: 11px; text-align: center; margin-top: 4px;">... mais campos (scroll)</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B) Barra de Imagens no Topo</h3>
+      <p>Barra horizontal sticky no topo do form com thumbnails + botão add + camera. Compacta, não ocupa espaço vertical. Scrollável horizontalmente se precisar. Form inteiro abaixo.</p>
+      <div class="pros-cons" style="margin-top: 12px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Não reduz largura do form</li><li>Sempre visível (sticky top)</li><li>Minimalista quando sem fotos</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Thumbnails pequenos, difícil ver detalhes</li><li>Área de drop menor</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 20px; background: #0f1014;">
+      <div style="display: flex; flex-direction: column; gap: 12px; height: 340px;">
+        <!-- Form fields first -->
+        <div style="display: flex; gap: 8px;">
+          <div style="flex: 4; background: #171920; border-radius: 8px; padding: 10px;">
+            <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Código</div>
+            <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 30px;"></div>
+          </div>
+          <div style="flex: 8; background: #171920; border-radius: 8px; padding: 10px;">
+            <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Material *</div>
+            <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 30px;"></div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <div style="flex: 1; background: #171920; border-radius: 8px; padding: 10px;">
+            <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Tipo *</div>
+            <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 30px;"></div>
+          </div>
+          <div style="flex: 1; background: #171920; border-radius: 8px; padding: 10px;">
+            <div style="color: #6e6e7a; font-size: 11px; margin-bottom: 4px;">Quantidade *</div>
+            <div style="background: #12141a; border: 1px solid #1a1c24; border-radius: 6px; height: 30px;"></div>
+          </div>
+        </div>
+        <!-- Collapsible image section -->
+        <div style="background: #171920; border-radius: 10px; border: 1px solid #1a1c24; overflow: hidden; flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="color: #f0f0f3; font-size: 12px; font-weight: 600;">Imagens</span>
+              <span style="background: rgba(75,123,255,0.1); color: #4B7BFF; font-size: 10px; padding: 2px 7px; border-radius: 9999px;">0/3</span>
+            </div>
+            <span style="color: #4B7BFF; font-size: 11px; cursor: pointer;">Expandir ▼</span>
+          </div>
+          <div style="padding: 16px; display: flex; align-items: center; justify-content: center; gap: 12px; flex: 1;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 20px; border: 2px dashed #2a2c34; border-radius: 10px; cursor: pointer;">
+              <span style="color: #4B7BFF; font-size: 18px;">📷</span>
+              <span style="color: #6e6e7a; font-size: 10px;">Camera</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 20px; border: 2px dashed #2a2c34; border-radius: 10px; cursor: pointer;">
+              <span style="color: #4B7BFF; font-size: 18px;">📁</span>
+              <span style="color: #6e6e7a; font-size: 10px;">Upload</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 20px; border: 2px dashed #2a2c34; border-radius: 10px; cursor: pointer;">
+              <span style="color: #4B7BFF; font-size: 18px;">📋</span>
+              <span style="color: #6e6e7a; font-size: 10px;">Colar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C) Seção Colapsável Inline</h3>
+      <p>Card colapsável "Imagens (0/3)" dentro do form. Expandido mostra 3 opções grandes: Camera, Upload, Colar (Ctrl+V). Colapsado mostra só o header com contador. Suporta drag-and-drop em toda a área e Ctrl+V paste de clipboard.</p>
+      <div class="pros-cons" style="margin-top: 12px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Não ocupa espaço quando fechado</li><li>3 ações claras e grandes (touch-friendly)</li><li>Ctrl+V paste = mais rápido de tudo</li><li>Funciona igual em desktop e mobile</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Precisa expandir para ver as fotos</li><li>Um clique extra para abrir</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
