@@ -23,6 +23,7 @@ import { cn } from '@/libs/shadcn.utils'
 // local
 import { MaterialImageColumn } from './MaterialImageColumn'
 import { MaterialSubmaterialsPanel } from './MaterialSubmaterialsPanel'
+import { TemplateEditor } from './editor'
 import type { Submaterial } from './MaterialSubmaterialsPanel'
 
 // types
@@ -53,12 +54,20 @@ type CadastroFormProps = {
 }
 
 function CadastroForm({ config, entityLabel, editData, onSubmit, onCancel, loading = false }: CadastroFormProps) {
+  // Template editor gets its own full-screen layout
+  if (config.layout === 'template-editor') {
+    return <TemplateEditor editData={editData} onSave={onSubmit} onCancel={onCancel} />
+  }
+
+  return <StandardCadastroForm config={config} entityLabel={entityLabel} editData={editData} onSubmit={onSubmit} onCancel={onCancel} loading={loading} />
+}
+
+function StandardCadastroForm({ config, entityLabel, editData, onSubmit, onCancel, loading = false }: CadastroFormProps) {
   const isMobile = useIsMobile()
   const isDesktop = useIsDesktop()
   const { cme } = useAuthStore()
   const isEdit = !!editData
   const is3ColMaterial = config.layout === '3col-material'
-  // Material uses 6|6 layout only on desktop (>=1024px). Below that, use mobile tabs.
   const useMaterial6col = is3ColMaterial && isDesktop
 
   const form = useForm({

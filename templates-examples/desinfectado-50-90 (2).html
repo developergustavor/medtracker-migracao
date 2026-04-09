@@ -1,0 +1,458 @@
+<div class="container">
+  <div class="indicator-container">
+    <div class="indicator-label">DESINFECTADO</div>
+  </div>
+
+  <div class="content-container" id="content-container">
+    <div class="row first-row row-no-border" style="padding-left: 0.5px">
+      <div class="column column-2 align-center justify-start">
+        <img src="https://bwipjs-api.metafloor.com/?bcid=datamatrixrectangular&text=1234567890&scale=2" id="qr_code"
+          style="margin: auto; height: 25px; width: 25px" />
+        <span nome-variavel="@@tag.id@@" class="variable font-weight-700" style="font-size: 10px !important">ID</span>
+      </div>
+
+      <div class="column column-2 align-center justify-center">
+        <img src="https://medtracker-etiquetagem.com.br/images/logos/cmes/medtracker.svg" class="logo" />
+      </div>
+
+      <div class="column column-8 align-center justify-center no-border">
+        <span class="break-line-3 line-height-1" style="font-weight: 700 !important;">Hospital Ana Nery</span>
+      </div>
+    </div>
+
+    <div class="row second-row">
+      <div class="column column-12 align-center justify-between no-border">
+        <span class="title" style="margin-top: 4px" style="margin-top: 4px">MATERIAL</span>
+        
+        <span nome-variavel="@@tag.material.name@@" class="variable font-weight-700 font-size-12 width-90 break-line-1 line-height-1">MATERIAL</span>
+        <span nome-variavel="@@tag.materialsQuantityRatio@@"
+          class="variable font-weight-700 variable-vertical-fixed" style="font-size: 10px !important">Qtd</span>
+      </div>
+    </div>
+
+    <div class="row third-row">
+      <div class="column column-7 align-center justify-between">
+        <span class="title" style="margin-top: 4px">DATA DE PREP.</span>
+        <span nome-variavel="@@tag.cycle.dateTime@@" class="variable break-line-1">VALOR</span>
+      </div>
+
+      <div class="column column-5 align-center justify-between no-border">
+        <span class="title" style="margin-top: 4px">VALIDADE</span>
+        <span nome-variavel="@@tag.expirationDate@@" class="variable break-line-1">VALOR</span>
+      </div>
+    </div>
+
+    <div class="row fourth-row">
+      <div class="column column-9 align-center justify-between">
+        <span class="title" style="margin-top: 4px">RESPONSÁVEL</span>
+        <span nome-variavel="@@tag.user.name@@" class="variable break-line-2">VALOR</span>
+      </div>
+
+      <div class="column column-3 align-center justify-between no-border">
+        <span class="title" style="margin-top: 4px">LOTE</span>
+        <span nome-variavel="@@tag.cycle.batch@@" class="variable break-line-2">VALOR</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-container">
+    <div class="site-label">www.medtracker.com.br</div>
+  </div>
+</div>
+<style type="text/css">
+  #content-container,
+  #content-container::before,
+  #content-container::after,
+  #content-container * .container *::before,
+  #content-container *::after {
+    all: revert;
+  }
+
+  .container {
+    width: 100% !important;
+    height: auto;
+    pointer-events: none !important;
+    cursor: not-allowed;
+  }
+
+  .container {
+    min-width: 336.37799513424px;
+    max-width: 336.37799513424px;
+    width: 336.37799513424px;
+    min-height: 188.917345690368px;
+    max-height: 188.917345690368px;
+    height: 188.917345690368px;
+    border: 1px solid #000;
+    border-radius: 8px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .indicator-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24.5669322289056px;
+    background-color: green;
+    border-radius: 8px 0px 0px 8px;
+  }
+
+  .indicator-label {
+    font-size: 15px;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    color: #fff;
+    rotate: 180deg;
+  }
+
+  .content-container {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    min-height: auto !important;
+    max-height: auto !important;
+    border-left: 1px solid #000 !important;
+    border-right: 1px solid #000 !important;
+  }
+
+  .title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .title-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .title-row span {
+    font-weight: 700;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    height: calc(47.254336423px - 1px);
+    min-height: calc(47.254336423px - 1px);
+    max-height: calc(47.254336423px - 1px);
+    border-bottom: 0.5px solid #000;
+    line-height: 0.75rem;
+  }
+
+  .inline {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    border-right: 0.5px solid #000;
+  }
+
+  .row.no-border {
+    height: 36.283469138px;
+    min-height: 36.283469138px;
+    max-height: 36.283469138px;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    border-right: 0.5px solid #000;
+  }
+
+  .column-2 {
+    width: calc(calc(calc(99% / 12) * 2) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 2) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 2) - 1px);
+  }
+
+  .column-2.no-border {
+    width: calc(calc(99% / 12) * 2);
+    min-width: calc(calc(99% / 12) * 2);
+    max-width: calc(calc(99% / 12) * 2);
+  }
+
+  .column-3 {
+    width: calc(calc(calc(99% / 12) * 3) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 3) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 3) - 1px);
+  }
+
+  .column-4 {
+    width: calc(calc(calc(99% / 12) * 4) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 4) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 4) - 1px);
+  }
+
+  .column-5 {
+    width: calc(calc(calc(99% / 12) * 5) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 5) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 5) - 1px);
+  }
+
+  .column-5 {
+    width: calc(calc(calc(99% / 12) * 5) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 5) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 5) - 1px);
+  }
+
+  .column-5.no-border {
+    width: calc(calc(99% / 12) * 5);
+    min-width: calc(calc(99% / 12) * 5);
+    max-width: calc(calc(99% / 12) * 5);
+  }
+
+  .column-6 {
+    width: calc(calc(calc(99% / 12) * 6) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 6) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 6) - 1px);
+  }
+
+  .column-6.no-border {
+    width: calc(calc(99% / 12) * 6);
+    min-width: calc(calc(99% / 12) * 6);
+    max-width: calc(calc(99% / 12) * 6);
+  }
+
+  .column-7 {
+    width: calc(calc(calc(99% / 12) * 7) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 7) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 7) - 1px);
+  }
+
+  .column-8 {
+    width: calc(calc(calc(99% / 12) * 8) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 8) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 8) - 1px);
+  }
+
+  .column-8.no-border {
+    width: calc(calc(99% / 12) * 8);
+    min-width: calc(calc(99% / 12) * 8);
+    max-width: calc(calc(99% / 12) * 8);
+  }
+
+  .column-9 {
+    width: calc(calc(calc(99% / 12) * 9) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 9) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 9) - 1px);
+  }
+
+  .column-9.no-border {
+    width: calc(calc(99% / 12) * 9);
+    min-width: calc(calc(99% / 12) * 9);
+    max-width: calc(calc(99% / 12) * 9);
+  }
+
+  .column-10 {
+    width: calc(calc(calc(99% / 12) * 10) - 1px);
+    min-width: calc(calc(calc(99% / 12) * 10) - 1px);
+    max-width: calc(calc(calc(99% / 12) * 10) - 1px);
+  }
+
+  .column-10.no-border {
+    width: calc(calc(99% / 12) * 10);
+    min-width: calc(calc(99% / 12) * 10);
+    max-width: calc(calc(99% / 12) * 10);
+  }
+
+  .column-12 {
+    width: calc(99% - 1px);
+    min-width: calc(99% - 1px);
+    max-width: calc(99% - 1px);
+  }
+
+  .column-12.no-border {
+    min-width: 99%;
+    max-width: 99%;
+  }
+
+  .align-center {
+    align-items: center;
+  }
+
+  .justify-start {
+    justify-content: flex-start;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+
+  .justify-end {
+    justify-content: flex-end;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .no-border {
+    border: 0 !important;
+  }
+
+  .pa-0 {
+    padding: 0 !important;
+  }
+
+  .variable,
+  .variable-no-value {
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 0.1px 4px;
+    border: 1px solid #006c9e;
+    color: #00415f !important;
+    background-color: #99c4d8;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    flex-direction: row !important;
+  }
+
+  .variable.red {
+    border: 1px solid #f00f0075;
+    color: #f00f0075;
+    background-color: #f00f0010;
+  }
+
+  .variable-title {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+  }
+
+  .variable-value {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .variable,
+  .variable-value {
+    text-align: center;
+    width: auto;
+    height: auto;
+    max-width: 99%;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-line;
+    line-height: 0.9rem;
+  }
+
+  .variable-no-value {
+    visibility: hidden;
+  }
+
+  .variable-vertical-fixed {
+    position: absolute !important;
+    width: auto !important;
+    height: 36px !important;
+    text-align: center !important;
+    align-self: flex-end !important;
+    justify-self: flex-end !important;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: #000;
+    rotate: 180deg;
+    line-height: 0.9rem;
+  }
+
+  .break-line-3 {
+    -webkit-line-clamp: 3 !important;
+  }
+
+  .break-line-2 {
+    -webkit-line-clamp: 2 !important;
+  }
+
+  .break-line-1 {
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .line-height-1 {
+    line-height: 1rem !important;
+  }
+
+  .site-container {
+    display: flex;
+    justify-content: center;
+    width: 13.89764017608px;
+    text-align: center;
+  }
+
+  .site-label {
+    font-size: 10px;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    color: #000;
+  }
+
+  .font-size-11 {
+    font-size: 11px;
+  }
+
+  .font-size-12 {
+    font-size: 12px;
+  }
+
+  .font-size-auto {
+    font-size: min(1em, 14.74vw) !important;
+  }
+
+  .font-weight-700 {
+    font-weight: 700;
+  }
+
+  .width-90 {
+    width: 90% !important;
+  }
+
+  .first-row {
+    height: calc(55.508672845999996px - 1px) !important;
+    min-height: calc(55.508672845999996px - 1px) !important;
+    max-height: calc(55.508672845999996px - 1px) !important;
+  }
+
+  .second-row {
+    height: calc(40.254336423px - 1px) !important;
+    min-height: calc(40.254336423px - 1px) !important;
+    max-height: calc(40.254336423px - 1px) !important;
+  }
+
+  .third-row {
+    height: calc(45.254336423px - 1px) !important;
+    min-height: calc(45.254336423px - 1px) !important;
+    max-height: calc(45.254336423px - 1px) !important;
+  }
+
+  .fourth-row {
+    height: calc(52.254336423px - 1px) !important;
+    min-height: calc(52.254336423px - 1px) !important;
+    max-height: calc(52.254336423px - 1px) !important;
+    border-bottom: 0px;
+  }
+
+  .logo {
+    width: 80%;
+    height: auto;
+    object-fit: fill;
+    transform: scale(1.2);
+  }
+
+  .title,
+  .variable {
+    margin: 0px 2px;
+  }
+</style>

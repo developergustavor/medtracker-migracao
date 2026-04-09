@@ -51,7 +51,7 @@ export type EntityFormConfig = {
   schema: ZodSchema
   fields: FormFieldConfig[]
   steps?: FormStep[]
-  layout?: 'default' | '3col-material'
+  layout?: 'default' | '3col-material' | 'template-editor'
   defaultValues: Record<string, unknown>
 }
 
@@ -256,6 +256,7 @@ const checklistFormConfig: EntityFormConfig = {
 }
 
 const templateFormConfig: EntityFormConfig = {
+  layout: 'template-editor',
   schema: templateSchema,
   fields: [
     { key: 'name', label: 'Modelo', type: 'text', placeholder: 'Nome do modelo', span: 8, required: true },
