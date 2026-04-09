@@ -1,10 +1,9 @@
 // packages
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 // components
 import { Sidebar } from '@/components/layout/Sidebar'
-import { SubSidebar } from '@/components/layout/SubSidebar'
 import { Topbar } from '@/components/layout/Topbar'
 import { ContextualBar } from '@/components/layout/ContextualBar'
 import { BottomTabBar } from '@/components/layout/BottomTabBar'
@@ -39,9 +38,7 @@ function findContextualActions(routes: RouteMetadataProps[], pathname: string): 
 
 export function AppLayout() {
   const isMobile = useIsMobile()
-  const navigate = useNavigate()
   const location = useLocation()
-  const [activeSubRoute, setActiveSubRoute] = useState<RouteMetadataProps | null>(null)
   const [spotlightOpen, setSpotlightOpen] = useState(false)
 
   // Global keybinding: Ctrl+K / Cmd+K
@@ -65,35 +62,12 @@ export function AppLayout() {
     [location.pathname]
   )
 
-  const handleOpenSubSidebar = useCallback((route: RouteMetadataProps) => {
-    // Don't open subsidebar for Cadastros when already on a cadastros page (entity sidebar handles it)
-    if (route.path === '/cadastros' && location.pathname.startsWith('/cadastros')) return
-    setActiveSubRoute(prev => (prev?.path === route.path ? null : route))
-  }, [location.pathname])
-
-  const handleSubNavigate = useCallback((path: string) => {
-    navigate(path)
-    setActiveSubRoute(null)
-  }, [navigate])
-
-  const handleCloseSubSidebar = useCallback(() => {
-    setActiveSubRoute(null)
-  }, [])
-
   return (
     <div className="flex h-dvh overflow-hidden bg-background">
-      {/* Sidebar + SubSidebar container */}
+      {/* Sidebar - desktop only */}
       {!isMobile && (
         <div className="relative flex shrink-0" style={{ zIndex: 10 }}>
-          <Sidebar onRouteWithChildren={handleOpenSubSidebar} />
-          {activeSubRoute && (
-            <SubSidebar
-              route={activeSubRoute}
-              onClose={handleCloseSubSidebar}
-              onNavigate={handleSubNavigate}
-              isOverlay={false}
-            />
-          )}
+          <Sidebar />
         </div>
       )}
 

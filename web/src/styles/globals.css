@@ -1,3 +1,83 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  /* Glass effects */
+  .glass-topbar {
+    background-color: var(--background-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .glass-backdrop {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Brand gradient (buttons, avatars) */
+  .gradient-primary {
+    background: linear-gradient(135deg, #2155FC, #4B7BFF);
+  }
+
+  /* Interactive hover patterns */
+  .hover-nav:hover {
+    background-color: var(--nav-hover-bg);
+  }
+  .hover-elevated:hover {
+    background-color: var(--elevated-hover);
+  }
+  .hover-primary-subtle:hover {
+    background-color: var(--primary-8);
+    border-color: var(--primary-20);
+    color: var(--primary);
+  }
+  .hover-destructive-subtle:hover {
+    background-color: var(--destructive-8);
+  }
+  .hover-shadow-card:hover {
+    border-color: var(--primary-20);
+    box-shadow: var(--shadow-card);
+  }
+  .hover-opacity:hover {
+    opacity: 0.7;
+  }
+
+  /* Active/selected states */
+  .active-primary {
+    background-color: var(--primary-8);
+    color: var(--primary);
+  }
+
+  /* Separator line */
+  .separator-h {
+    height: 1px;
+    background-color: var(--border-separator);
+  }
+  .separator-v {
+    width: 1px;
+    background-color: var(--border-separator);
+  }
+
+  /* Active indicator (sidebar left bar) */
+  .indicator-left {
+    position: absolute;
+    left: -2px;
+    top: 10px;
+    bottom: 10px;
+    width: 2.5px;
+    border-radius: 2px;
+    background-color: var(--primary);
+  }
+
+  /* Dot indicator (children routes) */
+  .dot-primary {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    opacity: 0.6;
+  }
+}

@@ -18,6 +18,9 @@ import { ROUTES } from '@/constants'
 // entities
 import { user_role, cme_module } from '@/entities'
 
+// libs
+import { cn } from '@/libs/shadcn.utils'
+
 // utils
 import { getRouteIcon } from '@/utils'
 
@@ -25,10 +28,6 @@ import { getRouteIcon } from '@/utils'
 import type { RouteMetadataProps } from '@/types'
 
 const _loc = '@/components/layout/Sidebar'
-
-type SidebarProps = {
-  onRouteWithChildren?: (route: RouteMetadataProps) => void
-}
 
 const SIDEBAR_ROUTES = ['/home', '/dashboard', '/dashboard-cme', '/cadastros', '/entrada-de-materiais', '/ciclos', '/saida-de-materiais', '/conferencia', '/impressao-de-etiquetas', '/relatorios']
 
@@ -57,19 +56,8 @@ function PortalTooltip({ state }: { state: TooltipState }) {
 
   return createPortal(
     <div
-      className="rounded-xs bg-popover shadow-popover text-xs text-foreground"
-      style={{
-        position: 'fixed',
-        top: state.top,
-        left: state.left,
-        padding: '6px 10px',
-        border: '1px solid var(--popover-border)',
-        fontWeight: 500,
-        whiteSpace: 'nowrap',
-        zIndex: 9999,
-        pointerEvents: 'none',
-        transform: 'translateY(-50%)'
-      }}
+      className="fixed z-tooltip rounded-xs bg-popover border border-popover shadow-popover px-[10px] py-[6px] text-xs text-foreground font-medium whitespace-nowrap pointer-events-none -translate-y-1/2"
+      style={{ top: state.top, left: state.left }}
     >
       {state.text}
     </div>,
@@ -77,7 +65,7 @@ function PortalTooltip({ state }: { state: TooltipState }) {
   )
 }
 
-export function Sidebar({ onRouteWithChildren }: SidebarProps) {
+export function Sidebar() {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, cme } = useAuthStore()
@@ -104,11 +92,10 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
   const displayName = isCmeOnly ? cme.corporateName : (user?.name || 'Perfil')
   const userInitial = displayName.charAt(0)?.toUpperCase() || 'U'
 
-
   const handleNavClick = (route: RouteMetadataProps) => {
     const hasChildren = route.children && route.children.length > 0
-    if (hasChildren && onRouteWithChildren) {
-      onRouteWithChildren(route)
+    if (hasChildren) {
+      navigate(route.children![0].path)
     } else {
       navigate(route.path)
     }
@@ -145,46 +132,14 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
             setHoveredItem(null)
             hideTooltip()
           }}
-          className="flex items-center justify-center w-full cursor-pointer rounded-md"
-          style={{
-            width: 44,
-            height: 44,
-            margin: '0 auto 2px auto',
-            backgroundColor: active ? 'var(--primary-8)' : isHovered ? 'var(--nav-hover-bg)' : 'transparent',
-            border: 'none',
-            position: 'relative',
-            color: active ? 'var(--primary)' : 'var(--sidebar-foreground)',
-            transition: 'background-color 150ms ease'
-          }}
+          className={cn(
+            'relative flex items-center justify-center w-[44px] h-[44px] mx-auto mb-[2px] border-none cursor-pointer rounded-md transition-colors duration-150',
+            active ? 'bg-primary-8 text-primary' : isHovered ? 'bg-nav-hover text-sidebar-foreground' : 'bg-transparent text-sidebar-foreground'
+          )}
         >
-          {active && (
-            <div
-              className="bg-primary"
-              style={{
-                position: 'absolute',
-                left: -2,
-                top: 10,
-                bottom: 10,
-                width: 2.5,
-                borderRadius: 2
-              }}
-            />
-          )}
+          {active && <div className="indicator-left" />}
           {route.icon && getRouteIcon(route.icon, 20, active)}
-          {hasChildren && (
-            <div
-              className="bg-primary"
-              style={{
-                position: 'absolute',
-                right: 2,
-                top: 2,
-                width: 6,
-                height: 6,
-                borderRadius: '50%',
-                opacity: 0.6
-              }}
-            />
-          )}
+          {hasChildren && <div className="dot-primary" />}
         </button>
       </div>
     )
@@ -192,26 +147,21 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
 
   return (
     <>
-      <aside
-        className="flex flex-col h-full shrink-0 overflow-hidden bg-sidebar border-r border-sidebar-border"
-        style={{
-          width: 68
-        }}
-      >
+      <aside className="flex flex-col h-full w-[68px] shrink-0 overflow-hidden bg-sidebar border-r border-sidebar">
         {/* Logo */}
-        <div className="flex items-center justify-center shrink-0" style={{ height: 56 }}>
+        <div className="flex items-center justify-center shrink-0 h-[56px]">
           <img
             src={theme === 'dark' ? '/icons/logo/logo-icon-white.svg' : '/icons/logo/logo-icon.svg'}
             alt="Medtracker Etiquetagem"
-            style={{ width: 32, height: 32 }}
+            className="w-[32px] h-[32px]"
           />
         </div>
 
         {/* Separator */}
-        <div className="mx-md" style={{ height: 1, backgroundColor: 'var(--border-separator)' }} />
+        <div className="mx-md separator-h" />
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-sm px-sm" style={{ scrollbarWidth: 'thin' }}>
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-sm px-sm">
           {pageRoutes.length > 0 && (
             <div>
               {pageRoutes.map(renderNavItem)}
@@ -220,11 +170,10 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
         </nav>
 
         {/* Separator */}
-        <div className="mx-md" style={{ height: 1, backgroundColor: 'var(--border-separator)' }} />
+        <div className="mx-md separator-h" />
 
         {/* Footer */}
         <div className="shrink-0 flex flex-col items-center gap-sm py-sm px-sm">
-          {/* Avatar */}
           <button
             onClick={() => setShowProfileDialog(true)}
             onMouseEnter={e => {
@@ -235,18 +184,10 @@ export function Sidebar({ onRouteWithChildren }: SidebarProps) {
               setHoveredItem(null)
               hideTooltip()
             }}
-            className="flex items-center justify-center cursor-pointer"
-            className="rounded-pill text-sm"
-            style={{
-              width: 36,
-              height: 36,
-              background: 'linear-gradient(135deg, #2155FC, #4B7BFF)',
-              border: hoveredItem === 'avatar' ? '2px solid var(--primary)' : '2px solid transparent',
-              fontWeight: 700,
-              color: '#ffffff',
-              transition: 'border-color 150ms ease'
-            }}
-
+            className={cn(
+              'flex items-center justify-center w-[36px] h-[36px] rounded-pill text-sm font-bold text-on-solid gradient-primary cursor-pointer border-2 transition-colors duration-150',
+              hoveredItem === 'avatar' ? 'border-primary' : 'border-transparent'
+            )}
           >
             {userInitial}
           </button>

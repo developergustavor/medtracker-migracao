@@ -1,7 +1,7 @@
 // packages
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowUp2, ArrowDown2, ArrowSwapVertical, DocumentText, Filter as FilterIcon } from 'iconsax-react'
+import { ArrowUp2, ArrowDown2, ArrowSwapVertical, DocumentText, Filter as FilterIcon, Add } from 'iconsax-react'
 
 // hooks
 import { useIsMobile } from '@/hooks'
@@ -14,6 +14,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { SearchInput } from '@/components/domain/SearchInput'
 
 const _loc = '@/components/domain/DataTable'
@@ -45,6 +46,8 @@ type DataTableProps<T> = {
   autoFitRows?: boolean
   emptyMessage?: string
   emptyIcon?: React.ReactNode
+  onEmptyAction?: () => void
+  emptyActionLabel?: string
   onRowClick?: (row: T) => void
   actions?: (row: T) => React.ReactNode
   headerActions?: React.ReactNode
@@ -78,6 +81,8 @@ function DataTable<T>({
   autoFitRows = false,
   emptyMessage = 'Nenhum registro encontrado.',
   emptyIcon,
+  onEmptyAction,
+  emptyActionLabel = 'Novo Registro',
   onRowClick,
   actions,
   headerActions,
@@ -331,16 +336,30 @@ function DataTable<T>({
     setCurrentPage(1)
   }, [])
 
-  // -- Page navigation helpers
-  const pageNumbers = useMemo(() => {
-    const pages: number[] = []
-    const maxVisible = 5
-    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2))
-    const end = Math.min(totalPages, start + maxVisible - 1)
-    start = Math.max(1, end - maxVisible + 1)
-    for (let i = start; i <= end; i++) pages.push(i)
-    return pages
+  // -- Smart page numbers: [1, '...', 5, 6, 7, '...', 100]
+  const pageSlots = useMemo((): (number | 'ellipsis-start' | 'ellipsis-end')[] => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    }
+    const slots: (number | 'ellipsis-start' | 'ellipsis-end')[] = []
+    slots.push(1)
+    if (currentPage > 3) slots.push('ellipsis-start')
+    const start = Math.max(2, currentPage - 1)
+    const end = Math.min(totalPages - 1, currentPage + 1)
+    for (let i = start; i <= end; i++) slots.push(i)
+    if (currentPage < totalPages - 2) slots.push('ellipsis-end')
+    if (totalPages > 1) slots.push(totalPages)
+    return slots
   }, [currentPage, totalPages])
+
+  const [ellipsisPopoverOpen, setEllipsisPopoverOpen] = useState<'start' | 'end' | null>(null)
+  const [ellipsisSearch, setEllipsisSearch] = useState('')
+
+  const ellipsisFilteredPages = useMemo(() => {
+    const all = Array.from({ length: totalPages }, (_, i) => i + 1)
+    if (!ellipsisSearch) return all
+    return all.filter(p => String(p).includes(ellipsisSearch))
+  }, [totalPages, ellipsisSearch])
 
   // -- Render sort icon
   const renderSortIcon = (key: string) => {
@@ -610,7 +629,7 @@ function DataTable<T>({
                   <div
                     className="flex flex-col items-center justify-center gap-2 rounded-md m-md"
                     style={{
-                      height: autoFitRows ? autoPageSize * 53 : 200,
+                      height: autoFitRows && autoPageSize ? autoPageSize * 53 : 200,
                       minHeight: 200,
                       color: 'var(--fg-muted)',
                       border: '2px dashed var(--border)'
@@ -618,6 +637,17 @@ function DataTable<T>({
                   >
                     {emptyIcon || <DocumentText size={40} color="var(--fg-dim)" variant="Linear" />}
                     <span style={{ fontSize: 'var(--text-body)' }}>{emptyMessage}</span>
+                    {onEmptyAction && (
+                      <button
+                        type="button"
+                        onClick={onEmptyAction}
+                        className="flex items-center gap-[6px] rounded-sm text-caption font-semibold text-primary-foreground cursor-pointer border-none gradient-primary hover-opacity transition-opacity duration-150"
+                        style={{ padding: '8px 16px', marginTop: 4 }}
+                      >
+                        <Add size={16} color="currentColor" />
+                        {emptyActionLabel}
+                      </button>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
@@ -854,67 +884,165 @@ function DataTable<T>({
               </Select>
             )}
 
-            {/* Page buttons */}
+            {/* Page buttons: << < [1] ... [5] [6] [7] ... [100] > >> */}
             <div className="flex items-center gap-1 flex-wrap">
-              <button
-                type="button"
+              {/* First page */}
+              <PaginationButton
+                disabled={currentPage <= 1}
+                onClick={() => setCurrentPage(1)}
+                isMobile={isMobile}
+              >
+                &laquo;
+              </PaginationButton>
+              {/* Previous */}
+              <PaginationButton
                 disabled={currentPage <= 1}
                 onClick={() => setCurrentPage(p => p - 1)}
-                className="inline-flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80 transition-opacity"
-                style={{
-                  width: isMobile ? 28 : 34,
-                  height: isMobile ? 28 : 34,
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border-subtle)',
-                  backgroundColor: 'var(--secondary)',
-                  fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-caption)',
-                  color: 'var(--fg-secondary)'
-                }}
+                isMobile={isMobile}
               >
                 &lt;
-              </button>
-              {pageNumbers.map(page => (
-                <button
-                  key={page}
-                  type="button"
-                  onClick={() => setCurrentPage(page)}
-                  className="inline-flex items-center justify-center transition-colors"
-                  style={{
-                    width: isMobile ? 28 : 34,
-                    height: isMobile ? 28 : 34,
-                    borderRadius: 'var(--radius-sm)',
-                    border: page === currentPage ? 'none' : '1px solid var(--border-subtle)',
-                    backgroundColor: page === currentPage ? 'var(--primary)' : 'var(--secondary)',
-                    color: page === currentPage ? 'var(--primary-fg)' : 'var(--fg-secondary)',
-                    fontWeight: page === currentPage ? 700 : 400,
-                    fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-caption)'
-                  }}
-                >
-                  {page}
-                </button>
-              ))}
-              <button
-                type="button"
+              </PaginationButton>
+
+              {pageSlots.map(slot => {
+                if (slot === 'ellipsis-start' || slot === 'ellipsis-end') {
+                  return (
+                    <Popover
+                      key={slot}
+                      open={ellipsisPopoverOpen === (slot === 'ellipsis-start' ? 'start' : 'end')}
+                      onOpenChange={open => {
+                        setEllipsisPopoverOpen(open ? (slot === 'ellipsis-start' ? 'start' : 'end') : null)
+                        if (open) setEllipsisSearch('')
+                      }}
+                    >
+                      <PopoverTrigger asChild>
+                        <PaginationButton isMobile={isMobile}>
+                          &hellip;
+                        </PaginationButton>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="p-0 w-[140px]"
+                        align="center"
+                        side="top"
+                        sideOffset={6}
+                      >
+                        <div className="p-[6px]">
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="Página..."
+                            value={ellipsisSearch}
+                            onChange={e => setEllipsisSearch(e.target.value.replace(/\D/g, ''))}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter') {
+                                const val = Number(ellipsisSearch)
+                                if (val >= 1 && val <= totalPages) {
+                                  setCurrentPage(val)
+                                  setEllipsisPopoverOpen(null)
+                                }
+                              }
+                            }}
+                            className="w-full rounded-xs border border-subtle bg-input text-xs px-[8px] py-[6px] outline-none focus:border-primary"
+                            autoFocus
+                          />
+                        </div>
+                        <div className="overflow-y-auto" style={{ maxHeight: 180 }}>
+                          {ellipsisFilteredPages.map(page => (
+                            <button
+                              key={page}
+                              type="button"
+                              onClick={() => {
+                                setCurrentPage(page)
+                                setEllipsisPopoverOpen(null)
+                              }}
+                              className={cn(
+                                'w-full text-left text-xs px-[10px] py-[6px] cursor-pointer border-none transition-colors',
+                                page === currentPage ? 'bg-primary-8 text-primary font-semibold' : 'bg-transparent text-foreground hover-nav'
+                              )}
+                            >
+                              Página {page}
+                            </button>
+                          ))}
+                          {ellipsisFilteredPages.length === 0 && (
+                            <div className="px-[10px] py-[8px] text-xs text-muted-foreground">
+                              Nenhuma página
+                            </div>
+                          )}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  )
+                }
+
+                const page = slot as number
+                return (
+                  <PaginationButton
+                    key={page}
+                    active={page === currentPage}
+                    onClick={() => setCurrentPage(page)}
+                    isMobile={isMobile}
+                  >
+                    {page}
+                  </PaginationButton>
+                )
+              })}
+
+              {/* Next */}
+              <PaginationButton
                 disabled={currentPage >= totalPages}
                 onClick={() => setCurrentPage(p => p + 1)}
-                className="inline-flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80 transition-opacity"
-                style={{
-                  width: isMobile ? 28 : 34,
-                  height: isMobile ? 28 : 34,
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border-subtle)',
-                  backgroundColor: 'var(--secondary)',
-                  fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-caption)',
-                  color: 'var(--fg-secondary)'
-                }}
+                isMobile={isMobile}
               >
                 &gt;
-              </button>
+              </PaginationButton>
+              {/* Last page */}
+              <PaginationButton
+                disabled={currentPage >= totalPages}
+                onClick={() => setCurrentPage(totalPages)}
+                isMobile={isMobile}
+              >
+                &raquo;
+              </PaginationButton>
             </div>
           </div>
         </div>
       )}
     </div>
+  )
+}
+
+function PaginationButton({
+  children,
+  disabled,
+  active,
+  onClick,
+  isMobile
+}: {
+  children: React.ReactNode
+  disabled?: boolean
+  active?: boolean
+  onClick?: () => void
+  isMobile?: boolean
+}) {
+  const size = isMobile ? 28 : 34
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={cn(
+        'inline-flex items-center justify-center rounded-sm border transition-colors',
+        disabled && 'opacity-30 cursor-not-allowed',
+        active ? 'bg-primary text-primary-foreground font-bold border-transparent' : 'bg-secondary text-fg-secondary border-subtle hover:opacity-80',
+        !disabled && !active && 'cursor-pointer'
+      )}
+      style={{
+        width: size,
+        height: size,
+        fontSize: isMobile ? 'var(--text-xs)' : 'var(--text-caption)'
+      }}
+    >
+      {children}
+    </button>
   )
 }
 

@@ -5,9 +5,12 @@ import { SearchNormal1, CloseCircle } from 'iconsax-react'
 
 // components
 import { Input } from '@/components/ui/input'
+import { ConfirmDialog } from '@/components'
 
 // pages
 import { CadastroTab, getTabColumns } from './CadastroTab'
+import { CadastroFormDialog } from './CadastroFormDialog'
+import { formConfigMap } from './cadastros.forms'
 
 // constants
 import { ROUTES } from '@/constants'
@@ -92,21 +95,50 @@ function Cadastros() {
   const { user, cme } = useAuthStore()
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [noData, setNoData] = useState(false)
   const [showColumnFilter, setShowColumnFilter] = useState(false)
   const [hiddenColumns, setHiddenColumns] = useState<Set<string>>(new Set())
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Form dialog state
+  const [formOpen, setFormOpen] = useState(false)
+  const [formEditData, setFormEditData] = useState<Record<string, unknown> | null>(null)
+
+  // Confirm delete dialog state
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<Record<string, unknown> | null>(null)
+
+  const handleNew = useCallback(() => {
+    setFormEditData(null)
+    setFormOpen(true)
+  }, [])
+
+  const handleEdit = useCallback((row: Record<string, unknown>) => {
+    setFormEditData(row)
+    setFormOpen(true)
+  }, [])
+
+  const handleDelete = useCallback((row: Record<string, unknown>) => {
+    setDeleteTarget(row)
+    setConfirmOpen(true)
+  }, [])
+
+  const handleConfirmDelete = useCallback(() => {
+    const fullLoc = `${_loc}.handleConfirmDelete`
+    console.log(`[${fullLoc}] Delete:`, deleteTarget)
+    setConfirmOpen(false)
+    setDeleteTarget(null)
+  }, [deleteTarget])
 
   // Listen for contextual-action events (from ContextualBar)
   useEffect(() => {
     const handler = (e: Event) => {
       const actionId = (e as CustomEvent).detail as string
       if (actionId === 'filters') setShowColumnFilter(prev => !prev)
+      if (actionId === 'new-record') handleNew()
     }
     window.addEventListener('contextual-action', handler)
     return () => window.removeEventListener('contextual-action', handler)
-  }, [])
+  }, [handleNew])
 
   const cadastrosRoute = useMemo(() => ROUTES.find(r => r.path === '/cadastros'), [])
 
@@ -200,7 +232,7 @@ function Cadastros() {
               value={search}
               onChange={handleSearchChange}
               placeholder="Filtrar..."
-              className="pl-8 pr-7 !text-[14px] bg-card rounded-sm"
+              className="pl-8 pr-7 !text-[14px] rounded-sm"
               style={{
                 height: 32,
                 fontSize: 'var(--text-sm)',
@@ -223,9 +255,31 @@ function Cadastros() {
         {/* Table — fills rest */}
         <div className="flex-1 overflow-hidden bg-card">
           {activeTabMeta && (
-            <CadastroTab tabKey={activeTab} tabName={activeTabMeta.name} externalSearch={debouncedSearch} hideHeader fullHeight loading={isLoading} forceEmpty={noData} hiddenColumns={hiddenColumns} />
+            <CadastroTab tabKey={activeTab} tabName={activeTabMeta.name} externalSearch={debouncedSearch} hideHeader fullHeight hiddenColumns={hiddenColumns} onNew={handleNew} onEdit={handleEdit} onDelete={handleDelete} />
           )}
         </div>
+
+        {/* Form Dialog (Create/Edit) */}
+        {formConfigMap[activeTab] && (
+          <CadastroFormDialog
+            open={formOpen}
+            onClose={() => { setFormOpen(false); setFormEditData(null) }}
+            config={formConfigMap[activeTab]}
+            entityLabel={activeTabMeta?.name || ''}
+            editData={formEditData}
+          />
+        )}
+
+        {/* Confirm Delete Dialog */}
+        <ConfirmDialog
+          open={confirmOpen}
+          onClose={() => { setConfirmOpen(false); setDeleteTarget(null) }}
+          onConfirm={handleConfirmDelete}
+          title="Excluir registro"
+          description={`Tem certeza que deseja excluir "${(deleteTarget as Record<string, unknown>)?.name || 'este registro'}"? Esta ação não pode ser desfeita.`}
+          confirmLabel="Excluir"
+          variant="destructive"
+        />
       </div>
     )
   }
@@ -309,33 +363,6 @@ function Cadastros() {
           })}
         </div>
 
-        {/* DEV: Toggle loading & no data */}
-        <div className="shrink-0 flex flex-col gap-1" style={{ padding: '6px 8px', borderTop: '1px solid var(--border-separator)' }}>
-          <button
-            type="button"
-            onClick={() => setIsLoading(prev => !prev)}
-            className="w-full cursor-pointer border-none outline-none rounded-sm text-xs font-medium transition-all duration-150 ease-in-out"
-            style={{
-              padding: '6px 10px',
-              backgroundColor: isLoading ? 'var(--destructive)' : 'var(--elevated)',
-              color: isLoading ? 'var(--primary-fg)' : 'var(--muted-foreground)'
-            }}
-          >
-            {isLoading ? 'Stop Loading' : 'Toggle Loading'}
-          </button>
-          <button
-            type="button"
-            onClick={() => setNoData(prev => !prev)}
-            className="w-full cursor-pointer border-none outline-none rounded-sm text-xs font-medium transition-all duration-150 ease-in-out"
-            style={{
-              padding: '6px 10px',
-              backgroundColor: noData ? 'var(--destructive)' : 'var(--elevated)',
-              color: noData ? 'var(--primary-fg)' : 'var(--muted-foreground)'
-            }}
-          >
-            {noData ? 'Stop No Data' : 'Toggle No Data'}
-          </button>
-        </div>
       </div>
 
       {/* Table card — full height, internal scroll */}
@@ -347,15 +374,38 @@ function Cadastros() {
             externalSearch={debouncedSearch}
             hideHeader
             fullHeight
-            loading={isLoading}
-            forceEmpty={noData}
             hiddenColumns={hiddenColumns}
+            onNew={handleNew}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         )}
       </div>
 
       {/* Column filter sidebar overlay */}
       {showColumnFilter && <ColumnFilterSidebar tabKey={activeTab} hiddenColumns={hiddenColumns} onToggleColumn={handleToggleColumn} onClose={() => setShowColumnFilter(false)} />}
+
+      {/* Form Dialog (Create/Edit) */}
+      {formConfigMap[activeTab] && (
+        <CadastroFormDialog
+          open={formOpen}
+          onClose={() => { setFormOpen(false); setFormEditData(null) }}
+          config={formConfigMap[activeTab]}
+          entityLabel={activeTabMeta?.name || ''}
+          editData={formEditData}
+        />
+      )}
+
+      {/* Confirm Delete Dialog */}
+      <ConfirmDialog
+        open={confirmOpen}
+        onClose={() => { setConfirmOpen(false); setDeleteTarget(null) }}
+        onConfirm={handleConfirmDelete}
+        title="Excluir registro"
+        description={`Tem certeza que deseja excluir "${(deleteTarget as Record<string, unknown>)?.name || 'este registro'}"? Esta ação não pode ser desfeita.`}
+        confirmLabel="Excluir"
+        variant="destructive"
+      />
     </div>
   )
 }

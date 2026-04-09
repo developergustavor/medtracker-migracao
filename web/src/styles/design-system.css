@@ -127,6 +127,7 @@
   --text-sm: 13px;
   --text-caption: 12px;
   --text-xs: 11px;
+  --text-xxs: 10px;
 
   /* On-solid */
   --on-solid: #ffffff;
@@ -314,3 +315,4 @@ body {
     font-size: 16px !important;
   }
 }
+
