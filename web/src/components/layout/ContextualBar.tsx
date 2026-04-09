@@ -14,6 +14,7 @@ const _loc = '@/components/layout/ContextualBar'
 type ContextualBarProps = {
   actions: ContextualActionProps[]
   onAction?: (actionId: string) => void
+  disabled?: boolean
 }
 
 function ActionButton({ action, isPrimary, onAction }: { action: ContextualActionProps; isPrimary: boolean; onAction?: (actionId: string) => void }) {
@@ -163,7 +164,7 @@ function OverflowMenu({ actions }: { actions: ContextualActionProps[] }) {
   )
 }
 
-export function ContextualBar({ actions, onAction }: ContextualBarProps) {
+export function ContextualBar({ actions, onAction, disabled = false }: ContextualBarProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const [overflowing, setOverflowing] = useState(false)
@@ -198,7 +199,7 @@ export function ContextualBar({ actions, onAction }: ContextualBarProps) {
   return (
     <div
       ref={containerRef}
-      className="shrink-0 flex items-center px-xl overflow-hidden bg-background"
+      className={`shrink-0 flex items-center px-xl overflow-hidden bg-background transition-opacity duration-200 ${disabled ? 'opacity-40 pointer-events-none' : ''}`}
       style={{
         height: 44,
         borderBottom: '1px solid var(--border-separator)'

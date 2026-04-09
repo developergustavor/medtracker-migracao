@@ -62,6 +62,14 @@ export function AppLayout() {
     [location.pathname]
   )
 
+  // Listen for form-open/close to disable contextual bar
+  const [contextualDisabled, setContextualDisabled] = useState(false)
+  useEffect(() => {
+    const handler = (e: Event) => setContextualDisabled((e as CustomEvent).detail as boolean)
+    window.addEventListener('contextual-bar-disabled', handler)
+    return () => window.removeEventListener('contextual-bar-disabled', handler)
+  }, [])
+
   return (
     <div className="flex h-dvh overflow-hidden bg-background">
       {/* Sidebar - desktop only */}
@@ -80,6 +88,7 @@ export function AppLayout() {
         {currentRouteActions && (
           <ContextualBar
             actions={currentRouteActions}
+            disabled={contextualDisabled}
             onAction={actionId => {
               window.dispatchEvent(new CustomEvent('contextual-action', { detail: actionId }))
             }}

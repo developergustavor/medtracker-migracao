@@ -13,6 +13,7 @@ import { LayoutPanel } from './LayoutPanel'
 import { LabelIframe } from './LabelIframe'
 import { SelectionOverlay } from './SelectionOverlay'
 import { PreviewDialog } from './PreviewPanel'
+import { SimulateDialog } from './SimulateDialog'
 import { mmToPx, type DimensionUnit } from './dimensions'
 
 const _loc = '@/pages/cadastros/editor/TemplateEditor'
@@ -47,6 +48,8 @@ function TemplateEditor({ editData, onSave, onCancel }: TemplateEditorProps) {
 
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
+  const [simulateOpen, setSimulateOpen] = useState(false)
+  const [isSimulating, setIsSimulating] = useState(false)
 
   const handleDimensionChange = useCallback((w: number, h: number) => {
     setWidthMm(w)
@@ -88,6 +91,46 @@ function TemplateEditor({ editData, onSave, onCancel }: TemplateEditorProps) {
     setTemplateCss(css)
     setPreviewOpen(true)
   }, [getLiveContent])
+
+  // Apply simulation values to iframe variables
+  const handleSimulateApply = useCallback((values: Record<string, string>) => {
+    const iframe = iframeRef.current
+    if (!iframe?.contentDocument) return
+    const doc = iframe.contentDocument
+
+    // Replace all variable elements with their values
+    const varElements = doc.querySelectorAll('[nome-variavel]')
+    varElements.forEach(el => {
+      const path = el.getAttribute('nome-variavel')?.replace(/@@/g, '') || ''
+      const value = values[path]
+      if (value) {
+        el.textContent = value
+        el.classList.remove('variable')
+        el.classList.add('variable-value')
+      }
+    })
+    setIsSimulating(true)
+  }, [])
+
+  // Clear simulation — restore original variable placeholders
+  const handleSimulateClear = useCallback(() => {
+    // Reload the template to reset
+    const iframe = iframeRef.current
+    if (!iframe?.contentDocument) return
+    const doc = iframe.contentDocument
+
+    const varElements = doc.querySelectorAll('[nome-variavel]')
+    varElements.forEach(el => {
+      const path = el.getAttribute('nome-variavel')?.replace(/@@/g, '') || ''
+      const varName = path.split('.').pop() || 'Variável'
+      // Capitalize first letter
+      const placeholder = varName.charAt(0).toUpperCase() + varName.slice(1)
+      el.textContent = placeholder
+      el.classList.remove('variable-value')
+      el.classList.add('variable')
+    })
+    setIsSimulating(false)
+  }, [])
 
   // Load a template preset into the editor
   const handleLoadTemplate = useCallback((html: string, css: string, wMm: number, hMm: number, newType: string, newCategory: string) => {
@@ -172,53 +215,86 @@ function TemplateEditor({ editData, onSave, onCancel }: TemplateEditorProps) {
   const heightPx = mmToPx(heightMm)
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-background">
-      {/* Toolbar */}
-      <EditorToolbar
-        name={name}
-        onNameChange={setName}
-        category={category}
-        onCategoryChange={setCategory}
-        type={type}
-        onTypeChange={setType}
-        widthMm={widthMm}
-        heightMm={heightMm}
-        onDimensionChange={handleDimensionChange}
-        unit={unit}
-        onUnitChange={setUnit}
-        zoom={zoom}
-        onZoomChange={setZoom}
-        onPreview={handlePreview}
-        onSave={handleSave}
-        onCancel={onCancel}
-      />
-
-      {/* Main area: canvas center + sidebar right */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Canvas area (center) */}
-        <div className="flex-1 overflow-auto flex items-center justify-center bg-background" style={{ backgroundImage: 'radial-gradient(circle, var(--fg-ghost) 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
-          {/* Label at zoom scale + selection overlay */}
-          <div className="relative" style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}>
-            <LabelIframe
-              ref={iframeRef}
-              html={templateHtml}
-              css={templateCss}
-              widthPx={widthPx}
-              heightPx={heightPx}
-              onElementSelect={(el) => {
-                setSelectedElement(el)
-                if (el) setSidebarTab('properties')
-              }}
-            />
-            <SelectionOverlay
-              iframeRef={iframeRef}
-              selectedElement={selectedElement}
-              zoom={1}
-              unit={unit}
-              onElementResize={() => {/* refresh selection box */}}
-            />
-          </div>
+    <div className="flex h-full overflow-hidden bg-background">
+      {/* Left: Toolbar (full height, vertical) */}
+      <div className="w-[240px] shrink-0 border-r border-separator bg-card flex flex-col overflow-hidden">
+        <EditorToolbar
+          name={name}
+          onNameChange={setName}
+          category={category}
+          onCategoryChange={setCategory}
+          type={type}
+          onTypeChange={setType}
+          widthMm={widthMm}
+          heightMm={heightMm}
+          onDimensionChange={handleDimensionChange}
+          unit={unit}
+          onUnitChange={setUnit}
+          onCancel={onCancel}
+        />
+        {/* Bottom actions: Preview + Save (fixed at bottom of toolbar) */}
+        <div className="shrink-0 flex flex-col gap-xs px-md py-md border-t border-separator mt-auto">
+          <button type="button" onClick={handlePreview} className="w-full flex items-center justify-center gap-[6px] text-xs text-primary bg-primary-8 border border-primary-20 rounded-sm cursor-pointer hover-primary-subtle transition-colors" style={{ height: 34 }}>
+            Preview
+          </button>
+          <button type="button" onClick={handleSave} className="w-full flex items-center justify-center gap-[6px] text-xs text-on-solid gradient-primary border-none rounded-sm cursor-pointer" style={{ height: 34 }}>
+            Salvar
+          </button>
         </div>
+      </div>
+
+      {/* Center + Right */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Canvas area */}
+        <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 overflow-auto flex items-center justify-center bg-background relative" style={{ backgroundImage: 'radial-gradient(circle, var(--fg-ghost) 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
+            {/* Label at zoom scale + selection overlay */}
+            <div className="relative" style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}>
+              <LabelIframe
+                ref={iframeRef}
+                html={templateHtml}
+                css={templateCss}
+                widthPx={widthPx}
+                heightPx={heightPx}
+                onElementSelect={(el) => {
+                  setSelectedElement(el)
+                  if (el) setSidebarTab('properties')
+                }}
+              />
+              <SelectionOverlay
+                iframeRef={iframeRef}
+                selectedElement={selectedElement}
+                zoom={1}
+                unit={unit}
+                onElementResize={() => {}}
+              />
+            </div>
+
+            {/* Floating canvas toolbar (bottom center) */}
+            <div className="absolute bottom-lg left-1/2 -translate-x-1/2 flex items-center gap-xs bg-card border border-separator rounded-md shadow-popover px-sm py-[5px]" style={{ zIndex: 20 }}>
+              {/* Zoom controls */}
+              <button type="button" onClick={() => setZoom(z => Math.max(0.25, z - 0.25))} className="w-[30px] h-[30px] rounded-xs border border-subtle flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors text-xs text-foreground">−</button>
+              <span className="text-xs text-muted-foreground w-[44px] text-center">{Math.round(zoom * 100)}%</span>
+              <button type="button" onClick={() => setZoom(z => Math.min(3, z + 0.25))} className="w-[30px] h-[30px] rounded-xs border border-subtle flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors text-xs text-foreground">+</button>
+              <button type="button" onClick={() => setZoom(1)} className="w-[30px] h-[30px] rounded-xs border border-subtle flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors text-xxs text-muted-foreground" title="Reset">1:1</button>
+              <div className="separator-v h-[20px]" />
+              {/* Simulate */}
+              {isSimulating ? (
+                <>
+                  <button type="button" onClick={handleSimulateClear} className="h-[30px] px-sm rounded-xs border border-destructive/30 flex items-center gap-[4px] bg-destructive-8 cursor-pointer text-xxs text-destructive transition-colors">
+                    Limpar
+                  </button>
+                  <button type="button" onClick={() => setSimulateOpen(true)} className="h-[30px] px-sm rounded-xs border border-primary-20 flex items-center gap-[4px] bg-primary-8 cursor-pointer text-xxs text-primary transition-colors">
+                    Editar
+                  </button>
+                </>
+              ) : (
+                <button type="button" onClick={() => setSimulateOpen(true)} className="h-[30px] px-md rounded-xs border border-primary-20 flex items-center gap-[4px] bg-primary-8 cursor-pointer text-xxs text-primary hover-primary-subtle transition-colors">
+                  Simular
+                </button>
+              )}
+            </div>
+          </div>
 
         {/* Sidebar (right) */}
         <div className="w-[280px] shrink-0 border-l border-separator bg-card flex flex-col overflow-hidden">
@@ -282,7 +358,17 @@ function TemplateEditor({ editData, onSave, onCancel }: TemplateEditorProps) {
             )}
           </div>
         </div>
+        </div>
       </div>
+
+      {/* Simulate dialog */}
+      <SimulateDialog
+        open={simulateOpen}
+        onClose={() => setSimulateOpen(false)}
+        onApply={handleSimulateApply}
+        onClear={handleSimulateClear}
+        isSimulating={isSimulating}
+      />
 
       {/* Preview dialog */}
       <PreviewDialog

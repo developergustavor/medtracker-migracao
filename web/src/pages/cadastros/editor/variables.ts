@@ -19,7 +19,8 @@ export const TEMPLATE_VARIABLES: VariableCategory[] = [
     label: 'CME',
     variables: [
       { key: 'cme.corporateName', path: 'tag.cme.corporateName', label: 'Razão Social', placeholder: 'CME' },
-      { key: 'cme.name', path: 'tag.cme.name', label: 'Nome', placeholder: 'Nome CME' }
+      { key: 'cme.name', path: 'tag.cme.name', label: 'Nome', placeholder: 'Nome CME' },
+      { key: 'cme.logo', path: 'tag.cme.logo', label: 'Logo', placeholder: 'Logo' }
     ]
   },
   {
@@ -103,5 +104,9 @@ export const TEMPLATE_VARIABLES: VariableCategory[] = [
 
 // Helper to create variable HTML
 export function createVariableHtml(variable: VariableDefinition): string {
+  // Logo variable inserts an image placeholder
+  if (variable.key === 'cme.logo') {
+    return `<img nome-variavel="@@${variable.path}@@" class="variable" src="/icons/logo/logo-icon.svg" style="width:30px;height:30px;object-fit:contain;" alt="Logo" />`
+  }
   return `<span nome-variavel="@@${variable.path}@@" class="variable">${variable.placeholder}</span>`
 }

@@ -103,6 +103,13 @@ function Cadastros() {
   const [displayType, setDisplayType] = useState<'table' | 'form'>('table')
   const [formEditData, setFormEditData] = useState<Record<string, unknown> | null>(null)
 
+  // Disable contextual bar when form/editor is open
+  useEffect(() => {
+    const isFormOpen = displayType === 'form'
+    window.dispatchEvent(new CustomEvent('contextual-bar-disabled', { detail: isFormOpen }))
+    return () => { window.dispatchEvent(new CustomEvent('contextual-bar-disabled', { detail: false })) }
+  }, [displayType])
+
   // Confirm delete dialog state
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Record<string, unknown> | null>(null)
