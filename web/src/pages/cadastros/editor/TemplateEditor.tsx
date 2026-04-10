@@ -252,8 +252,11 @@ function TemplateEditor({ editData, onSave, onCancel }: TemplateEditorProps) {
     onRedo: commandStack.redo,
     onDuplicate: handleDuplicate,
     onEscape: () => setSelectedElement(null),
-    onGroup: () => {},
-    onUngroup: () => {}
+    onGroup: () => { if (selectedElement) elementTree.groupNodes([selectedElement]) },
+    onUngroup: () => {
+      const node = elementTree.tree.flatMap(function flatten(n): typeof elementTree.tree { return [n, ...n.children.flatMap(flatten)] }).find(n => n.element === selectedElement)
+      if (node) elementTree.ungroupNode(node)
+    }
   })
 
   // -- Context menu handler
@@ -320,7 +323,7 @@ function TemplateEditor({ editData, onSave, onCancel }: TemplateEditorProps) {
             />
             <SelectionOverlay
               iframeRef={iframeRef} selectedElement={selectedElement}
-              zoom={1} unit={unit} onElementResize={() => {}}
+              zoom={zoom} unit={unit} onElementResize={() => { elementTree.refresh() }}
             />
           </div>
 
@@ -407,7 +410,11 @@ function TemplateEditor({ editData, onSave, onCancel }: TemplateEditorProps) {
           onCut={() => { handleCopy(); handleDeleteSelected() }}
           onCopy={handleCopy} onPaste={handlePaste}
           onDuplicate={handleDuplicate} onDelete={handleDeleteSelected}
-          onGroup={() => {}} onUngroup={() => {}}
+          onGroup={() => { if (selectedElement) elementTree.groupNodes([selectedElement]) }}
+          onUngroup={() => {
+            const node = elementTree.tree.flatMap(function f(n): typeof elementTree.tree { return [n, ...n.children.flatMap(f)] }).find(n => n.element === selectedElement)
+            if (node) elementTree.ungroupNode(node)
+          }}
           onLock={() => {}}
           onBringForward={() => { if (selectedElement?.nextElementSibling) selectedElement.parentElement?.insertBefore(selectedElement.nextElementSibling, selectedElement); elementTree.refresh() }}
           onSendBackward={() => { if (selectedElement?.previousElementSibling) selectedElement.parentElement?.insertBefore(selectedElement, selectedElement.previousElementSibling); elementTree.refresh() }}

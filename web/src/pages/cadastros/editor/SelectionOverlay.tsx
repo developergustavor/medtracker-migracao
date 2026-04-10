@@ -45,14 +45,16 @@ function SelectionOverlay({ iframeRef, selectedElement, zoom, unit, onElementRes
     }
   }, [iframeRef])
 
-  // Convert element rect inside iframe to overlay coordinates (accounting for zoom)
+  // Convert element rect inside iframe to overlay coordinates
+  // Overlay is INSIDE the zoom transform, so no zoom multiplication needed for position.
+  // But measurements shown to user should be in real (unzoomed) units.
   const elementToOverlay = useCallback((rect: DOMRect): BoundingBox => {
     const offset = getIframeOffset()
     return {
-      x: offset.x + rect.left * zoom,
-      y: offset.y + rect.top * zoom,
-      width: rect.width * zoom,
-      height: rect.height * zoom
+      x: offset.x + rect.left,
+      y: offset.y + rect.top,
+      width: rect.width,
+      height: rect.height
     }
   }, [getIframeOffset, zoom])
 
@@ -193,7 +195,7 @@ function SelectionOverlay({ iframeRef, selectedElement, zoom, unit, onElementRes
               zIndex: 20
             }}
           >
-            {formatDimension(hoverInfo.box.width / zoom, unit)} × {formatDimension(hoverInfo.box.height / zoom, unit)}
+            {formatDimension(hoverInfo.box.width, unit)} × {formatDimension(hoverInfo.box.height, unit)}
             <span className="text-fg-dim ml-[4px]">{hoverInfo.tagName}{hoverInfo.className ? `.${hoverInfo.className}` : ''}</span>
           </div>
         </>
@@ -221,7 +223,7 @@ function SelectionOverlay({ iframeRef, selectedElement, zoom, unit, onElementRes
               zIndex: 20
             }}
           >
-            {formatDimension(selectionBox.width / zoom, unit)} × {formatDimension(selectionBox.height / zoom, unit)}
+            {formatDimension(selectionBox.width, unit)} × {formatDimension(selectionBox.height, unit)}
           </div>
 
           {/* Resize handles */}

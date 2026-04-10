@@ -70,11 +70,55 @@ const LabelIframe = forwardRef<HTMLIFrameElement, LabelIframeProps>(
         const doc = iframe.contentDocument
         if (!doc) return
 
+        // Element selection + internal drag
+        let dragState: { el: HTMLElement; startX: number; startY: number; origLeft: string; origTop: string; moved: boolean } | null = null
+
+        doc.addEventListener('mousedown', (e) => {
+          const target = e.target as HTMLElement
+          if (!target || target === doc.body || target === doc.documentElement) return
+
+          // Start potential drag
+          const cs = doc.defaultView?.getComputedStyle(target)
+          dragState = {
+            el: target,
+            startX: e.clientX,
+            startY: e.clientY,
+            origLeft: target.style.left || cs?.left || '0',
+            origTop: target.style.top || cs?.top || '0',
+            moved: false
+          }
+        })
+
+        doc.addEventListener('mousemove', (e) => {
+          if (!dragState) return
+          const dx = e.clientX - dragState.startX
+          const dy = e.clientY - dragState.startY
+
+          // Only start drag if moved more than 3px (to distinguish from click)
+          if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return
+          dragState.moved = true
+
+          const el = dragState.el
+          // Switch to absolute positioning if not already
+          if (el.style.position !== 'absolute') {
+            el.style.position = 'relative'
+          }
+          el.style.left = `${(parseFloat(dragState.origLeft) || 0) + dx}px`
+          el.style.top = `${(parseFloat(dragState.origTop) || 0) + dy}px`
+        })
+
+        doc.addEventListener('mouseup', () => {
+          if (dragState && !dragState.moved) {
+            // It was a click, not a drag
+            onElementSelect(dragState.el)
+          }
+          dragState = null
+        })
+
+        // Click on empty space deselects
         doc.addEventListener('click', (e) => {
           const target = e.target as HTMLElement
-          if (target && target !== doc.body) {
-            onElementSelect(target)
-          } else {
+          if (target === doc.body || target === doc.documentElement) {
             onElementSelect(null)
           }
         })
