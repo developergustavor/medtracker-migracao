@@ -219,6 +219,7 @@ function Cadastros() {
 
   const activeTabMeta = visibleTabs.find(t => extractTabKey(t.path) === activeTab)
   const showingForm = displayType === 'form'
+  const isTemplateEditor = activeTab === 'modelos' && showingForm
 
   if (visibleTabs.length === 0) {
     return (
@@ -327,7 +328,8 @@ function Cadastros() {
       <div
         className={cn(
           'flex flex-col shrink-0 h-full border-r border-border transition-opacity duration-200',
-          showingForm && 'opacity-40 pointer-events-none'
+          isTemplateEditor && 'hidden',
+          showingForm && !isTemplateEditor && 'opacity-40 pointer-events-none'
         )}
         style={{ width: 200, backgroundColor: 'var(--bg)' }}
       >

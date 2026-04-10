@@ -40,7 +40,8 @@ function PropertiesPanel({ element, onStyleChange }: PropertiesPanelProps) {
       color: '#000000', backgroundColor: 'transparent', textAlign: 'left',
       lineHeight: '1', lineClamp: 'none', width: 'auto', height: 'auto',
       paddingTop: '0', paddingRight: '0', paddingBottom: '0', paddingLeft: '0',
-      borderWidth: '0', borderColor: '#000000', borderRadius: '0',
+      borderWidth: '0', borderStyle: 'solid', borderColor: '#000000', borderRadius: '0',
+      borderTopWidth: '0', borderRightWidth: '0', borderBottomWidth: '0', borderLeftWidth: '0',
       rotate: '0', overflow: 'hidden'
     }
     if (!element) return defaults
@@ -58,8 +59,10 @@ function PropertiesPanel({ element, onStyleChange }: PropertiesPanelProps) {
         width: element.style.width || 'auto', height: element.style.height || 'auto',
         paddingTop: String(parseInt(cs.paddingTop) || 0), paddingRight: String(parseInt(cs.paddingRight) || 0),
         paddingBottom: String(parseInt(cs.paddingBottom) || 0), paddingLeft: String(parseInt(cs.paddingLeft) || 0),
-        borderWidth: String(parseInt(cs.borderWidth) || 0), borderColor: rgbToHex(cs.borderColor) || '#000000',
-        borderRadius: String(parseInt(cs.borderRadius) || 0),
+        borderWidth: String(parseInt(cs.borderWidth) || 0), borderStyle: cs.borderStyle || 'solid',
+        borderColor: rgbToHex(cs.borderColor) || '#000000', borderRadius: String(parseInt(cs.borderRadius) || 0),
+        borderTopWidth: String(parseInt(cs.borderTopWidth) || 0), borderRightWidth: String(parseInt(cs.borderRightWidth) || 0),
+        borderBottomWidth: String(parseInt(cs.borderBottomWidth) || 0), borderLeftWidth: String(parseInt(cs.borderLeftWidth) || 0),
         rotate: extractRotation(cs.transform) || '0', overflow: cs.overflow || 'hidden'
       }
     } catch { return defaults }
@@ -93,8 +96,13 @@ function PropertiesPanel({ element, onStyleChange }: PropertiesPanelProps) {
       paddingBottom: 'padding-bottom',
       paddingLeft: 'padding-left',
       borderWidth: 'border-width',
+      borderStyle: 'border-style',
       borderColor: 'border-color',
       borderRadius: 'border-radius',
+      borderTopWidth: 'border-top-width',
+      borderRightWidth: 'border-right-width',
+      borderBottomWidth: 'border-bottom-width',
+      borderLeftWidth: 'border-left-width',
       overflow: 'overflow'
     }
 
@@ -106,7 +114,9 @@ function PropertiesPanel({ element, onStyleChange }: PropertiesPanelProps) {
       onStyleChange('-webkit-line-clamp', value === 'none' ? 'unset' : value)
     } else if (key === 'rotate') {
       onStyleChange('transform', value === '0' ? 'none' : `rotate(${value}deg)`)
-    } else if (['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'borderWidth', 'borderRadius'].includes(key)) {
+    } else if (key === 'borderStyle') {
+      onStyleChange('border-style', value)
+    } else if (['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'borderWidth', 'borderRadius', 'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth'].includes(key)) {
       onStyleChange(cssMap[key], `${value}px`)
     } else if (cssMap[key]) {
       onStyleChange(cssMap[key], value)
@@ -227,16 +237,31 @@ function PropertiesPanel({ element, onStyleChange }: PropertiesPanelProps) {
       {/* Border */}
       <Section label="Borda">
         <Row>
-          <Field label="Largura" span={4}>
-            <Input value={props.borderWidth} onChange={e => handleChange('borderWidth', e.target.value.replace(/\D/g, ''))} className="text-xs text-center h-[28px]" />
+          <Field label="Estilo" span={6}>
+            <Select value={props.borderStyle || 'solid'} onValueChange={v => handleChange('borderStyle', v)}>
+              <SelectTrigger className="text-xs h-[28px]"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Nenhuma</SelectItem>
+                <SelectItem value="solid">Sólida</SelectItem>
+                <SelectItem value="dashed">Tracejada</SelectItem>
+                <SelectItem value="dotted">Pontilhada</SelectItem>
+                <SelectItem value="double">Dupla</SelectItem>
+              </SelectContent>
+            </Select>
           </Field>
-          <Field label="Cor" span={4}>
+          <Field label="Cor" span={3}>
             <input type="color" value={props.borderColor} onChange={e => handleChange('borderColor', e.target.value)} className="w-full h-[28px] rounded-xs border border-subtle cursor-pointer" />
           </Field>
-          <Field label="Radius" span={4}>
+          <Field label="Radius" span={3}>
             <Input value={props.borderRadius} onChange={e => handleChange('borderRadius', e.target.value.replace(/\D/g, ''))} className="text-xs text-center h-[28px]" />
           </Field>
         </Row>
+        <div className="grid grid-cols-4 gap-xs">
+          <Field label="T"><Input value={props.borderTopWidth || props.borderWidth} onChange={e => handleChange('borderTopWidth', e.target.value.replace(/\D/g, ''))} className="text-xs text-center h-[28px]" /></Field>
+          <Field label="R"><Input value={props.borderRightWidth || props.borderWidth} onChange={e => handleChange('borderRightWidth', e.target.value.replace(/\D/g, ''))} className="text-xs text-center h-[28px]" /></Field>
+          <Field label="B"><Input value={props.borderBottomWidth || props.borderWidth} onChange={e => handleChange('borderBottomWidth', e.target.value.replace(/\D/g, ''))} className="text-xs text-center h-[28px]" /></Field>
+          <Field label="L"><Input value={props.borderLeftWidth || props.borderWidth} onChange={e => handleChange('borderLeftWidth', e.target.value.replace(/\D/g, ''))} className="text-xs text-center h-[28px]" /></Field>
+        </div>
       </Section>
 
       {/* Rotation */}

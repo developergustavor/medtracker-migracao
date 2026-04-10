@@ -34,6 +34,8 @@ function SimulateDialog({ open, onClose, onApply, onClear, isSimulating }: Simul
     return vars
   }, [])
 
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(TEMPLATE_VARIABLES.map(c => c.key)))
+
   const [values, setValues] = useState<Record<string, string>>(() => {
     const init: Record<string, string> = {}
     for (const v of allVariables) init[v.path] = ''
@@ -116,28 +118,41 @@ function SimulateDialog({ open, onClose, onApply, onClear, isSimulating }: Simul
           )}
         </div>
 
-        {/* Variables form */}
-        <div className="flex-1 overflow-y-auto flex flex-col gap-md">
+        {/* Toggle expand/collapse all */}
+        <div className="flex items-center justify-end">
+          <button type="button" onClick={() => setExpandedSections(prev => prev.size === TEMPLATE_VARIABLES.length ? new Set() : new Set(TEMPLATE_VARIABLES.map(c => c.key)))} className="text-xxs text-primary bg-transparent border-none cursor-pointer">
+            {expandedSections.size === TEMPLATE_VARIABLES.length ? 'Recolher todas' : 'Expandir todas'}
+          </button>
+        </div>
+
+        {/* Variables form (accordions) */}
+        <div className="flex-1 overflow-y-auto flex flex-col">
           {TEMPLATE_VARIABLES.map(cat => {
             const visibleVars = cat.variables.filter(v => v.key !== 'cme.logo')
             if (visibleVars.length === 0) return null
+            const isExpanded = expandedSections.has(cat.key)
             return (
-              <div key={cat.key}>
-                <span className="text-xxs text-muted-foreground uppercase font-semibold tracking-wider">{cat.label}</span>
-                <div className="grid grid-cols-2 gap-x-sm gap-y-xs mt-xs">
-                  {visibleVars.map(v => (
-                    <div key={v.key} className="flex flex-col gap-[2px]">
-                      <Label className="text-xxs text-fg-dim">{v.label}</Label>
-                      <Input
-                        value={values[v.path] || ''}
-                        onChange={e => handleChange(v.path, e.target.value)}
-                        placeholder={v.placeholder}
-                        className="text-xs"
-                        style={{ height: 28 }}
-                      />
-                    </div>
-                  ))}
-                </div>
+              <div key={cat.key} className="border-b border-separator">
+                <button type="button" onClick={() => setExpandedSections(prev => { const n = new Set(prev); if (n.has(cat.key)) n.delete(cat.key); else n.add(cat.key); return n })} className="w-full flex items-center justify-between px-sm py-[8px] bg-transparent border-none cursor-pointer hover-nav transition-colors">
+                  <span className="text-xs text-foreground font-semibold">{cat.label}</span>
+                  <span className="text-xxs text-fg-dim">{isExpanded ? '▲' : '▼'}</span>
+                </button>
+                {isExpanded && (
+                  <div className="grid grid-cols-2 gap-x-sm gap-y-xs px-sm pb-sm">
+                    {visibleVars.map(v => (
+                      <div key={v.key} className="flex flex-col gap-[2px]">
+                        <Label className="text-xxs text-fg-dim">{v.label}</Label>
+                        <Input
+                          value={values[v.path] || ''}
+                          onChange={e => handleChange(v.path, e.target.value)}
+                          placeholder={v.placeholder}
+                          className="text-xs"
+                          style={{ height: 28 }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )
           })}
