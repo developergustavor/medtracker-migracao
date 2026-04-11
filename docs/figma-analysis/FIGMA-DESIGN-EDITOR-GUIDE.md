@@ -593,8 +593,8 @@ Mesmas propriedades do Rectangle.
 | Context menu | ✅ Completo com todos os items | ⚠️ Bugado, nem sempre aparece | **CORRIGIR** |
 | Multi-select (Shift+click) | ✅ | ❌ | **IMPLEMENTAR** |
 | Marquee select (drag em vazio) | ✅ | ❌ | **IMPLEMENTAR** |
-| Smart guides | ✅ Linhas de alinhamento | ❌ | **FUTURO** |
-| Snap to objects | ✅ | ❌ | **FUTURO** |
+| Smart guides | ✅ Linhas de alinhamento | ❌ | **IMPLEMENTAR** |
+| Snap to objects | ✅ | ❌ | **IMPLEMENTAR** |
 | Group/Ungroup | ✅ Ctrl+G/Ctrl+Shift+G | ⚠️ Parcialmente wired | **REFINAR** |
 | Layers tree com drag | ✅ Reorder, reparent, lock, hide | ⚠️ Tree existe mas sem drag reorder | **REFINAR** |
 | Propriedades completas | ✅ Position, Layout, Fill, Stroke, Effects | ⚠️ Tipografia, cores, border básicos | **EXPANDIR** |
@@ -604,11 +604,11 @@ Mesmas propriedades do Rectangle.
 | Color picker | ✅ HSB/RGB/HEX com presets | ⚠️ Input type=color básico | **MELHORAR** |
 | Grid overlay | ✅ Configurável | ✅ Toggle simples 10px | **OK** |
 | Rotation | ✅ Drag perto de canto | ⚠️ Só via input no panel | **MELHORAR** |
-| Constraint system | ✅ | ❌ | **FUTURO** |
-| Auto layout | ✅ | ❌ | **FUTURO** |
-| Export (PNG/SVG/PDF) | ✅ | ❌ | **FUTURO** |
-| Ruler/guides | ✅ | ❌ | **FUTURO** |
-| Boolean operations | ✅ Union, Subtract, Intersect, Exclude | ❌ | **FUTURO** |
+| Constraint system | ✅ | ❌ | **IMPLEMENTAR** |
+| Auto layout | ✅ | ❌ | **IMPLEMENTAR** |
+| Export (PNG/SVG/PDF) | ✅ | ❌ | **IMPLEMENTAR** |
+| Ruler/guides | ✅ | ❌ | **IMPLEMENTAR** |
+| Boolean operations | ✅ Union, Subtract, Intersect, Exclude | ❌ | **IMPLEMENTAR** |
 
 ---
 
@@ -637,13 +637,13 @@ Mesmas propriedades do Rectangle.
 16. **Layers tree** com drag reorder e reparent
 17. **Color picker** melhorado
 
-### Prioridade 4 — Avançado (Futuro)
-18. Auto layout
-19. Constraints
-20. Boolean operations
-21. Export
+### Prioridade 4 — Avançado
+18. Auto layout completo (direction, spacing, padding, alignment, hug/fixed)
+19. Constraints (left/right/top/bottom/center/stretch)
+20. Boolean operations (union, subtract, intersect, exclude)
+21. Export (PNG, SVG, PDF com scales)
 22. Ruler/guides
-23. Components system
+23. Components system (create, instances, overrides)
 
 ---
 
@@ -894,7 +894,448 @@ Após criar um elemento com qualquer tool de criação (R, O, F, T, L):
 
 ---
 
+---
+
+## 21. FRAME + AUTO LAYOUT — DETALHAMENTO COMPLETO
+
+### 21.1 Frame vs Group
+
+| Aspecto | Frame | Group |
+|---------|-------|-------|
+| Container | ✅ Clip content | ❌ Sem clip |
+| Background | ✅ Tem fill próprio | ❌ Sem fill |
+| Auto Layout | ✅ Suporta | ❌ Não suporta |
+| Constraints | ✅ Filhos têm constraints | ❌ Não tem |
+| Corner radius | ✅ Tem | ❌ Não tem |
+| Resize behavior | Constraina filhos | Escala filhos |
+
+### 21.2 Auto Layout
+
+![Frame com Auto Layout](screenshots/figma-frame-autolayout.png)
+
+**Atalho:** Shift+A (adiciona a frame/seleção)
+
+**Propriedades do Auto Layout:**
+
+| Propriedade | Descrição | Controle |
+|------------|-----------|----------|
+| **Direction** | Horizontal, Vertical, Wrap, Grid | 4 buttons |
+| **Spacing** | Distância entre items | Number input (→ ou ↓) |
+| **Padding** | Espaçamento interno | 4 inputs (T, R, B, L) ou H/V |
+| **Alignment** | Posição dos items | Matriz 3×3 (9 dots) |
+| **Sizing** | Fixed, Hug contents, Fill container | Dropdown per eixo (W, H) |
+| **Clip content** | Conteúdo fora dos limites é cortado | Checkbox |
+
+**Sizing modes por eixo:**
+- **Fixed** — tamanho definido pelo usuário
+- **Hug** — tamanho ajusta ao conteúdo
+- **Fill** — preenche o container pai
+
+**Direções:**
+- **→** Horizontal (items lado a lado)
+- **↓** Vertical (items empilhados)
+- **↩** Wrap (quebra linha quando não cabe)
+- **⊞** Grid (linhas e colunas automáticas)
+
+### 21.3 Constraints (filhos de Frame)
+
+Quando um elemento está dentro de um Frame (sem auto layout):
+
+**Horizontal constraints:**
+- Left — fixo à esquerda
+- Right — fixo à direita
+- Left and Right — estica horizontalmente
+- Center — centralizado
+- Scale — proporcional
+
+**Vertical constraints:**
+- Top — fixo ao topo
+- Bottom — fixo ao fundo
+- Top and Bottom — estica verticalmente
+- Center — centralizado
+- Scale — proporcional
+
+**Controle:** Visualização interativa com linhas de constraint no canvas
+
+---
+
+## 22. INDIVIDUAL CORNER RADIUS
+
+![Corner radius individual](screenshots/figma-effects-panel.png)
+
+**Modo padrão:** Valor único para todos os 4 cantos
+**Modo individual:** Click no ícone de expandir (⊞) → 4 inputs separados:
+- ┌ Top-left
+- ┐ Top-right
+- └ Bottom-left
+- ┘ Bottom-right
+
+**Smooth corners (iOS):** Toggle para usar corner smoothing (superellipse) ao invés de circular.
+
+---
+
+## 23. EFFECTS — DETALHAMENTO COMPLETO
+
+**Botão "+"** adiciona efeito ao elemento selecionado.
+
+### 23.1 Tipos de Efeito
+
+| Tipo | Descrição | Propriedades |
+|------|-----------|-------------|
+| **Drop shadow** | Sombra externa | X, Y, Blur, Spread, Color, Blend mode |
+| **Inner shadow** | Sombra interna | X, Y, Blur, Spread, Color, Blend mode |
+| **Layer blur** | Desfoque do elemento | Blur amount |
+| **Background blur** | Desfoque do fundo (glass) | Blur amount |
+
+### 23.2 Drop Shadow Properties
+
+| Prop | Range | Default |
+|------|-------|---------|
+| X offset | -∞ to +∞ px | 0 |
+| Y offset | -∞ to +∞ px | 4 |
+| Blur | 0 to +∞ px | 4 |
+| Spread | -∞ to +∞ px | 0 |
+| Color | qualquer | #000000 25% |
+| Blend mode | Normal, Multiply, etc. | Normal |
+
+**Múltiplos efeitos:** Pode adicionar vários efeitos ao mesmo elemento. Cada um tem toggle de visibilidade (👁).
+
+---
+
+## 24. STROKE — DETALHAMENTO COMPLETO
+
+**Botão "+"** adiciona stroke ao elemento.
+
+### 24.1 Stroke Properties
+
+| Propriedade | Valores | Descrição |
+|------------|---------|-----------|
+| **Color** | qualquer | Cor do stroke |
+| **Opacity** | 0-100% | Transparência |
+| **Weight** | 0+ px | Espessura |
+| **Position** | Inside, Center, Outside | Onde o stroke é desenhado |
+| **Type** | Solid, Dash | Estilo da linha |
+| **Cap** | None, Round, Square | Final de linhas abertas |
+| **Join** | Miter, Round, Bevel | Junção de ângulos |
+| **Dash** | length, gap | Padrão de traço (quando Dash) |
+
+### 24.2 Stroke por Lado (Advanced)
+
+Click no ícone de settings (⊞) ao lado do Stroke:
+- Toggle individual sides: Top, Right, Bottom, Left
+- Cada lado pode ter stroke independente
+
+---
+
+## 25. EXPORT — DETALHAMENTO COMPLETO
+
+**Botão "+"** na seção Export adiciona configuração.
+
+| Propriedade | Valores |
+|------------|---------|
+| **Format** | PNG, JPG, SVG, PDF |
+| **Scale** | 0.5x, 1x, 2x, 3x, 4x (ou custom) |
+| **Suffix** | texto adicionado ao nome do arquivo |
+| **Constraint** | Width, Height (para exportação proporcional) |
+
+**Múltiplas configs:** Pode ter várias configurações de export simultâneas (ex: 1x PNG + 2x PNG + SVG).
+
+**Export selection:** Ctrl+Shift+E exporta seleção atual com todas as configs definidas.
+
+---
+
+## 26. PROTOTYPE TAB
+
+![Prototype tab](screenshots/figma-prototype-tab.png)
+
+**Funcionalidades do Prototype:**
+- **Connections:** drag entre frames para criar fluxos de navegação
+- **Triggers:** On click, On hover, While pressing, After delay, Mouse enter/leave
+- **Actions:** Navigate to, Open overlay, Swap overlay, Back, Close overlay, Scroll to, Open link
+- **Animations:** Instant, Dissolve, Move in/out, Push, Slide in/out, Smart animate
+- **Easing:** Linear, Ease in, Ease out, Ease in and out, Custom bezier
+- **Overflow:** Horizontal scroll, Vertical scroll, Both
+- **Device:** iPhone, Android, Custom, etc.
+- **Presentation:** Play button no top-right para preview
+
+---
+
+## 27. MENUS COMPLETOS (CAPTURADOS)
+
+### 27.1 File Menu
+
+![File submenu](screenshots/figma-submenu-file.png)
+
+| Item | Atalho | Descrição |
+|------|--------|-----------|
+| New Design | — | Cria novo arquivo de design |
+| New → | — | Submenu: FigJam, Slide deck |
+| Place image | Ctrl+Shift+K | Inserir imagem do computador |
+| Save local copy | — | Salva cópia .fig local |
+| Save to version history | Ctrl+Alt+S | Cria ponto de restauração |
+| Show version history | — | Mostra histórico de versões |
+| Export | Ctrl+Shift+E | Exporta seleção |
+| Export frames to PDF | — | Gera PDF com frames |
+| Create branch | — | Cria branch (versioning) |
+
+### 27.2 Edit Menu
+
+![Edit submenu](screenshots/figma-deep-edit.png)
+
+| Item | Atalho | Descrição |
+|------|--------|-----------|
+| Undo | Ctrl+Z | Desfazer |
+| Redo | Ctrl+Shift+Z | Refazer |
+| Copy as → | — | Submenu: CSS, SVG, PNG, Link |
+| Paste over selection | Ctrl+Shift+V | Cola substituindo |
+| Duplicate | Ctrl+D | Duplicar in-place |
+| Delete | Del/Backspace | Excluir seleção |
+| Find and replace | Ctrl+F | Buscar/substituir texto |
+| Set default properties | — | Define props padrão para tool |
+| Pick color | I | Ativa eyedropper |
+| Select all | Ctrl+A | Seleciona tudo |
+| Select none | — | Deseleciona tudo |
+| Select inverse | — | Inverte seleção |
+| Select all with same → | — | Submenu: same fill, stroke, font, etc. |
+
+### 27.3 Object Menu
+
+![Object submenu](screenshots/figma-object-submenu-v2.png)
+
+| Item | Atalho | Descrição |
+|------|--------|-----------|
+| Group selection | Ctrl+G | Agrupa |
+| Frame selection | Ctrl+Alt+G | Cria frame |
+| Ungroup | Ctrl+Shift+G | Desagrupa |
+| Use as mask | Ctrl+Alt+M | Usa como máscara |
+| Remove fill | — | Remove fill do elemento |
+| Remove stroke | — | Remove stroke |
+| Flatten | Ctrl+E | Achata em único vetor |
+| Outline stroke | — | Converte stroke em shape |
+| Boolean operations → | — | Union, Subtract, Intersect, Exclude |
+| Rasterize | — | Converte em imagem |
+| Show/Hide | Ctrl+Shift+H | Toggle visibilidade |
+| Lock/Unlock | Ctrl+Shift+L | Toggle lock |
+| Collapse layers | — | Recolhe todas as layers |
+
+### 27.4 Preferences
+
+![Preferences submenu](screenshots/figma-preferences-submenu-v2.png)
+
+| Item | Descrição |
+|------|-----------|
+| Snap to geometry | Snap em pontos de geometria |
+| Snap to objects | Snap em bordas de objetos |
+| Snap to pixel grid | Snap em grid de pixels |
+| Keep tool selected after creating | Tool não volta para Move após criar |
+| Highlight on hover | Mostra highlight ao passar mouse |
+| Rename duplicated layers | Adiciona "Copy" ao nome |
+| Show dimensions on objects | Mostra W×H |
+| Nudge amount | Small: 1px, Big: 10px (configurável) |
+| Theme | Light, Dark, System |
+
+---
+
+## 28. SCALE TOOL (K)
+
+**Atalho:** K
+
+Diferente do Move tool, o Scale tool redimensiona o elemento E todos os seus atributos proporcionalmente:
+- Width/Height escalam
+- Font sizes escalam
+- Border widths escalam
+- Padding escala
+- Corner radius escala
+- Effects escalam
+
+**Move tool (V):** Só redimensiona o bounding box (atributos ficam fixos).
+
+---
+
+## 29. DISTANCE MEASUREMENT (Alt+Hover)
+
+**Como funciona:**
+1. Selecione um elemento
+2. Segure Alt
+3. Hover sobre outro elemento ou edge do canvas/frame
+
+**O Figma mostra:**
+- Linhas vermelhas/magenta com labels de distância em px
+- Distância entre as bordas mais próximas dos dois elementos
+- Se hover no canvas vazio: distância até os edges do frame pai
+
+**Sem seleção + Alt+Hover:**
+- Mostra dimensões do elemento sob o cursor
+
+---
+
+## 30. BOOLEAN OPERATIONS
+
+**Requer:** 2+ formas selecionadas (não textos)
+
+| Operação | Atalho | Resultado |
+|----------|--------|-----------|
+| **Union** | Ctrl+Alt+U | Combina formas |
+| **Subtract** | Ctrl+Alt+S | Primeira forma menos as outras |
+| **Intersect** | Ctrl+Alt+I | Apenas a interseção |
+| **Exclude** | Ctrl+Alt+X | Tudo exceto a interseção |
+| **Flatten** | Ctrl+E | Converte em path único |
+
+**Resultado:** Cria um "Boolean Group" editável na layers tree. Pode editar as formas originais depois.
+
+---
+
+## 31. BLEND MODES
+
+Disponível no Appearance > Blend mode dropdown:
+
+| Modo | Categoria |
+|------|-----------|
+| Pass through | Padrão (groups) |
+| Normal | Padrão |
+| Darken | Escurecimento |
+| Multiply | Multiplicação |
+| Color Burn | Queima de cor |
+| Lighten | Clareamento |
+| Screen | Tela |
+| Color Dodge | Superexposição |
+| Overlay | Sobreposição |
+| Soft Light | Luz suave |
+| Hard Light | Luz forte |
+| Difference | Diferença |
+| Exclusion | Exclusão |
+| Hue | Matiz |
+| Saturation | Saturação |
+| Color | Cor |
+| Luminosity | Luminosidade |
+
+---
+
+## 32. VARIABLES SYSTEM
+
+**Seção Variables no right sidebar (quando nada selecionado):**
+- Criar variáveis de cor, número, string, boolean
+- Organizar em collections
+- Usar variables em fills, strokes, spacing, corner radius, etc.
+- Variables podem ser scoped (por frame/página)
+- Suporta modes (ex: Light/Dark)
+
+---
+
+## 33. STYLES SYSTEM
+
+**Seção Styles no right sidebar:**
+- **Color styles:** Paletas de cores reutilizáveis
+- **Text styles:** Combinação de font family + weight + size + line-height
+- **Effect styles:** Sombras, blurs reutilizáveis
+- **Grid styles:** Layout grids reutilizáveis
+
+**Criar:** Click "+" na seção, define nome e propriedades
+**Aplicar:** Click no ícone de 4 quadrados (⊞) na seção de propriedade
+
+---
+
+## 34. COMPARAÇÃO COMPLETA: FIGMA vs NOSSO EDITOR
+
+| # | Funcionalidade | Figma | Nosso Editor | Gap |
+|---|---------------|-------|-------------|-----|
+| 1 | Canvas infinito zoom/pan | ✅ Ctrl+scroll centrado, Space+drag | ❌ Zoom só por botões | **CRÍTICO** |
+| 2 | Draw-to-create | ✅ Click+drag define dimensão | ❌ Click adiciona direto | **CRÍTICO** |
+| 3 | Resize em tempo real | ✅ 8 handles funcionais | ⚠️ Bugado | **CRÍTICO** |
+| 4 | Drag element fora do container | ✅ Funciona globalmente | ⚠️ Não funciona fora da label | **CRÍTICO** |
+| 5 | Context menu | ✅ 15+ items | ⚠️ Bugado, nem sempre aparece | **CRÍTICO** |
+| 6 | Multi-select Shift+click | ✅ | ❌ | **ALTO** |
+| 7 | Marquee select | ✅ Drag em vazio | ❌ | **ALTO** |
+| 8 | Cursor states | ✅ 11 estados | ❌ Cursor genérico | **ALTO** |
+| 9 | Undo/Redo funcional | ✅ Full command stack | ⚠️ Hook existe, não registra | **ALTO** |
+| 10 | Keyboard shortcuts (30+) | ✅ V/R/O/T/F/P/H/K/I etc | ⚠️ Só básicos | **ALTO** |
+| 11 | Mouse wheel zoom | ✅ Ctrl+scroll centrado cursor | ❌ | **ALTO** |
+| 12 | Space+drag pan | ✅ | ❌ | **ALTO** |
+| 13 | Smart guides | ✅ Linhas magenta | ❌ | **MÉDIO** |
+| 14 | Snap to objects | ✅ | ❌ | **MÉDIO** |
+| 15 | Text editing inline | ✅ Double-click | ❌ | **MÉDIO** |
+| 16 | Rotation via drag | ✅ Perto do canto | ⚠️ Só input | **MÉDIO** |
+| 17 | Layers tree drag reorder | ✅ | ⚠️ Tree sem drag | **MÉDIO** |
+| 18 | Color picker HSB | ✅ HSB + gradients | ⚠️ Input type=color | **MÉDIO** |
+| 19 | Individual corner radius | ✅ 4 inputs | ❌ | **MÉDIO** |
+| 20 | Stroke per side | ✅ T/R/B/L | ⚠️ Global border width | **MÉDIO** |
+| 21 | Border style (solid/dashed) | ✅ + cap/join | ✅ Implementado | **OK** |
+| 22 | Effects (shadow, blur) | ✅ 4 tipos | ❌ | **MÉDIO** |
+| 23 | Alt+drag duplicate | ✅ | ❌ | **MÉDIO** |
+| 24 | Arrow key move (1px/10px) | ✅ | ❌ | **BAIXO** |
+| 25 | Distance measurement Alt+hover | ✅ | ❌ | **BAIXO** |
+| 26 | Grid overlay | ✅ Configurável | ✅ 10px toggle | **OK** |
+| 27 | Blend modes | ✅ 17 modos | ❌ | **BAIXO** |
+| 28 | Auto layout | ✅ Full system | ❌ | **MÉDIO** |
+| 29 | Constraints | ✅ | ❌ | **MÉDIO** |
+| 30 | Boolean operations | ✅ 4 ops + flatten | ❌ | **BAIXO** |
+| 31 | Export (PNG/SVG/PDF) | ✅ Multi-config | ❌ | **MÉDIO** |
+| 32 | Scale tool (K) | ✅ | ❌ | **BAIXO** |
+| 33 | Eyedropper (I) | ✅ | ❌ | **BAIXO** |
+| 34 | Find/Replace text | ✅ | ❌ | **BAIXO** |
+| 35 | Version history | ✅ | ❌ | **BAIXO** |
+| 36 | Variables system | ✅ | ❌ (temos @@var@@ system) | **N/A** |
+| 37 | Styles system | ✅ | ❌ | **BAIXO** |
+| 38 | Components | ✅ | ❌ | **BAIXO** |
+| 39 | Prototype/Interactions | ✅ | ❌ (não aplicável) | **N/A** |
+| 40 | Group/Ungroup | ✅ Ctrl+G/Shift+G | ✅ Implementado | **OK** |
+| 41 | Frame selection | ✅ Ctrl+Alt+G | ❌ | **MÉDIO** |
+| 42 | Preferences (snap, nudge, theme) | ✅ | ⚠️ Parcial (grid, theme) | **BAIXO** |
+
+---
+
+## 35. ROADMAP PRIORIZADO — SEM LACUNAS
+
+### P0 — Crítico (sem isso não funciona)
+1. Zoom com Ctrl+mouse wheel centrado no cursor
+2. Pan com Space+drag e mouse wheel scroll
+3. Resize funcional em tempo real (8 handles)
+4. Drag de elementos dentro E fora do container
+5. Context menu funcionando em right-click
+6. Draw-to-create: click+drag define dimensões do novo elemento
+
+### P1 — Alto (UX básica necessária)
+7. Multi-select com Shift+click
+8. Marquee select (drag em espaço vazio)
+9. Cursor states corretos (move, resize, rotate, crosshair, hand)
+10. Undo/Redo completo (command stack registrando todas as ações)
+11. Keyboard shortcuts expandidos (V, R, O, T, F, P, H, K, I, arrows)
+12. Mouse wheel zoom (Ctrl+scroll)
+13. Space+drag pan canvas
+
+### P2 — Médio (refinamento profissional)
+14. Smart guides durante move/resize
+15. Snap to objects/geometry
+16. Text editing inline (double-click)
+17. Rotation via drag perto de corner
+18. Layers tree com drag reorder e reparent
+19. Color picker HSB com gradients
+20. Individual corner radius (4 inputs)
+21. Stroke per side (T/R/B/L) + cap/join
+22. Effects (drop shadow, inner shadow, blur)
+23. Alt+drag duplicate
+24. Auto layout (direction, spacing, padding, alignment, sizing)
+25. Constraints (left/right/top/bottom/center/stretch)
+26. Frame selection (Ctrl+Alt+G) com clip content
+27. Export (PNG, SVG, PDF com scales)
+
+### P3 — Baixo (polimento)
+28. Arrow key move (1px, Shift+10px)
+29. Distance measurement (Alt+hover)
+30. Blend modes (17 modos)
+31. Boolean operations (union, subtract, intersect, exclude)
+32. Scale tool (K) — resize proporcional com atributos
+33. Eyedropper (I)
+34. Find/Replace texto
+35. Version history
+36. Styles system
+37. Components system
+38. Preferences (snap options, nudge amount, theme)
+
+---
+
 *Documento gerado via análise interativa do Figma Design Editor usando Playwright.*
-*Cada screenshot foi capturada durante interações reais no Figma.*
-*Total de screenshots: 51*
-*Total de interações testadas: 28 batches*
+*Cada screenshot foi capturada durante interações reais no Figma Web Desktop.*
+*Total de screenshots: 106*
+*Total de interações testadas: 40+ batches*
+*Todas as funcionalidades mapeadas e cruzadas com o editor atual.*
