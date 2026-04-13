@@ -20,6 +20,9 @@ import { useIsMobile, useIsDesktop } from '@/hooks'
 // libs
 import { cn } from '@/libs/shadcn.utils'
 
+// mock
+import { mockSubmaterials, mockMaterialImages } from '@/mock/data'
+
 // local
 import { MaterialImageColumn } from './MaterialImageColumn'
 import { MaterialSubmaterialsPanel } from './MaterialSubmaterialsPanel'
@@ -84,8 +87,28 @@ function StandardCadastroForm({ config, entityLabel, editData, onSubmit, onCance
         if (field.key in editData) values[field.key] = editData[field.key]
       }
       form.reset(values)
+
+      // Load submaterials and images for material form
+      if (is3ColMaterial) {
+        const materialId = editData.id as number | undefined
+        if (materialId) {
+          setSubmaterials(mockSubmaterials.filter(s => s.materialId === materialId))
+          setMaterialImages(mockMaterialImages[materialId] || [])
+        } else if (editData._submaterials) {
+          // Duplicated material: restore from clone data
+          setSubmaterials(editData._submaterials as Submaterial[])
+          setMaterialImages((editData._images as string[]) || [])
+        } else {
+          setSubmaterials([])
+          setMaterialImages([])
+        }
+      }
     } else {
       form.reset(config.defaultValues)
+      if (is3ColMaterial) {
+        setSubmaterials([])
+        setMaterialImages([])
+      }
     }
   }, [editData]) // eslint-disable-line react-hooks/exhaustive-deps
 

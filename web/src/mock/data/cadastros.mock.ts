@@ -327,3 +327,48 @@ export const mockTemplates: MockTemplate[] = [
   { id: 9, name: 'Desinfecção Química', type: 'SEM_INDICADOR', category: 'DESINFECCAO', isDefault: false, status: 'ATIVO', createdAt: '2025-07-29T09:00:00Z' },
   { id: 10, name: 'Entrada Urgência', type: 'SEM_INDICADOR', category: 'ENTRADA', isDefault: false, status: 'ATIVO', createdAt: '2025-07-29T09:30:00Z' }
 ]
+
+// -- Submaterials (for KIT materials: ids 2, 6, 10)
+
+export type MockSubmaterial = {
+  id: number
+  materialId: number
+  code: string
+  name: string
+  amount: number
+  images: string[]
+}
+
+export const mockSubmaterials: MockSubmaterial[] = [
+  // CX VASCULAR Nº1 (materialId: 2)
+  { id: 1, materialId: 2, code: 'SUB-001', name: 'Pinça Kelly Curva 16cm', amount: 1, images: [] },
+  { id: 2, materialId: 2, code: 'SUB-002', name: 'Pinça Hemostática Crile', amount: 1, images: [] },
+  { id: 3, materialId: 2, code: 'SUB-003', name: 'Tesoura Metzenbaum 18cm', amount: 1, images: [] },
+  { id: 4, materialId: 2, code: 'SUB-004', name: 'Porta Agulha Mayo-Hegar', amount: 1, images: [] },
+  { id: 5, materialId: 2, code: 'SUB-005', name: 'Afastador Farabeuf', amount: 2, images: [] },
+  { id: 6, materialId: 2, code: '', name: 'Campo Cirúrgico Fenestrado', amount: 3, images: [] },
+  { id: 7, materialId: 2, code: '', name: 'Cabo de Bisturi Nº4', amount: 1, images: [] },
+  // CX ORTOPÉDICA Nº3 (materialId: 6)
+  { id: 8, materialId: 6, code: 'ORT-001', name: 'Chave Hexagonal 3.5mm', amount: 1, images: [] },
+  { id: 9, materialId: 6, code: 'ORT-002', name: 'Broca Canulada 4.5mm', amount: 2, images: [] },
+  { id: 10, materialId: 6, code: 'ORT-003', name: 'Guia de Broca 3.5mm', amount: 1, images: [] },
+  { id: 11, materialId: 6, code: 'ORT-004', name: 'Placa DCP 8 furos', amount: 1, images: [] },
+  { id: 12, materialId: 6, code: '', name: 'Parafuso Cortical 3.5x26mm', amount: 8, images: [] },
+  { id: 13, materialId: 6, code: '', name: 'Parafuso Cortical 3.5x30mm', amount: 6, images: [] },
+  // CX CESARIANA (materialId: 10)
+  { id: 14, materialId: 10, code: 'CES-001', name: 'Pinça Allis', amount: 2, images: [] },
+  { id: 15, materialId: 10, code: 'CES-002', name: 'Afastador Doyen', amount: 1, images: [] },
+  { id: 16, materialId: 10, code: 'CES-003', name: 'Tesoura Mayo Curva', amount: 1, images: [] },
+  { id: 17, materialId: 10, code: '', name: 'Pinça Kocher Reta', amount: 2, images: [] },
+  { id: 18, materialId: 10, code: '', name: 'Porta Agulha Mayo', amount: 1, images: [] }
+]
+
+// -- Material images (placeholder SVG data URIs for demo)
+
+const PLACEHOLDER_IMG = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="none"><rect width="120" height="120" rx="8" fill="#e2e8f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="11" fill="#94a3b8" font-family="sans-serif">Foto</text></svg>')
+
+export const mockMaterialImages: Record<number, string[]> = {
+  1: [PLACEHOLDER_IMG],
+  2: [PLACEHOLDER_IMG, PLACEHOLDER_IMG],
+  6: [PLACEHOLDER_IMG, PLACEHOLDER_IMG, PLACEHOLDER_IMG]
+}

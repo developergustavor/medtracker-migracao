@@ -1,6 +1,9 @@
 // packages
 import type { ZodSchema } from 'zod'
 
+// mock
+import { mockPackages, mockTemplates, mockOwners } from '@/mock/data'
+
 // schemas
 import {
   materialSchema, collaboratorSchema, equipmentSchema, packageSchema,
@@ -105,6 +108,10 @@ export function getCollaboratorRoleOptions(userRole?: string): SelectOption[] {
   return nonAdminCollaboratorRoleOptions
 }
 
+const packageOptions: SelectOption[] = mockPackages.filter(p => p.status === 'ATIVO').map(p => ({ value: String(p.id), label: p.name }))
+const templateSelectOptions: SelectOption[] = mockTemplates.filter(t => t.status === 'ATIVO').map(t => ({ value: String(t.id), label: t.name }))
+const ownerSelectOptions: SelectOption[] = mockOwners.filter(o => o.status === 'ATIVO').map(o => ({ value: String(o.id), label: o.name }))
+
 const templateTypeOptions: SelectOption[] = [
   { value: 'COM_INDICADOR', label: 'Com Indicador' },
   { value: 'SEM_INDICADOR', label: 'Sem Indicador' },
@@ -126,10 +133,10 @@ const materialFields: FormFieldConfig[] = [
   { key: 'name', label: 'Material', type: 'text', placeholder: 'Nome do material', span: 8, required: true },
   { key: 'type', label: 'Tipo', type: 'select', options: materialTypeOptions, span: 6, required: true, disabledOnEdit: true },
   { key: 'amount', label: 'Quantidade', type: 'increment', span: 6, required: true, min: 1, dynamicLabel: (v) => v.type === 'KIT' ? 'Qtd. Submateriais' : 'Quantidade' },
-  { key: 'packageId', label: 'Embalagem', type: 'select', options: [], span: 6 },
-  { key: 'templateId', label: 'Modelo de Etiqueta', type: 'select', options: [], span: 6 },
+  { key: 'packageId', label: 'Embalagem', type: 'select', options: packageOptions, span: 6 },
+  { key: 'templateId', label: 'Modelo de Etiqueta', type: 'select', options: templateSelectOptions, span: 6 },
   { key: 'consigned', label: 'Consignado', type: 'checkbox', span: 6 },
-  { key: 'ownerId', label: 'Terceiro', type: 'select', options: [], span: 6, disabledCondition: (v) => v.consigned !== true },
+  { key: 'ownerId', label: 'Terceiro', type: 'select', options: ownerSelectOptions, span: 6, disabledCondition: (v) => v.consigned !== true },
   { key: 'color', label: 'Cor', type: 'text', placeholder: 'Ex: Azul', span: 12 },
   { key: 'details', label: 'Detalhes', type: 'textarea', placeholder: 'Observações sobre o material...', span: 12, rows: 3 },
   { key: 'images', label: 'Imagens', type: 'images', span: 12, accept: 'image/png,image/jpg,image/jpeg' }

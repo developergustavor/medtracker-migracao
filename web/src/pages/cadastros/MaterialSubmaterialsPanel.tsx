@@ -45,8 +45,12 @@ function MaterialSubmaterialsPanel({
   const [code, setCode] = useState('')
   const [name, setName] = useState('')
   const [amount, setAmount] = useState(1)
+  const [pendingImages, setPendingImages] = useState<string[]>([])
   const nameRef = useRef<HTMLInputElement>(null)
   const codeRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const rowCameraInputRef = useRef<HTMLInputElement>(null)
+  const [rowCameraTarget, setRowCameraTarget] = useState<number | null>(null)
 
   const hasCode = code.trim().length > 0
   const isValid = name.trim().length > 0
@@ -71,12 +75,13 @@ function MaterialSubmaterialsPanel({
 
   const handleAdd = useCallback(() => {
     if (!isValid) return
-    onAdd({ code: code.trim(), name: name.trim(), amount: hasCode ? 1 : amount, images: [] })
+    onAdd({ code: code.trim(), name: name.trim(), amount: hasCode ? 1 : amount, images: [...pendingImages] })
     setCode('')
     setName('')
     setAmount(1)
+    setPendingImages([])
     codeRef.current?.focus()
-  }, [code, name, amount, hasCode, isValid, onAdd])
+  }, [code, name, amount, hasCode, isValid, onAdd, pendingImages])
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && isValid) {
@@ -90,6 +95,39 @@ function MaterialSubmaterialsPanel({
     // After duplicating, focus code input for the new entry
     setTimeout(() => codeRef.current?.focus(), 50)
   }, [onDuplicate])
+
+  const handleCameraClick = useCallback(() => {
+    cameraInputRef.current?.click()
+  }, [])
+
+  const handleCameraFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      setPendingImages(prev => [...prev, reader.result as string])
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }, [])
+
+  const handleRowCameraClick = useCallback((index: number) => {
+    setRowCameraTarget(index)
+    setTimeout(() => rowCameraInputRef.current?.click(), 0)
+  }, [])
+
+  const handleRowCameraFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file == null || rowCameraTarget == null) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      const sub = submaterials[rowCameraTarget]
+      if (sub) onEdit(rowCameraTarget, { ...sub, images: [...sub.images, reader.result as string] })
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
+    setRowCameraTarget(null)
+  }, [rowCameraTarget, submaterials, onEdit])
 
   return (
     <div className={cn('flex flex-col gap-sm h-full transition-opacity', disabled && 'opacity-30 pointer-events-none')}>
@@ -151,12 +189,18 @@ function MaterialSubmaterialsPanel({
             />
           </div>
           <div className="flex gap-[3px] items-end pb-[1px]">
+            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleCameraFile} />
+            <input ref={rowCameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleRowCameraFile} />
             <button
               type="button"
-              className="w-[30px] h-[32px] rounded-xs bg-primary-8 flex items-center justify-center border-none cursor-pointer"
+              onClick={handleCameraClick}
+              className="relative w-[30px] h-[32px] rounded-xs bg-primary-8 flex items-center justify-center border-none cursor-pointer"
               disabled={disabled}
             >
               <Camera size={14} color="var(--primary)" />
+              {pendingImages.length > 0 && (
+                <span className="absolute -top-[5px] -right-[5px] w-[16px] h-[16px] rounded-full bg-primary text-on-solid text-[9px] font-bold flex items-center justify-center">{pendingImages.length}</span>
+              )}
             </button>
             <button
               type="button"
@@ -231,11 +275,13 @@ function MaterialSubmaterialsPanel({
                 <div className={cn('w-[35px] text-center text-xs', !sub.code && sub.amount > 1 ? 'text-foreground font-bold' : 'text-fg-muted')}>{sub.amount}</div>
                 <div className="w-[30px] text-center">
                   {sub.images.length > 0 ? (
-                    <div className="w-[22px] h-[22px] rounded-xs bg-elevated border border-subtle mx-auto flex items-center justify-center">
-                      <Camera size={10} color="var(--fg-muted)" />
-                    </div>
+                    <button type="button" onClick={() => handleRowCameraClick(idx)} className="w-[22px] h-[22px] rounded-xs bg-elevated border border-subtle mx-auto flex items-center justify-center cursor-pointer">
+                      <span className="text-[9px] font-bold text-fg-muted">{sub.images.length}</span>
+                    </button>
                   ) : (
-                    <span className="text-fg-ghost text-xs">—</span>
+                    <button type="button" onClick={() => handleRowCameraClick(idx)} className="w-[22px] h-[22px] rounded-xs bg-transparent border border-dashed border-subtle mx-auto flex items-center justify-center cursor-pointer hover:bg-elevated transition-colors">
+                      <Camera size={10} color="var(--fg-ghost)" />
+                    </button>
                   )}
                 </div>
                 <div className="w-[76px] flex gap-[3px] justify-end">

@@ -1,0 +1,17 @@
+[      47ms] [LOG] %c Console Ninja extension is connected to Vite, background: rgb(30,30,30); color: rgb(255,213,92) see https://tinyurl.com/2vt8jxzw for more info. @ :0
+[    1170ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5175/node_modules/.vite/deps/react-dom_client.js?v=acd070a5:20102
+[    1375ms] [LOG] %cDocumentation: %chttps://mswjs.io/docs font-weight:bold font-weight:normal @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:870
+[    1375ms] [LOG] Found an issue? https://github.com/mswjs/msw/issues @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:875
+[    1375ms] [LOG] Worker script URL: http://localhost:5175/mockServiceWorker.js @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:877
+[    1375ms] [LOG] Worker scope: http://localhost:5175/ @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:880
+[    1375ms] [LOG] Client ID: %s (%s) 78aa2a21-4fa1-40b0-8175-1ee358ea0ab2 top-level @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:883
+[   33425ms] [LOG] Request {url: URL, method: POST, headers: Object, body: {"action":"user-by-code","code":"gg"}} @ http://localhost:5175/node_modules/.vite/deps/msw.js?v=acd070a5:958
+[   33426ms] [LOG] Handler: HttpHandler @ http://localhost:5175/node_modules/.vite/deps/msw.js?v=acd070a5:959
+[   33426ms] [LOG] Response {status: 200, statusText: OK, headers: Object, body: {"statusCode":200,"statusMessage":"Login realizado…00Z"}]}],"token":"mock-jwt-token-medtracker-dev"}} @ http://localhost:5175/node_modules/.vite/deps/msw.js?v=acd070a5:960
+[ 2185951ms] [LOG] %c Console Ninja extension is connected to Vite, background: rgb(30,30,30); color: rgb(255,213,92) see https://tinyurl.com/2vt8jxzw for more info. @ :0
+[ 2186116ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5175/node_modules/.vite/deps/react-dom_client.js?v=acd070a5:20102
+[ 2186251ms] [LOG] %cDocumentation: %chttps://mswjs.io/docs font-weight:bold font-weight:normal @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:870
+[ 2186251ms] [LOG] Found an issue? https://github.com/mswjs/msw/issues @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:875
+[ 2186251ms] [LOG] Worker script URL: http://localhost:5175/mockServiceWorker.js @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:877
+[ 2186251ms] [LOG] Worker scope: http://localhost:5175/ @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:880
+[ 2186251ms] [LOG] Client ID: %s (%s) 13f13e21-e9f7-4930-9436-7600df1b5afa top-level @ http://localhost:5175/node_modules/.vite/deps/msw_browser.js?v=acd070a5:883

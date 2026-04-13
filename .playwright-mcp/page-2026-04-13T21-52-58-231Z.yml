@@ -1,0 +1,134 @@
+- generic [ref=e22]:
+  - complementary [ref=e670]:
+    - img "Medtracker Etiquetagem" [ref=e672]
+    - navigation [ref=e674]:
+      - generic [ref=e675]:
+        - button [ref=e677] [cursor=pointer]:
+          - img [ref=e679]
+        - button [ref=e682] [cursor=pointer]:
+          - img [ref=e683]
+        - button [ref=e686] [cursor=pointer]:
+          - img [ref=e687]
+        - button [ref=e691] [cursor=pointer]:
+          - img [ref=e692]
+        - button [ref=e696] [cursor=pointer]:
+          - img [ref=e697]
+        - button [ref=e702] [cursor=pointer]:
+          - img [ref=e703]
+        - button [ref=e707] [cursor=pointer]:
+          - img [ref=e708]
+        - button [ref=e712] [cursor=pointer]:
+          - img [ref=e713]
+    - button "G" [ref=e718] [cursor=pointer]
+  - generic [ref=e73]:
+    - generic [ref=e719]:
+      - navigation [ref=e720]:
+        - generic [ref=e722]: Home
+      - generic [ref=e723]:
+        - generic [ref=e724] [cursor=pointer]:
+          - img [ref=e725]
+          - generic [ref=e727]: Buscar...
+          - generic [ref=e728]: Ctrl+K
+        - button "3" [ref=e729] [cursor=pointer]:
+          - img [ref=e730]
+          - generic [ref=e734]: "3"
+        - button [ref=e735] [cursor=pointer]:
+          - img [ref=e736]
+        - button "Medtracker LTDA Completo" [ref=e738] [cursor=pointer]:
+          - generic [ref=e740]: Medtracker LTDA
+          - generic [ref=e741]: Completo
+          - img [ref=e742]
+    - main [ref=e99]:
+      - generic [ref=e101]:
+        - generic [ref=e102]:
+          - heading "Boa noite, Gustavo" [level=1] [ref=e103]
+          - generic [ref=e744]:
+            - img [ref=e745]
+            - generic [ref=e748]: 13 de Abril, 2026
+        - generic [ref=e749]:
+          - button "Novidades v2.1 — Novo módulo de conferência Conferência de materiais agora conta com scan automático e verificação por foto." [ref=e750] [cursor=pointer]:
+            - generic [ref=e751]:
+              - img [ref=e753]
+              - generic [ref=e755]: Novidades v2.1 — Novo módulo de conferência
+              - img [ref=e756]
+            - paragraph [ref=e758]: Conferência de materiais agora conta com scan automático e verificação por foto.
+          - generic [ref=e759]:
+            - generic [ref=e760]:
+              - generic [ref=e762]: "12"
+              - generic [ref=e763]:
+                - generic [ref=e764]: Ciclos hoje
+                - generic [ref=e765]:
+                  - generic [ref=e766]: Hoje
+                  - generic [ref=e767]: ·
+                  - img [ref=e768]
+                  - generic [ref=e772]: "+3"
+            - generic [ref=e773]:
+              - generic [ref=e775]: "8"
+              - generic [ref=e776]:
+                - generic [ref=e777]: Etiquetas hoje
+                - generic [ref=e778]:
+                  - generic [ref=e779]: Hoje
+                  - generic [ref=e780]: ·
+                  - img [ref=e781]
+                  - generic [ref=e785]: "+2"
+            - generic [ref=e786]:
+              - generic [ref=e788]: "47"
+              - generic [ref=e789]:
+                - generic [ref=e790]: Ciclos na semana
+                - generic [ref=e791]:
+                  - generic [ref=e792]: Semana
+                  - generic [ref=e793]: ·
+                  - img [ref=e794]
+                  - generic [ref=e798]: "-5"
+            - generic [ref=e799]:
+              - generic [ref=e801]: "189"
+              - generic [ref=e802]:
+                - generic [ref=e803]: Ciclos no mês
+                - generic [ref=e804]:
+                  - generic [ref=e805]: Mês
+                  - generic [ref=e806]: ·
+                  - img [ref=e807]
+                  - generic [ref=e811]: +12%
+        - generic [ref=e173]:
+          - generic [ref=e174]:
+            - button "Dashboard" [ref=e175] [cursor=pointer]:
+              - img [ref=e177]
+              - text: Dashboard
+            - button "Cadastros" [ref=e179] [cursor=pointer]:
+              - img [ref=e181]
+              - text: Cadastros
+            - button "Relatórios" [ref=e183] [cursor=pointer]:
+              - img [ref=e185]
+              - text: Relatórios
+          - generic [ref=e188]:
+            - button "Entrada de Materiais Entrada de Materiais Registre a entrada de materiais na CME" [ref=e812] [cursor=pointer]:
+              - img "Entrada de Materiais" [ref=e813]
+              - generic [ref=e814]:
+                - img [ref=e817]
+                - generic [ref=e820]: Entrada de Materiais
+                - generic [ref=e821]: Registre a entrada de materiais na CME
+            - button "Desinfecção Desinfecção Ciclos de desinfecção de materiais" [ref=e822] [cursor=pointer]:
+              - img "Desinfecção" [ref=e823]
+              - generic [ref=e824]:
+                - img [ref=e827]
+                - generic [ref=e830]: Desinfecção
+                - generic [ref=e831]: Ciclos de desinfecção de materiais
+            - button "Esterilização Esterilização Ciclos de esterilização com autoclaves" [ref=e832] [cursor=pointer]:
+              - img "Esterilização" [ref=e833]
+              - generic [ref=e834]:
+                - img [ref=e837]
+                - generic [ref=e839]: Esterilização
+                - generic [ref=e840]: Ciclos de esterilização com autoclaves
+            - button "Saida de Materiais Saida de Materiais Saída de materiais para setores e CMEs" [ref=e841] [cursor=pointer]:
+              - img "Saida de Materiais" [ref=e842]
+              - generic [ref=e843]:
+                - img [ref=e846]
+                - generic [ref=e849]: Saida de Materiais
+                - generic [ref=e850]: Saída de materiais para setores e CMEs
+            - button "Conferência Conferência Conferência no centro cirúrgico" [ref=e851] [cursor=pointer]:
+              - img "Conferência" [ref=e852]
+              - generic [ref=e853]:
+                - img [ref=e856]
+                - generic [ref=e858]: Conferência
+                - generic [ref=e859]: Conferência no centro cirúrgico
+        - button [ref=e260] [cursor=pointer]

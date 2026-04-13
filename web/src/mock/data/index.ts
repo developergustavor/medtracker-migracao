@@ -16,7 +16,9 @@ export {
   mockDoctors,
   mockPatients,
   mockChecklists,
-  mockTemplates
+  mockTemplates,
+  mockSubmaterials,
+  mockMaterialImages
 } from './cadastros.mock'
 export type {
   MockMaterial,
@@ -32,5 +34,6 @@ export type {
   MockDoctor,
   MockPatient,
   MockChecklist,
-  MockTemplate
+  MockTemplate,
+  MockSubmaterial
 } from './cadastros.mock'

@@ -30,6 +30,8 @@ import { useIsMobile } from '@/hooks'
 
 // mock
 import {
+  mockSubmaterials,
+  mockMaterialImages,
   mockMaterials,
   mockCollaborators,
   mockEquipments,
@@ -137,8 +139,14 @@ function Cadastros() {
   }, [formEditData])
 
   const handleDuplicate = useCallback((row: Record<string, unknown>) => {
+    const materialId = row.id as number | undefined
     const clone = { ...row }
     delete clone.id
+    // Carry submaterials and images for material duplication
+    if (materialId) {
+      clone._submaterials = mockSubmaterials.filter(s => s.materialId === materialId).map(s => ({ ...s, id: Date.now() + Math.random() }))
+      clone._images = mockMaterialImages[materialId] || []
+    }
     setFormEditData(null)
     // Small delay so form resets before opening with clone data
     setTimeout(() => {

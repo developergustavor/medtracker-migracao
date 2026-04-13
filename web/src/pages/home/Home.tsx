@@ -46,7 +46,7 @@ export function Home() {
   const displayName = user?.name || cme?.corporateName || 'Usuário'
 
   return (
-    <div className="flex flex-col gap-xl p-lg relative h-full overflow-y-auto">
+    <div className="flex flex-col gap-xl p-lg relative h-full overflow-y-auto lgAndUp:overflow-hidden">
       {/* Row 1: Greeting + Date */}
       <div className={`flex ${isMobile ? 'flex-col gap-sm' : 'items-center justify-between'}`}>
         <h1 className="text-display font-bold text-foreground truncate">
@@ -78,8 +78,10 @@ export function Home() {
         </div>
       )}
 
-      {/* Row 3: Workflow cards (full width) */}
-      <HomeWorkflowTabs />
+      {/* Row 3: Workflow cards (full width, fill remaining height on lgAndUp) */}
+      <div className="lgAndUp:flex-1 lgAndUp:min-h-0">
+        <HomeWorkflowTabs />
+      </div>
 
       {/* Floating helpdesk */}
       <HomeHelpdeskButton />

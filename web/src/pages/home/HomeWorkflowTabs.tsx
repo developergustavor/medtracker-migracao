@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store'
 
 // hooks
-import { useIsMobile } from '@/hooks'
+import { useIsMobile, useIsDesktop } from '@/hooks'
 
 // constants
 import { ROUTES } from '@/constants'
@@ -57,6 +57,7 @@ export function HomeWorkflowTabs() {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
   const { user, cme } = useAuthStore()
+  const isDesktop = useIsDesktop()
   const isCmeOnly = !user && !!cme
 
   const workflowCards = useMemo(() => {
@@ -91,7 +92,7 @@ export function HomeWorkflowTabs() {
   if (isCmeOnly) return null
 
   return (
-    <div className="flex flex-col gap-md">
+    <div className="flex flex-col gap-md h-full">
       {/* Quick action buttons (subtopbar style) */}
       {hasQuickActions && (
         <div className="flex items-center gap-sm flex-wrap">
@@ -127,13 +128,15 @@ export function HomeWorkflowTabs() {
       )}
 
       {/* Workflow cards grid */}
-      <div className={`grid gap-md ${isMobile ? 'grid-cols-2' : 'grid-cols-3 lgAndUp:grid-cols-5'}`}>
+      <div className={`grid gap-md flex-1 min-h-0 ${isMobile ? 'grid-cols-2' : 'grid-cols-3 lgAndUp:grid-cols-5'}`}>
         {workflowCards.map(({ route, path, moduleAllowed }) => (
           <WorkflowCard
             key={path}
             route={route}
+            path={path}
             description={WORKFLOW_DESCRIPTIONS[path] || mockWorkflowDescriptions[path]?.description || ''}
             disabled={!moduleAllowed}
+            fillHeight={isDesktop}
             onClick={() => {
               if (moduleAllowed) navigate(path)
             }}
@@ -173,17 +176,97 @@ function QuickActionButton({ icon, label, onClick }: { icon: string; label: stri
   )
 }
 
+const CARD_IMAGES: Record<string, string> = {
+  '/entrada-de-materiais': '/images/home/entrada.svg',
+  '/ciclos/desinfeccao': '/images/home/desinfeccao.svg',
+  '/ciclos/esterilizacao': '/images/home/esterilizacao.svg',
+  '/saida-de-materiais': '/images/home/saida.svg',
+  '/conferencia': '/images/home/conferencia.svg'
+}
+
 function WorkflowCard({
   route,
   description,
   disabled,
+  fillHeight,
+  path,
   onClick
 }: {
   route: RouteMetadataProps
   description: string
   disabled: boolean
+  fillHeight: boolean
+  path: string
   onClick: () => void
 }) {
+  if (fillHeight) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={disabled}
+        className={cn(
+          'group flex flex-col rounded-[14px] border overflow-hidden transition-all duration-300 h-full',
+          disabled
+            ? 'bg-muted opacity-50 cursor-not-allowed border-border'
+            : 'bg-card cursor-pointer border-border hover:border-primary-20 hover:shadow-lg hover:-translate-y-[2px] hover:border-primary hover:border-4 hover:shadow-2xl'
+        )}
+      >
+        {/* Image — top half */}
+        <div className="relative h-1/2 shrink-0 overflow-hidden bg-gradient-to-br from-primary-8 to-primary-15">
+          {CARD_IMAGES[path] ? (
+            <img
+              src={CARD_IMAGES[path]}
+              alt={route.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              draggable={false}
+            />
+          ) : (
+            <div className="w-full h-full" />
+          )}
+          {/* Bottom fade into card */}
+          <div className="absolute inset-x-0 bottom-0 h-[40%]" style={{ background: 'linear-gradient(to top, hsl(var(--card)), transparent)' }} />
+        </div>
+
+        {/* Content — bottom half, centered */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center gap-md px-lg py-lg w-full">
+          {/* Large icon */}
+          <div
+            className="flex items-center justify-center rounded-[16px] transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
+            style={{
+              width: 104,
+              height: 104,
+              background: disabled ? 'var(--elevated)' : 'var(--primary-10)',
+              border: disabled ? 'none' : '1px solid var(--primary-12)'
+            }}
+          >
+            <span style={{ color: disabled ? 'var(--muted-foreground)' : 'var(--primary)' }}>
+              {getRouteIcon(route.icon || 'Chart', 48, !disabled)}
+            </span>
+          </div>
+
+          {/* Name — large and bold */}
+          <span className={cn('text-3xl font-bold truncate w-full transition-colors duration-200', disabled ? 'text-muted-foreground' : 'text-foreground group-hover:text-primary')}>
+            {route.name}
+          </span>
+
+          {/* Description */}
+          <span className="text-md leading-relaxed text-muted-foreground line-clamp-2">
+            {description}
+          </span>
+
+          {/* Disabled badge */}
+          {disabled && (
+            <span className="text-xs font-medium rounded-pill" style={{ padding: '2px 8px', backgroundColor: 'var(--warning-10)', color: 'var(--warning)', fontSize: 10 }}>
+              Módulo Completo
+            </span>
+          )}
+        </div>
+      </button>
+    )
+  }
+
+  // Mobile/tablet: compact card (no image)
   return (
     <button
       type="button"
@@ -207,45 +290,20 @@ function WorkflowCard({
         }
       }}
     >
-      {/* Icon */}
       <div
         className="flex items-center justify-center rounded-[12px]"
-        style={{
-          width: 48,
-          height: 48,
-          background: disabled ? 'var(--elevated)' : 'var(--primary-10)'
-        }}
+        style={{ width: 48, height: 48, background: disabled ? 'var(--elevated)' : 'var(--primary-10)' }}
       >
         <span style={{ color: disabled ? 'var(--muted-foreground)' : 'var(--primary)' }}>
           {getRouteIcon(route.icon || 'Chart', 24, !disabled)}
         </span>
       </div>
-
-      {/* Name */}
-      <span
-        className={cn('text-sm font-semibold truncate w-full', disabled ? 'text-muted-foreground' : 'text-foreground')}
-      >
+      <span className={cn('text-sm font-semibold truncate w-full', disabled ? 'text-muted-foreground' : 'text-foreground')}>
         {route.name}
       </span>
-
-      {/* Description */}
-      <span
-        className="text-xs leading-relaxed text-muted-foreground line-clamp-2"
-      >
-        {description}
-      </span>
-
-      {/* Disabled badge */}
+      <span className="text-xs leading-relaxed text-muted-foreground line-clamp-2">{description}</span>
       {disabled && (
-        <span
-          className="text-xs font-medium rounded-pill"
-          style={{
-            padding: '2px 8px',
-            backgroundColor: 'var(--warning-10)',
-            color: 'var(--warning)',
-            fontSize: 10
-          }}
-        >
+        <span className="text-xs font-medium rounded-pill" style={{ padding: '2px 8px', backgroundColor: 'var(--warning-10)', color: 'var(--warning)', fontSize: 10 }}>
           Módulo Completo
         </span>
       )}

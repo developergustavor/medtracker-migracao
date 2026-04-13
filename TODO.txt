@@ -1,0 +1,11 @@
+
+Aba	Campo	Valor
+Código	Código	gg (Gustavo, Admin)
+ff (Filipe, Admin)
+mm (Marcos, Colaborador)
+mt (Mateus, Representante — tem 2FA)
+tt (Teste, Chefe)
+Usuário	CPF	101.261.546-43 + Senha 13ce5dc1
+CME	Usuário	medtracker + Senha medtracker
+2FA	OTP	12345 (ao logar com Mateus via código mt)
+45678
