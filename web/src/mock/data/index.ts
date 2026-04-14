@@ -37,3 +37,5 @@ export type {
   MockTemplate,
   MockSubmaterial
 } from './cadastros.mock'
+export { mockEntries, mockEntryMaterials } from './entrada.mock'
+export type { MockEntry, MockEntryMaterial } from './entrada.mock'
