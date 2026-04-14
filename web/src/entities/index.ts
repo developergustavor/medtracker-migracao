@@ -4,3 +4,6 @@ export { loginByCodeSchema, loginByCpfSchema, loginByCmeSchema, twoFactorSchema 
 export { cme_module, cme_status, formatted_cme_module } from './cmes'
 export type { CmeProps, CmeSettingsProps } from './cmes'
 export type { BaseResponseProps } from './apis'
+export { entry_type, entry_status, formatted_entry_type, formatted_entry_status } from './entries'
+export type { EntryFormData, EntryMaterialProps, EntryProps } from './entries'
+export { entryFormSchema } from './entries'
