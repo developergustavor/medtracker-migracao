@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 // components
 import { EntradaForm } from './EntradaForm'
 import { EntradaMaterialList } from './EntradaMaterialList'
+import { AuthModal } from '@/components/domain'
 
 // hooks
 import { useIsDesktop } from '@/hooks'
@@ -41,6 +42,10 @@ function Entrada() {
 
   // -- Materials state
   const [materials, setMaterials] = useState<EntryMaterialProps[]>([])
+
+  // -- Auth state
+  const [authTarget, setAuthTarget] = useState<number | null>(null)
+  const [rememberedUserId, setRememberedUserId] = useState<number | null>(null)
 
   const handleFormChange = useCallback((partial: Partial<EntryFormData>) => {
     setFormData(prev => ({ ...prev, ...partial }))
@@ -90,6 +95,22 @@ function Entrada() {
     setMaterials(prev => prev.map((m, i) => i === index ? { ...m, amount } : m))
   }, [])
 
+  const handleRegisterClick = useCallback((index: number) => {
+    setAuthTarget(index)
+  }, [])
+
+  const handleAuthenticate = useCallback((userId: number, userName: string, remember: boolean) => {
+    if (authTarget === null) return
+    if (remember) setRememberedUserId(userId)
+    setMaterials(prev => prev.map((m, i) => i === authTarget ? {
+      ...m,
+      recorded: true,
+      recordedBy: userName,
+      recordedAt: new Date().toISOString()
+    } : m))
+    setAuthTarget(null)
+  }, [authTarget])
+
   // Listen for contextual-action events
   useEffect(() => {
     const handler = (e: Event) => {
@@ -123,11 +144,18 @@ function Entrada() {
           onAddMaterial={handleAddMaterial}
           onConference={(i) => console.log('conference', i)}
           onImages={(i) => console.log('images', i)}
-          onRegister={(i) => console.log('register', i)}
+          onRegister={handleRegisterClick}
           onRemove={handleRemoveMaterial}
           onAmountChange={handleAmountChange}
         />
       </div>
+
+      <AuthModal
+        open={authTarget !== null}
+        onClose={() => setAuthTarget(null)}
+        onAuthenticate={handleAuthenticate}
+        rememberedUserId={rememberedUserId}
+      />
     </div>
   )
 }
