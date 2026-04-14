@@ -82,7 +82,7 @@ function EntradaMaterialList({
               value={inputValue}
               onChange={e => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Bipar codigo ou buscar material..."
+              placeholder="Bipar código ou buscar material..."
               className="pl-[36px] !border-2 !border-primary !rounded-[10px]"
               style={{ padding: '10px 14px 10px 36px' }}
               autoFocus={isFormValid}
@@ -132,7 +132,7 @@ function EntradaMaterialList({
           className="flex items-center gap-xs text-primary text-xs font-medium border border-primary/20 rounded-sm px-sm py-[4px] bg-transparent cursor-pointer hover:bg-primary-8 transition-colors"
         >
           <DocumentText size={14} color="var(--primary)" />
-          Relatorio
+          Relatório
         </button>
       </div>
     </div>

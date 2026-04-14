@@ -20,7 +20,7 @@ type CreateInlineDrawerProps = {
 }
 
 const ENTITY_CONFIG = {
-  doctor: { title: 'Novo Medico', description: 'Preencha os dados para criar um novo medico.' },
+  doctor: { title: 'Novo Médico', description: 'Preencha os dados para criar um novo médico.' },
   patient: { title: 'Novo Paciente', description: 'Preencha os dados para criar um novo paciente.' },
   owner: { title: 'Novo Terceiro', description: 'Preencha os dados para criar um novo terceiro.' }
 } as const
@@ -83,7 +83,7 @@ function DrawerForm({ entityType, onClose, onCreated }: DrawerFormProps) {
             value={name}
             onChange={e => setName(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={entityType === 'doctor' ? 'Nome do medico' : entityType === 'patient' ? 'Nome do paciente' : 'Nome do terceiro'}
+            placeholder={entityType === 'doctor' ? 'Nome do médico' : entityType === 'patient' ? 'Nome do paciente' : 'Nome do terceiro'}
             style={{ height: 38 }}
           />
         </div>
@@ -97,7 +97,7 @@ function DrawerForm({ entityType, onClose, onCreated }: DrawerFormProps) {
                 <SelectValue placeholder="Selecione o tipo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="MEDICO">Medico</SelectItem>
+                <SelectItem value="MEDICO">Médico</SelectItem>
                 <SelectItem value="EMPRESA">Empresa</SelectItem>
               </SelectContent>
             </Select>

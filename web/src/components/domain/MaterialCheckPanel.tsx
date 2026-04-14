@@ -233,9 +233,9 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
         onClick={handlePanelClick}
       >
         {/* Accessible title (visually hidden) */}
-        <DialogTitle className="sr-only">Conferencia - {materialName}</DialogTitle>
+        <DialogTitle className="sr-only">Conferência - {materialName}</DialogTitle>
         <DialogDescription className="sr-only">
-          Painel de conferencia de submateriais do material {materialName}
+          Painel de conferência de submateriais do material {materialName}
         </DialogDescription>
 
         {/* 1. Scan bar + Progress (sticky top) */}
@@ -267,7 +267,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
               value={scanValue}
               onChange={e => setScanValue(e.target.value)}
               onKeyDown={handleScanKeyDown}
-              placeholder="Bipar codigo ou digitar nome do submaterial..."
+              placeholder="Bipar código ou digitar nome do submaterial..."
               autoFocus
               className={`
                 w-full h-[40px] pl-[36px] pr-md text-body bg-input rounded-[10px] border-2 transition-colors
@@ -329,7 +329,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
                 color: 'var(--primary)'
               }}
             >
-              <span className="font-medium">Ultimo conferido</span>
+              <span className="font-medium">Último conferido</span>
               <span className="font-bold truncate max-w-[120px]">
                 {lastChecked.name} ({lastChecked.checkedAmount}/{lastChecked.amount})
               </span>

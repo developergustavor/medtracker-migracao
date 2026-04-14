@@ -70,7 +70,7 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
     return [
       { key: 'type', label: 'Tipo', filled: !!formData.type },
       { key: 'sector', label: sectorLabel, filled: sectorFilled },
-      { key: 'doctor', label: 'Medico', filled: !!formData.doctorId },
+      { key: 'doctor', label: 'Médico', filled: !!formData.doctorId },
       { key: 'patient', label: 'Paciente', filled: !!formData.patientId },
       { key: 'procedure', label: 'Procedimento', filled: procedureFilled },
       { key: 'owner', label: 'Terceiro', filled: !!formData.ownerId }
@@ -135,7 +135,7 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
       {/* Header */}
       <div>
         <h2 className="text-subheading font-semibold text-foreground">Dados da Entrada</h2>
-        <p className="text-caption text-muted-foreground mt-[2px]">Preencha para liberar a conferencia</p>
+        <p className="text-caption text-muted-foreground mt-[2px]">Preencha para liberar a conferência</p>
       </div>
 
       {/* Progress badges */}
@@ -227,7 +227,7 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
         {/* Medico */}
         <div className="flex flex-col gap-[6px]">
           <div className="flex items-center justify-between">
-            <Label className="text-caption text-foreground font-medium">Medico</Label>
+            <Label className="text-caption text-foreground font-medium">Médico</Label>
             <button
               type="button"
               onClick={() => onCreateInline('doctor')}
@@ -331,7 +331,7 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
               <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="MEDICO">Medico</SelectItem>
+              <SelectItem value="MEDICO">Médico</SelectItem>
               <SelectItem value="EMPRESA">Empresa</SelectItem>
             </SelectContent>
           </Select>

@@ -320,10 +320,10 @@ function Entrada() {
           <DialogHeader className="flex flex-col items-center text-center">
             <DocumentText size={48} color="var(--primary)" className="mb-sm" />
             <DialogTitle className="text-heading" style={{ color: 'var(--fg)' }}>
-              Relatorio de Entrada
+              Relatório de Entrada
             </DialogTitle>
             <DialogDescription className="text-body mt-sm" style={{ color: 'var(--fg-muted)' }}>
-              Funcionalidade em desenvolvimento. Em breve sera possivel visualizar, exportar e imprimir o relatorio da entrada.
+              Funcionalidade em desenvolvimento. Em breve será possível visualizar, exportar e imprimir o relatório da entrada.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-center mt-2">
@@ -376,7 +376,7 @@ function Entrada() {
 
             {/* Add image button or max reached message */}
             {imagesTargetMaterial && imagesTargetMaterial.images.length >= 3 ? (
-              <span className="text-xs text-fg-dim text-center">Maximo de 3 imagens</span>
+              <span className="text-xs text-fg-dim text-center">Máximo de 3 imagens</span>
             ) : (
               <>
                 <input
