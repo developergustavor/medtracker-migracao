@@ -1,5 +1,6 @@
 // packages
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import { ArrowDown2 } from 'iconsax-react'
 
 // components
 import { EntradaForm } from './EntradaForm'
@@ -41,6 +42,14 @@ function Entrada() {
 
   const isFormValid = !!(formData.type && (formData.departmentId || formData.sourceCmeId))
 
+  // -- Mobile accordion state
+  const [mobileFormExpanded, setMobileFormExpanded] = useState(!isFormValid)
+
+  const filledCount = useMemo(() => {
+    const fields = [formData.type, formData.departmentId || formData.sourceCmeId, formData.doctorId, formData.patientId, formData.procedureDate, formData.ownerId]
+    return fields.filter(Boolean).length
+  }, [formData])
+
   // -- Materials state
   const [materials, setMaterials] = useState<EntryMaterialProps[]>([])
 
@@ -52,7 +61,16 @@ function Entrada() {
   const [conferenceTarget, setConferenceTarget] = useState<number | null>(null)
 
   const handleFormChange = useCallback((partial: Partial<EntryFormData>) => {
-    setFormData(prev => ({ ...prev, ...partial }))
+    setFormData(prev => {
+      const next = { ...prev, ...partial }
+      // Auto-collapse mobile accordion when form becomes valid
+      const willBeValid = !!(next.type && (next.departmentId || next.sourceCmeId))
+      const wasValid = !!(prev.type && (prev.departmentId || prev.sourceCmeId))
+      if (willBeValid && !wasValid) {
+        setMobileFormExpanded(false)
+      }
+      return next
+    })
   }, [])
 
   const handleInlineCreated = useCallback((entity: { id: number; name: string; type?: string }) => {
@@ -168,9 +186,9 @@ function Entrada() {
   }, [handleNewEntry, handleReport])
 
   return (
-    <div className="flex h-full overflow-hidden">
-      {/* Left: form panel */}
-      {isDesktop && (
+    <div className={`flex h-full overflow-hidden ${isDesktop ? 'flex-row' : 'flex-col'}`}>
+      {/* Form panel */}
+      {isDesktop ? (
         <div className="w-[320px] shrink-0 border-r border-border bg-card overflow-y-auto">
           <EntradaForm
             formData={formData}
@@ -179,9 +197,37 @@ function Entrada() {
             onCreateInline={setDrawerEntity}
           />
         </div>
+      ) : (
+        <div className="shrink-0 border-b border-border bg-card">
+          <button
+            type="button"
+            onClick={() => setMobileFormExpanded(prev => !prev)}
+            className="w-full flex items-center justify-between px-lg py-sm"
+          >
+            <span className="text-body font-semibold text-foreground">Dados da Entrada</span>
+            <div className="flex items-center gap-sm">
+              <span className="text-xs text-muted-foreground">{filledCount}/6 preenchidos</span>
+              <ArrowDown2
+                size={16}
+                color="currentColor"
+                className={`text-muted-foreground transition-transform duration-200 ${mobileFormExpanded ? 'rotate-180' : ''}`}
+              />
+            </div>
+          </button>
+          {mobileFormExpanded && (
+            <div className="px-md pb-md overflow-y-auto max-h-[60vh]">
+              <EntradaForm
+                formData={formData}
+                onChange={handleFormChange}
+                materialsAdded={materialsAdded}
+                onCreateInline={setDrawerEntity}
+              />
+            </div>
+          )}
+        </div>
       )}
 
-      {/* Right: materials area */}
+      {/* Materials area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
         <EntradaMaterialList
           materials={materials}
