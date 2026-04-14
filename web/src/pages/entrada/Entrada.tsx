@@ -1,13 +1,43 @@
 // packages
-import { useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+
+// components
+import { EntradaForm } from './EntradaForm'
 
 // hooks
 import { useIsDesktop } from '@/hooks'
+
+// entities
+import { entry_type } from '@/entities'
+
+// types
+import type { EntryFormData } from '@/entities'
 
 const _loc = '@/pages/entrada/Entrada'
 
 function Entrada() {
   const isDesktop = useIsDesktop()
+
+  // -- Form state
+  const [formData, setFormData] = useState<EntryFormData>({
+    type: '' as entry_type,
+    departmentId: '',
+    sourceCmeId: '',
+    doctorId: '',
+    patientId: '',
+    procedureDate: '',
+    procedureTime: '',
+    ownerId: '',
+    ownerType: ''
+  })
+  const [materialsAdded, _setMaterialsAdded] = useState(false)
+  const [_drawerEntity, setDrawerEntity] = useState<'doctor' | 'patient' | 'owner' | null>(null)
+
+  const _isFormValid = !!(formData.type && (formData.departmentId || formData.sourceCmeId))
+
+  const handleFormChange = useCallback((partial: Partial<EntryFormData>) => {
+    setFormData(prev => ({ ...prev, ...partial }))
+  }, [])
 
   const handleNewEntry = useCallback(() => {
     window.location.reload()
@@ -34,7 +64,12 @@ function Entrada() {
       {/* Left: form panel */}
       {isDesktop && (
         <div className="w-[320px] shrink-0 border-r border-border bg-card overflow-y-auto">
-          <div className="p-lg text-center text-muted-foreground text-body">Form placeholder</div>
+          <EntradaForm
+            formData={formData}
+            onChange={handleFormChange}
+            materialsAdded={materialsAdded}
+            onCreateInline={setDrawerEntity}
+          />
         </div>
       )}
 
