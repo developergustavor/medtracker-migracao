@@ -5,6 +5,7 @@ export { ConfirmDialog } from './ConfirmDialog'
 export { CreateInlineDrawer } from './CreateInlineDrawer'
 export { SearchInput } from './SearchInput'
 export { StatusBadge } from './StatusBadge'
+export { MaterialCheckPanel } from './MaterialCheckPanel'
 
 // types
 export type { AuthModalProps } from './AuthModal'
@@ -14,3 +15,4 @@ export type { ConfirmDialogProps } from './ConfirmDialog'
 export type { CreateInlineDrawerProps } from './CreateInlineDrawer'
 export type { SearchInputProps } from './SearchInput'
 export type { StatusBadgeProps, StatusBadgeVariant } from './StatusBadge'
+export type { MaterialCheckPanelProps, CheckItem } from './MaterialCheckPanel'

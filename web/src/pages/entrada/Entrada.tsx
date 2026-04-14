@@ -1,10 +1,10 @@
 // packages
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 
 // components
 import { EntradaForm } from './EntradaForm'
 import { EntradaMaterialList } from './EntradaMaterialList'
-import { AuthModal, CreateInlineDrawer } from '@/components/domain'
+import { AuthModal, CreateInlineDrawer, MaterialCheckPanel } from '@/components/domain'
 
 // hooks
 import { useIsDesktop } from '@/hooks'
@@ -17,6 +17,7 @@ import { mockMaterials, mockSubmaterials, mockPackages } from '@/mock/data'
 
 // types
 import type { EntryFormData, EntryMaterialProps } from '@/entities'
+import type { CheckItem } from '@/components/domain'
 
 const _loc = '@/pages/entrada/Entrada'
 
@@ -46,6 +47,9 @@ function Entrada() {
   // -- Auth state
   const [authTarget, setAuthTarget] = useState<number | null>(null)
   const [rememberedUserId, setRememberedUserId] = useState<number | null>(null)
+
+  // -- Conference state
+  const [conferenceTarget, setConferenceTarget] = useState<number | null>(null)
 
   const handleFormChange = useCallback((partial: Partial<EntryFormData>) => {
     setFormData(prev => ({ ...prev, ...partial }))
@@ -122,6 +126,36 @@ function Entrada() {
     setAuthTarget(null)
   }, [authTarget])
 
+  // -- Conference handlers
+  const handleConferenceOpen = useCallback((index: number) => {
+    setConferenceTarget(index)
+  }, [])
+
+  const handleConferenceUpdate = useCallback((updatedItems: CheckItem[]) => {
+    if (conferenceTarget === null) return
+    const totalChecked = updatedItems.reduce((sum, item) => sum + item.checkedAmount, 0)
+    setMaterials(prev => prev.map((m, i) => i === conferenceTarget ? { ...m, checkedCount: totalChecked } : m))
+  }, [conferenceTarget])
+
+  const handleConferenceClose = useCallback(() => {
+    setConferenceTarget(null)
+  }, [])
+
+  const conferenceItems: CheckItem[] = useMemo(() => {
+    if (conferenceTarget === null) return []
+    const material = materials[conferenceTarget]
+    if (!material) return []
+    const subs = mockSubmaterials.filter(s => s.materialId === material.materialId)
+    return subs.map(s => ({
+      id: s.id,
+      code: s.code,
+      name: s.name,
+      amount: s.amount,
+      checkedAmount: 0,
+      images: s.images || []
+    }))
+  }, [conferenceTarget, materials])
+
   // Listen for contextual-action events
   useEffect(() => {
     const handler = (e: Event) => {
@@ -153,7 +187,7 @@ function Entrada() {
           materials={materials}
           isFormValid={isFormValid}
           onAddMaterial={handleAddMaterial}
-          onConference={(i) => console.log('conference', i)}
+          onConference={handleConferenceOpen}
           onImages={(i) => console.log('images', i)}
           onRegister={handleRegisterClick}
           onRemove={handleRemoveMaterial}
@@ -174,6 +208,15 @@ function Entrada() {
         onClose={() => setDrawerEntity(null)}
         onCreated={handleInlineCreated}
       />
+
+      {conferenceTarget !== null && (
+        <MaterialCheckPanel
+          materialName={materials[conferenceTarget]?.materialName || ''}
+          items={conferenceItems}
+          onUpdate={handleConferenceUpdate}
+          onClose={handleConferenceClose}
+        />
+      )}
     </div>
   )
 }
