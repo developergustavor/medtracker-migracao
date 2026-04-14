@@ -39,6 +39,7 @@ const PAGE_MAP: Record<string, ReturnType<typeof lazy>> = {
   '/cadastros/pacientes': LazyCadastros,
   '/cadastros/checklists': LazyCadastros,
   '/cadastros/modelos': LazyCadastros,
+  '/entrada-de-materiais': lazy(() => import('@/pages/entrada').then(m => ({ default: m.Entrada }))),
   // Add more as pages are implemented:
   // '/dashboard': lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard }))),
 }

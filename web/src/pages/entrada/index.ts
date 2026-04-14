@@ -1,0 +1,1 @@
+export { Entrada } from './Entrada'
