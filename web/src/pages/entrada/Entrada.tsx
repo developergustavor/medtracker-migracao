@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 // components
 import { EntradaForm } from './EntradaForm'
 import { EntradaMaterialList } from './EntradaMaterialList'
-import { AuthModal } from '@/components/domain'
+import { AuthModal, CreateInlineDrawer } from '@/components/domain'
 
 // hooks
 import { useIsDesktop } from '@/hooks'
@@ -36,7 +36,7 @@ function Entrada() {
     ownerType: ''
   })
   const [materialsAdded, setMaterialsAdded] = useState(false)
-  const [_drawerEntity, setDrawerEntity] = useState<'doctor' | 'patient' | 'owner' | null>(null)
+  const [drawerEntity, setDrawerEntity] = useState<'doctor' | 'patient' | 'owner' | null>(null)
 
   const isFormValid = !!(formData.type && (formData.departmentId || formData.sourceCmeId))
 
@@ -50,6 +50,17 @@ function Entrada() {
   const handleFormChange = useCallback((partial: Partial<EntryFormData>) => {
     setFormData(prev => ({ ...prev, ...partial }))
   }, [])
+
+  const handleInlineCreated = useCallback((entity: { id: number; name: string; type?: string }) => {
+    if (drawerEntity === 'doctor') {
+      setFormData(prev => ({ ...prev, doctorId: String(entity.id) }))
+    } else if (drawerEntity === 'patient') {
+      setFormData(prev => ({ ...prev, patientId: String(entity.id) }))
+    } else if (drawerEntity === 'owner') {
+      setFormData(prev => ({ ...prev, ownerId: String(entity.id), ownerType: entity.type || '' }))
+    }
+    setDrawerEntity(null)
+  }, [drawerEntity])
 
   const handleNewEntry = useCallback(() => {
     window.location.reload()
@@ -155,6 +166,13 @@ function Entrada() {
         onClose={() => setAuthTarget(null)}
         onAuthenticate={handleAuthenticate}
         rememberedUserId={rememberedUserId}
+      />
+
+      <CreateInlineDrawer
+        open={drawerEntity !== null}
+        entityType={drawerEntity}
+        onClose={() => setDrawerEntity(null)}
+        onCreated={handleInlineCreated}
       />
     </div>
   )
