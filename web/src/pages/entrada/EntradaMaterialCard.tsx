@@ -117,10 +117,15 @@ function EntradaMaterialCard({
             <button
               type="button"
               onClick={onImages}
-              className="w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
+              className="relative w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
               title="Imagens"
             >
               <Camera size={14} color="var(--fg-muted)" />
+              {material.images.length > 0 && (
+                <span className="absolute -top-[5px] -right-[5px] min-w-[14px] h-[14px] rounded-full bg-primary text-on-solid text-[9px] font-bold flex items-center justify-center px-[2px]">
+                  {material.images.length}
+                </span>
+              )}
             </button>
             <button
               type="button"
@@ -225,10 +230,15 @@ function EntradaMaterialCard({
           <button
             type="button"
             onClick={onImages}
-            className="w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
+            className="relative w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
             title="Imagens"
           >
             <Camera size={14} color="var(--fg-muted)" />
+            {material.images.length > 0 && (
+              <span className="absolute -top-[5px] -right-[5px] min-w-[14px] h-[14px] rounded-full bg-primary text-on-solid text-[9px] font-bold flex items-center justify-center px-[2px]">
+                {material.images.length}
+              </span>
+            )}
           </button>
           <button
             type="button"

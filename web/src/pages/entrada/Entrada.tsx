@@ -1,11 +1,15 @@
 // packages
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { ArrowDown2 } from 'iconsax-react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { ArrowDown2, DocumentText, Camera, CloseCircle } from 'iconsax-react'
 
 // components
 import { EntradaForm } from './EntradaForm'
 import { EntradaMaterialList } from './EntradaMaterialList'
 import { AuthModal, CreateInlineDrawer, MaterialCheckPanel } from '@/components/domain'
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+
+// libs
+import { cn } from '@/libs/shadcn.utils'
 
 // hooks
 import { useIsDesktop } from '@/hooks'
@@ -57,6 +61,13 @@ function Entrada() {
   const [authTarget, setAuthTarget] = useState<number | null>(null)
   const [rememberedUserId, setRememberedUserId] = useState<number | null>(null)
 
+  // -- Report dialog state
+  const [reportOpen, setReportOpen] = useState(false)
+
+  // -- Images dialog state
+  const [imagesTarget, setImagesTarget] = useState<number | null>(null) // index of material
+  const imagesFileRef = useRef<HTMLInputElement>(null)
+
   // -- Conference state
   const [conferenceTarget, setConferenceTarget] = useState<number | null>(null)
 
@@ -88,9 +99,9 @@ function Entrada() {
     window.location.reload()
   }, [])
 
+  // TODO: implement report preview + export/download/print (was Electron in v1)
   const handleReport = useCallback(() => {
-    // TODO: open report dialog
-    console.log(`[${_loc}] report`)
+    setReportOpen(true)
   }, [])
 
   const handleAddMaterial = useCallback((code: string) => {
@@ -158,6 +169,43 @@ function Entrada() {
   const handleConferenceClose = useCallback(() => {
     setConferenceTarget(null)
   }, [])
+
+  // -- Images handlers
+  const handleImagesClick = useCallback((index: number) => {
+    setImagesTarget(index)
+  }, [])
+
+  const handleAddImage = useCallback((base64: string) => {
+    if (imagesTarget === null) return
+    setMaterials(prev => prev.map((m, i) => {
+      if (i !== imagesTarget) return m
+      if (m.images.length >= 3) return m
+      return { ...m, images: [...m.images, base64] }
+    }))
+  }, [imagesTarget])
+
+  const handleRemoveImage = useCallback((imgIndex: number) => {
+    if (imagesTarget === null) return
+    setMaterials(prev => prev.map((m, i) => {
+      if (i !== imagesTarget) return m
+      return { ...m, images: m.images.filter((_, j) => j !== imgIndex) }
+    }))
+  }, [imagesTarget])
+
+  const handleImageFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        handleAddImage(reader.result)
+      }
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }, [handleAddImage])
+
+  const imagesTargetMaterial = imagesTarget !== null ? materials[imagesTarget] : null
 
   const conferenceItems: CheckItem[] = useMemo(() => {
     if (conferenceTarget === null) return []
@@ -234,10 +282,11 @@ function Entrada() {
           isFormValid={isFormValid}
           onAddMaterial={handleAddMaterial}
           onConference={handleConferenceOpen}
-          onImages={(i) => console.log('images', i)}
+          onImages={handleImagesClick}
           onRegister={handleRegisterClick}
           onRemove={handleRemoveMaterial}
           onAmountChange={handleAmountChange}
+          onReport={handleReport}
         />
       </div>
 
@@ -263,6 +312,116 @@ function Entrada() {
           onClose={handleConferenceClose}
         />
       )}
+
+      {/* Report placeholder dialog */}
+      {/* TODO: implement report preview + export/download/print (was Electron in v1) */}
+      <Dialog open={reportOpen} onOpenChange={val => !val && setReportOpen(false)}>
+        <DialogContent className="sm:max-w-[420px] rounded-md">
+          <DialogHeader className="flex flex-col items-center text-center">
+            <DocumentText size={48} color="var(--primary)" className="mb-sm" />
+            <DialogTitle className="text-heading" style={{ color: 'var(--fg)' }}>
+              Relatorio de Entrada
+            </DialogTitle>
+            <DialogDescription className="text-body mt-sm" style={{ color: 'var(--fg-muted)' }}>
+              Funcionalidade em desenvolvimento. Em breve sera possivel visualizar, exportar e imprimir o relatorio da entrada.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center mt-2">
+            <button
+              type="button"
+              onClick={() => setReportOpen(false)}
+              className={cn(
+                'inline-flex items-center justify-center font-medium transition-colors',
+                'hover:opacity-80 rounded-sm text-body bg-transparent px-lg'
+              )}
+              style={{
+                height: 36,
+                border: '1px solid var(--border-subtle)',
+                color: 'var(--fg-secondary)'
+              }}
+            >
+              Fechar
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Images dialog */}
+      <Dialog open={imagesTarget !== null} onOpenChange={val => !val && setImagesTarget(null)}>
+        <DialogContent className="sm:max-w-[420px] rounded-md">
+          <DialogHeader>
+            <DialogTitle className="text-heading" style={{ color: 'var(--fg)' }}>
+              Imagens {imagesTargetMaterial ? `\u2014 ${imagesTargetMaterial.materialName}` : ''}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex flex-col gap-md">
+            {/* Image grid */}
+            {imagesTargetMaterial && imagesTargetMaterial.images.length > 0 && (
+              <div className="grid grid-cols-2 gap-sm">
+                {imagesTargetMaterial.images.map((img, imgIdx) => (
+                  <div key={imgIdx} className="relative w-[100px] h-[100px] rounded-sm overflow-hidden border border-subtle">
+                    <img src={img} alt={`Imagem ${imgIdx + 1}`} className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(imgIdx)}
+                      className="absolute top-[4px] right-[4px] w-[20px] h-[20px] rounded-full bg-destructive/80 flex items-center justify-center border-none cursor-pointer"
+                    >
+                      <CloseCircle size={12} color="white" variant="Bold" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add image button or max reached message */}
+            {imagesTargetMaterial && imagesTargetMaterial.images.length >= 3 ? (
+              <span className="text-xs text-fg-dim text-center">Maximo de 3 imagens</span>
+            ) : (
+              <>
+                <input
+                  ref={imagesFileRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageFileChange}
+                />
+                <button
+                  type="button"
+                  onClick={() => imagesFileRef.current?.click()}
+                  className={cn(
+                    'inline-flex items-center justify-center gap-xs font-medium transition-colors',
+                    'hover:opacity-80 rounded-sm text-body px-lg',
+                    'bg-primary-8 text-primary border-none cursor-pointer'
+                  )}
+                  style={{ height: 36 }}
+                >
+                  <Camera size={16} color="var(--primary)" />
+                  Adicionar Foto
+                </button>
+              </>
+            )}
+          </div>
+
+          <DialogFooter className="sm:justify-end mt-2">
+            <button
+              type="button"
+              onClick={() => setImagesTarget(null)}
+              className={cn(
+                'inline-flex items-center justify-center font-medium transition-colors',
+                'hover:opacity-80 rounded-sm text-body bg-transparent px-lg'
+              )}
+              style={{
+                height: 36,
+                border: '1px solid var(--border-subtle)',
+                color: 'var(--fg-secondary)'
+              }}
+            >
+              Fechar
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

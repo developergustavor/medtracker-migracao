@@ -20,6 +20,7 @@ type EntradaMaterialListProps = {
   onRegister: (index: number) => void
   onRemove: (index: number) => void
   onAmountChange: (index: number, amount: number) => void
+  onReport: () => void
 }
 
 function EntradaMaterialList({
@@ -30,7 +31,8 @@ function EntradaMaterialList({
   onImages,
   onRegister,
   onRemove,
-  onAmountChange
+  onAmountChange,
+  onReport
 }: EntradaMaterialListProps) {
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -126,7 +128,7 @@ function EntradaMaterialList({
         </span>
         <button
           type="button"
-          onClick={() => console.log(`[${_loc}] Relatorio clicked`)}
+          onClick={onReport}
           className="flex items-center gap-xs text-primary text-xs font-medium border border-primary/20 rounded-sm px-sm py-[4px] bg-transparent cursor-pointer hover:bg-primary-8 transition-colors"
         >
           <DocumentText size={14} color="var(--primary)" />
