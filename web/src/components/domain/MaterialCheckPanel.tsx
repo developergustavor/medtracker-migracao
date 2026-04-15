@@ -9,6 +9,8 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/dialog'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Command, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command'
 
 // -- Types
 
@@ -70,9 +72,8 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [tooltipId, setTooltipId] = useState<number | null>(null)
   const [lastCheckedItem, setLastCheckedItem] = useState<CheckItem | null>(null)
-  const [showScanDropdown, setShowScanDropdown] = useState(false)
+  const [scanOpen, setScanOpen] = useState(false)
   const scanRef = useRef<HTMLInputElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
   const tooltipTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Clean up tooltip timer
@@ -80,17 +81,6 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
     return () => {
       if (tooltipTimer.current) clearTimeout(tooltipTimer.current)
     }
-  }, [])
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node) && !scanRef.current?.contains(e.target as Node)) {
-        setShowScanDropdown(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   // -- Derived values
@@ -148,7 +138,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
   const checkItemById = useCallback((itemId: number) => {
     updateItem(itemId, 1)
     setScanValue('')
-    setShowScanDropdown(false)
+    setScanOpen(false)
     playBeep()
     setScanError(false)
     scanRef.current?.focus()
@@ -169,7 +159,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
     if (found) {
       updateItem(found.id, 1)
       setScanValue('')
-      setShowScanDropdown(false)
+      setScanOpen(false)
       playBeep()
       setScanError(false)
     } else {
@@ -272,67 +262,67 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
             <h2 className="text-subheading font-bold text-foreground truncate pr-lg">
               {materialName}
             </h2>
-            {/* Close handled by DialogContent built-in X button */}
           </div>
 
           {/* Scan input (combobox) */}
           <div className="relative mb-sm">
-            <SearchNormal1
-              size={16}
-              color="var(--fg-muted)"
-              className="absolute left-[12px] top-1/2 -translate-y-1/2 pointer-events-none"
-            />
-            <input
-              ref={scanRef}
-              type="text"
-              value={scanValue}
-              onChange={e => {
-                setScanValue(e.target.value)
-                setShowScanDropdown(true)
-              }}
-              onFocus={() => setShowScanDropdown(true)}
-              onKeyDown={handleScanKeyDown}
-              placeholder="Bipar código ou digitar nome do submaterial..."
-              autoFocus
-              className={`
-                w-full h-[40px] pl-[36px] pr-md text-body bg-input rounded-[10px] border-2 transition-colors
-                focus:outline-none focus:ring-2 focus:ring-primary/20
-                ${scanError ? 'border-destructive' : 'border-primary'}
-              `}
-              style={{ color: 'var(--fg)' }}
-            />
-
-            {/* Combobox dropdown */}
-            {showScanDropdown && filteredScanItems.length > 0 && (
-              <div
-                ref={dropdownRef}
-                className="absolute left-0 right-0 top-full mt-[4px] z-50 max-h-[200px] overflow-y-auto rounded-lg border border-border bg-card shadow-lg"
-              >
-                {filteredScanItems.map(item => {
-                  const status = getStatus(item)
-                  const config = statusConfig[status]
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => checkItemById(item.id)}
-                      className="w-full flex items-center gap-sm px-sm py-[8px] text-left hover:bg-elevated transition-colors cursor-pointer border-none bg-transparent"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <span className="text-xs font-medium text-foreground truncate block">{item.name}</span>
-                        <span className="text-xxs text-fg-dim">{item.code || '\u2014'}</span>
-                      </div>
-                      <span
-                        className="shrink-0 px-[6px] py-[1px] rounded-pill text-xxs font-bold"
-                        style={{ backgroundColor: config.bg, color: config.text }}
-                      >
-                        {config.label}
-                      </span>
-                    </button>
-                  )
-                })}
-              </div>
-            )}
+            <Popover open={scanOpen} onOpenChange={setScanOpen}>
+              <PopoverTrigger asChild>
+                <div className="relative">
+                  <SearchNormal1
+                    size={16}
+                    color="var(--fg-muted)"
+                    className="absolute left-[12px] top-1/2 -translate-y-1/2 pointer-events-none z-[1]"
+                  />
+                  <input
+                    ref={scanRef}
+                    type="text"
+                    value={scanValue}
+                    onChange={e => {
+                      setScanValue(e.target.value)
+                      setScanOpen(true)
+                    }}
+                    onFocus={() => setScanOpen(true)}
+                    onKeyDown={handleScanKeyDown}
+                    placeholder="Bipar código ou digitar nome do submaterial..."
+                    autoFocus
+                    className={`
+                      w-full h-[40px] pl-[36px] pr-md text-body bg-input rounded-[10px] border-2 transition-colors
+                      focus:outline-none focus:ring-2 focus:ring-primary/20
+                      ${scanError ? 'border-destructive' : 'border-primary'}
+                    `}
+                    style={{ color: 'var(--fg)' }}
+                  />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                <Command shouldFilter={false}>
+                  <CommandList>
+                    <CommandEmpty>Nenhum resultado</CommandEmpty>
+                    <CommandGroup>
+                      {filteredScanItems.map(item => {
+                        const status = getStatus(item)
+                        const config = statusConfig[status]
+                        return (
+                          <CommandItem key={item.id} value={String(item.id)} onSelect={() => checkItemById(item.id)}>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-xs font-medium text-foreground truncate block">{item.name}</span>
+                              <span className="text-xxs text-fg-dim">{item.code || '\u2014'}</span>
+                            </div>
+                            <span
+                              className="shrink-0 px-[6px] py-[1px] rounded-pill text-xxs font-bold"
+                              style={{ backgroundColor: config.bg, color: config.text }}
+                            >
+                              {config.label}
+                            </span>
+                          </CommandItem>
+                        )
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
 
           {/* Progress bar */}

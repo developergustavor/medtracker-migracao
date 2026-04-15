@@ -5,7 +5,7 @@ import { useState, useCallback } from 'react'
 import { cn } from '@/libs/shadcn.utils'
 
 // components
-import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { Sheet, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -65,14 +65,14 @@ function DrawerForm({ entityType, onClose, onCreated }: DrawerFormProps) {
 
   return (
     <>
-      <DialogHeader>
-        <DialogTitle className="text-heading" style={{ color: 'var(--fg)' }}>
+      <SheetHeader>
+        <SheetTitle className="text-heading" style={{ color: 'var(--fg)' }}>
           {config.title}
-        </DialogTitle>
-        <DialogDescription className="text-body mt-sm" style={{ color: 'var(--fg-muted)' }}>
+        </SheetTitle>
+        <SheetDescription className="text-body mt-sm" style={{ color: 'var(--fg-muted)' }}>
           {config.description}
-        </DialogDescription>
-      </DialogHeader>
+        </SheetDescription>
+      </SheetHeader>
 
       <div className="flex flex-col gap-4 py-4 flex-1">
         {/* Nome field - all entity types */}
@@ -105,7 +105,7 @@ function DrawerForm({ entityType, onClose, onCreated }: DrawerFormProps) {
         )}
       </div>
 
-      <DialogFooter className="gap-2 sm:gap-2 mt-2">
+      <SheetFooter className="gap-2 sm:gap-2 mt-2">
         <button
           type="button"
           onClick={onClose}
@@ -136,7 +136,7 @@ function DrawerForm({ entityType, onClose, onCreated }: DrawerFormProps) {
         >
           Salvar
         </button>
-      </DialogFooter>
+      </SheetFooter>
     </>
   )
 }
@@ -145,21 +145,8 @@ function CreateInlineDrawer({ open, entityType, onClose, onCreated }: CreateInli
   if (!entityType) return null
 
   return (
-    <Dialog open={open} onOpenChange={val => !val && onClose()}>
-      <DialogContent
-        className={cn(
-          // Override default dialog positioning to slide from right
-          '!fixed !left-auto !top-0 !right-0 !translate-x-0 !translate-y-0',
-          '!h-[100dvh] !max-w-[380px] !w-[380px] !rounded-none !rounded-l-lg',
-          // Override default animations for slide-from-right
-          'data-[state=open]:!animate-none data-[state=closed]:!animate-none',
-          'data-[state=open]:!slide-in-from-right data-[state=closed]:!slide-out-to-right',
-          'data-[state=open]:animate-in data-[state=closed]:animate-out',
-          'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
-          'flex flex-col'
-        )}
-        style={{ animationDuration: '200ms' }}
-      >
+    <Sheet open={open} onOpenChange={val => !val && onClose()}>
+      <SheetContent side="right" className="w-[380px] sm:max-w-[380px] flex flex-col">
         {/* Key on entityType forces remount, resetting form state */}
         <DrawerForm
           key={entityType}
@@ -167,8 +154,8 @@ function CreateInlineDrawer({ open, entityType, onClose, onCreated }: CreateInli
           onClose={onClose}
           onCreated={onCreated}
         />
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   )
 }
 

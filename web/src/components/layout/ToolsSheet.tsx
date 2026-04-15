@@ -1,6 +1,5 @@
 // packages
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { createPortal } from 'react-dom'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   SearchNormal1,
@@ -13,6 +12,9 @@ import {
   ArrowLeft2,
   Notification
 } from 'iconsax-react'
+
+// components
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
 // store
 import { useAuthStore } from '@/store'
@@ -85,29 +87,6 @@ function getModuleBadgeColors(mod: cme_module): { color: string; bg: string } {
   }
 }
 
-const backdropStyle: React.CSSProperties = {
-  position: 'absolute',
-  inset: 0,
-  backgroundColor: 'rgba(0,0,0,0.4)',
-  animation: 'tools-sheet-backdrop-in 200ms ease forwards'
-}
-
-const sheetStyle: React.CSSProperties = {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  maxHeight: '88vh',
-  backgroundColor: 'var(--card)',
-  borderTopLeftRadius: 'var(--radius-xl)',
-  borderTopRightRadius: 'var(--radius-xl)',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  overflowX: 'hidden',
-  animation: 'tools-sheet-slide-in 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards'
-}
-
 export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: ToolsSheetProps) {
   const navigate = useNavigate()
   const location = useLocation()
@@ -115,15 +94,6 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
   const { theme, toggleTheme } = useTheme()
 
   const [view, setView] = useState<SheetView>('main')
-
-  // Lock body scroll when sheet is open
-  useEffect(() => {
-    if (open) {
-      const prev = document.body.style.overflow
-      document.body.style.overflow = 'hidden'
-      return () => { document.body.style.overflow = prev }
-    }
-  }, [open])
 
   const isCmeOnly = !user && !!cme
   const showThemeToggle = isCmeOnly ? false : checkCanToggleTheme(user?.role)
@@ -135,47 +105,6 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
   const displayName = isCmeOnly ? cme.corporateName : (user?.name || 'Usuário')
   const displayRole = isCmeOnly ? 'CME' : (user?.role ? formatted_user_role[user.role] : '')
   const userInitial = displayName.charAt(0)?.toUpperCase() || 'U'
-
-  // Touch gesture: drag sheet up/down, release to close or snap back
-  const touchStartY = useRef(0)
-  const touchMovedRef = useRef(false)
-  const [dragY, setDragY] = useState(0)
-  const [activeDrag, setActiveDrag] = useState(false)
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY
-    touchMovedRef.current = false
-    setActiveDrag(true)
-    setDragY(0)
-  }, [])
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!activeDrag) return
-    touchMovedRef.current = true
-    const deltaY = e.touches[0].clientY - touchStartY.current
-    setDragY(deltaY > 0 ? deltaY : deltaY * 0.2)
-  }, [activeDrag])
-
-  const handleTouchEnd = useCallback(() => {
-    if (!activeDrag) return
-    setActiveDrag(false)
-    if (!touchMovedRef.current) {
-      // No movement — it was a click, not a drag. Reset and let onClick handle it.
-      setDragY(0)
-      return
-    }
-    if (dragY > 80) {
-      // Close with exit animation
-      setDragY(window.innerHeight)
-      setTimeout(() => {
-        onClose()
-        setDragY(0)
-      }, 200)
-    } else {
-      // Snap back
-      setDragY(0)
-    }
-  }, [activeDrag, dragY, onClose])
 
   // Reset view when sheet closes
   const prevOpenRef = useRef(open)
@@ -189,10 +118,6 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
 
   const goToCmeSelector = useCallback(() => setView('cme-selector'), [])
   const goBackToMain = useCallback(() => setView('main'), [])
-
-  const handleClose = useCallback(() => {
-    onClose()
-  }, [onClose])
 
   const handleNavigate = useCallback(
     (path: string) => {
@@ -243,31 +168,12 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
     [location.pathname]
   )
 
-  if (!open) return null
-
   const moduleBadge = cme?.module ? getModuleBadgeColors(cme.module) : null
 
   const renderMainView = () => (
     <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%', overflowX: 'hidden' }}>
-      {/* Handle bar */}
-      <div
-        className="flex items-center justify-center shrink-0"
-        style={{ padding: '10px 0 6px' }}
-        onTouchStart={handleTouchStart}
-      >
-        <div
-          style={{
-            width: 36,
-            height: 4,
-            borderRadius: 2,
-            backgroundColor: 'var(--muted-foreground)',
-            opacity: 0.3
-          }}
-        />
-      </div>
-
       {/* Scrollable content */}
-      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '0 16px 24px', touchAction: 'pan-y' }}>
+      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '0 0 24px', touchAction: 'pan-y' }}>
         {/* Search input */}
         <button
           onClick={handleSearchClick}
@@ -562,7 +468,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       <div
         className="shrink-0"
         style={{
-          padding: '6px 8px',
+          padding: '6px 0',
           borderBottom: '1px solid var(--border-separator)'
         }}
       >
@@ -586,7 +492,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
       </div>
 
       {/* CME list */}
-      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
+      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 0 24px', touchAction: 'pan-y' }}>
         {mockCmes.map(item => {
           const isCurrentCme = cme?.id === item.id
           const moduleColors = getModuleBadgeColors(item.module)
@@ -651,7 +557,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
 
   const renderNotificationsView = () => (
     <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%', overflowX: 'hidden' }}>
-      <div className="shrink-0" style={{ padding: '6px 8px', borderBottom: '1px solid var(--border-separator)' }}>
+      <div className="shrink-0" style={{ padding: '6px 0', borderBottom: '1px solid var(--border-separator)' }}>
         <button
           onClick={goBackToMain}
           className="flex items-center gap-sm cursor-pointer w-full rounded-sm text-foreground text-body"
@@ -663,7 +569,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           Notificações
         </button>
       </div>
-      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
+      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 0 24px', touchAction: 'pan-y' }}>
         {mockNotifications.length === 0 ? (
           <div className="flex items-center justify-center py-xl text-muted-foreground text-sm">
             Nenhuma notificação
@@ -689,7 +595,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
 
   const renderSupportView = () => (
     <div style={{ width: '100%', flexShrink: 0, display: 'flex', flexDirection: 'column', height: '100%', overflowX: 'hidden' }}>
-      <div className="shrink-0" style={{ padding: '6px 8px', borderBottom: '1px solid var(--border-separator)' }}>
+      <div className="shrink-0" style={{ padding: '6px 0', borderBottom: '1px solid var(--border-separator)' }}>
         <button
           onClick={goBackToMain}
           className="flex items-center gap-sm cursor-pointer w-full rounded-sm text-foreground text-body"
@@ -701,7 +607,7 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
           Material de apoio
         </button>
       </div>
-      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 12px 24px', touchAction: 'pan-y' }}>
+      <div data-scrollable style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', padding: '8px 0 24px', touchAction: 'pan-y' }}>
         {mockSupportLinks.map(link => (
           <button
             key={link.id}
@@ -719,61 +625,33 @@ export function ToolsSheet({ open, onClose, onOpenSubroutes, onOpenSpotlight }: 
     </div>
   )
 
-  return createPortal(
-    <>
-      <style>{`
-        @keyframes tools-sheet-slide-in {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
-        }
-        @keyframes tools-sheet-backdrop-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-      `}</style>
+  return (
+    <Sheet open={open} onOpenChange={val => { if (!val) onClose() }}>
+      <SheetContent side="bottom" className="max-h-[88vh] rounded-t-[16px]">
+        <SheetHeader>
+          <SheetTitle>Ferramentas</SheetTitle>
+        </SheetHeader>
 
-      <div
-        style={{ position: 'fixed', inset: 0, zIndex: 200, touchAction: 'none', overscrollBehavior: 'contain' }}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
         <div
-          onTouchStart={handleTouchStart}
-          onClick={() => { if (!touchMovedRef.current) handleClose() }}
           style={{
-            ...backdropStyle,
-            opacity: dragY > 0 ? Math.max(0, 1 - dragY / 300) : undefined
+            display: 'flex',
+            width: '200%',
+            height: '100%',
+            transform: view === 'main' ? 'translateX(0%)' : 'translateX(-50%)',
+            transition: 'transform 250ms cubic-bezier(0.16, 1, 0.3, 1)',
+            overflowX: 'hidden'
           }}
-        />
-
-        <div style={{
-          ...sheetStyle,
-          transform: `translateY(${Math.max(0, dragY)}px)`,
-          transition: activeDrag ? 'none' : 'transform 250ms cubic-bezier(0.16, 1, 0.3, 1)',
-          animation: dragY === 0 && !activeDrag ? sheetStyle.animation : 'none'
-        }}>
-          <div
-            style={{
-              display: 'flex',
-              width: '200%',
-              height: '100%',
-              transform: view === 'main' ? 'translateX(0%)' : 'translateX(-50%)',
-              transition: 'transform 250ms cubic-bezier(0.16, 1, 0.3, 1)',
-              overflowX: 'hidden'
-            }}
-          >
-            <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              {renderMainView()}
-            </div>
-            <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              {view === 'cme-selector' && renderCmeSelectorView()}
-              {view === 'notifications' && renderNotificationsView()}
-              {view === 'support' && renderSupportView()}
-            </div>
+        >
+          <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            {renderMainView()}
+          </div>
+          <div style={{ width: '50%', flexShrink: 0, height: '100%', overflowX: 'hidden', overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            {view === 'cme-selector' && renderCmeSelectorView()}
+            {view === 'notifications' && renderNotificationsView()}
+            {view === 'support' && renderSupportView()}
           </div>
         </div>
-      </div>
-    </>,
-    document.body
+      </SheetContent>
+    </Sheet>
   )
 }

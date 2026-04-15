@@ -1,9 +1,10 @@
 // packages
-import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
+import { useState, useRef, useCallback, useMemo } from 'react'
 import { SearchNormal1, Add, Lock1, DocumentText } from 'iconsax-react'
 
 // components
-import { Input } from '@/components/ui/input'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Command, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command'
 import { EntradaMaterialCard } from './EntradaMaterialCard'
 
 // mock
@@ -37,41 +38,25 @@ function EntradaMaterialList({
   onAmountChange,
   onReport
 }: EntradaMaterialListProps) {
+  const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [showDropdown, setShowDropdown] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const registeredCount = materials.filter(m => m.recorded).length
   const firstKitIndex = useMemo(() => materials.findIndex(m => m.materialType === 'KIT'), [materials])
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node) && !inputRef.current?.contains(e.target as Node)) {
-        setShowDropdown(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  const activeMaterials = useMemo(() => mockMaterials.filter(m => m.status === 'ATIVO'), [])
 
-  // Filtered mock materials for combobox
-  const filteredMaterials = useMemo(() => {
-    const val = inputValue.trim().toLowerCase()
-    if (!val) return mockMaterials.filter(m => m.status === 'ATIVO')
-    return mockMaterials.filter(m =>
-      m.status === 'ATIVO' && (
-        m.name.toLowerCase().includes(val) ||
-        (m.code && m.code.toLowerCase().includes(val))
-      )
-    )
-  }, [inputValue])
+  const typeBadgeColors: Record<string, { bg: string; text: string }> = {
+    KIT: { bg: 'var(--primary)', text: 'white' },
+    AVULSO: { bg: 'var(--muted)', text: 'var(--fg-dim)' },
+    QUANTIDADE: { bg: 'var(--muted)', text: 'var(--fg-dim)' }
+  }
 
   const handleSelectMaterial = useCallback((code: string) => {
     onAddMaterial(code)
     setInputValue('')
-    setShowDropdown(false)
+    setOpen(false)
     inputRef.current?.focus()
   }, [onAddMaterial])
 
@@ -79,7 +64,6 @@ function EntradaMaterialList({
     const trimmed = inputValue.trim()
     if (!trimmed) return
 
-    // Try exact code match first
     const exactMatch = mockMaterials.find(m => m.status === 'ATIVO' && m.code === trimmed)
     if (exactMatch) {
       onAddMaterial(exactMatch.code!)
@@ -88,22 +72,9 @@ function EntradaMaterialList({
     }
 
     setInputValue('')
-    setShowDropdown(false)
+    setOpen(false)
     inputRef.current?.focus()
   }, [inputValue, onAddMaterial])
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      handleSubmit()
-    }
-  }, [handleSubmit])
-
-  const typeBadgeColors: Record<string, { bg: string; text: string }> = {
-    KIT: { bg: 'var(--primary)', text: 'white' },
-    AVULSO: { bg: 'var(--muted)', text: 'var(--fg-dim)' },
-    QUANTIDADE: { bg: 'var(--muted)', text: 'var(--fg-dim)' }
-  }
 
   return (
     <div className="relative flex flex-col h-full">
@@ -120,60 +91,69 @@ function EntradaMaterialList({
       {/* Scan bar */}
       <div className="shrink-0 px-md pt-md pb-sm sticky top-0 z-[5] bg-background">
         <div className="flex items-center gap-sm">
-          <div className="relative flex-1">
-            <SearchNormal1
-              size={16}
-              color="var(--fg-muted)"
-              className="absolute left-[12px] top-1/2 -translate-y-1/2 pointer-events-none"
-            />
-            <Input
-              ref={inputRef}
-              type="text"
-              value={inputValue}
-              onChange={e => {
-                setInputValue(e.target.value)
-                setShowDropdown(true)
-              }}
-              onFocus={() => setShowDropdown(true)}
-              onKeyDown={handleKeyDown}
-              placeholder="Bipar código ou buscar material..."
-              className="pl-[36px] !border-2 !border-primary !rounded-[10px]"
-              style={{ padding: '10px 14px 10px 36px' }}
-              autoFocus={isFormValid}
-              disabled={!isFormValid}
-            />
-
-            {/* Combobox dropdown */}
-            {showDropdown && isFormValid && inputValue.trim() && filteredMaterials.length > 0 && (
-              <div
-                ref={dropdownRef}
-                className="absolute left-0 right-0 top-full mt-[4px] z-50 max-h-[240px] overflow-y-auto rounded-lg border border-border bg-card shadow-lg"
-              >
-                {filteredMaterials.map(mat => {
-                  const colors = typeBadgeColors[mat.type] || typeBadgeColors.AVULSO
-                  return (
-                    <button
-                      key={mat.id}
-                      type="button"
-                      onClick={() => handleSelectMaterial(mat.code || mat.name)}
-                      className="w-full flex items-center gap-sm px-sm py-[8px] text-left hover:bg-elevated transition-colors cursor-pointer border-none bg-transparent"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <span className="text-xs font-medium text-foreground truncate block">{mat.name}</span>
-                        <span className="text-xxs text-fg-dim">{mat.code || '\u2014'}</span>
-                      </div>
-                      <span
-                        className="shrink-0 px-[6px] py-[1px] rounded text-xxs font-bold"
-                        style={{ backgroundColor: colors.bg, color: colors.text }}
-                      >
-                        {mat.type}
-                      </span>
-                    </button>
-                  )
-                })}
+          <Popover open={open && isFormValid} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <div className="relative flex-1">
+                <SearchNormal1
+                  size={16}
+                  color="var(--fg-muted)"
+                  className="absolute left-[12px] top-1/2 -translate-y-1/2 pointer-events-none z-[1]"
+                />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={e => {
+                    setInputValue(e.target.value)
+                    setOpen(true)
+                  }}
+                  onFocus={() => setOpen(true)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      handleSubmit()
+                    }
+                  }}
+                  placeholder="Bipar código ou buscar material..."
+                  className="w-full pl-[36px] pr-[14px] py-[10px] text-body bg-input border-2 border-primary rounded-[10px] focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  autoFocus={isFormValid}
+                  disabled={!isFormValid}
+                />
               </div>
-            )}
-          </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+              <Command shouldFilter={false}>
+                <CommandList>
+                  <CommandEmpty>Nenhum resultado</CommandEmpty>
+                  <CommandGroup>
+                    {activeMaterials
+                      .filter(m => {
+                        const val = inputValue.trim().toLowerCase()
+                        if (!val) return true
+                        return m.name.toLowerCase().includes(val) || (m.code && m.code.toLowerCase().includes(val))
+                      })
+                      .map(mat => {
+                        const colors = typeBadgeColors[mat.type] || typeBadgeColors.AVULSO
+                        return (
+                          <CommandItem key={mat.id} value={mat.code || mat.name} onSelect={() => handleSelectMaterial(mat.code || mat.name)}>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-xs font-medium text-foreground truncate block">{mat.name}</span>
+                              <span className="text-xxs text-fg-dim">{mat.code || '\u2014'}</span>
+                            </div>
+                            <span
+                              className="shrink-0 px-[6px] py-[1px] rounded text-xxs font-bold"
+                              style={{ backgroundColor: colors.bg, color: colors.text }}
+                            >
+                              {mat.type}
+                            </span>
+                          </CommandItem>
+                        )
+                      })}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
           <button
             type="button"
             onClick={handleSubmit}

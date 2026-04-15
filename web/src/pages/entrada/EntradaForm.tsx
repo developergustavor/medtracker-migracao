@@ -1,10 +1,12 @@
 // packages
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
-import { TickCircle } from 'iconsax-react'
+import { useState, useCallback, useMemo } from 'react'
+import { TickCircle, ArrowDown2, Add } from 'iconsax-react'
 
 // components
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandSeparator } from '@/components/ui/command'
 
 // libs
 import { cn } from '@/libs/shadcn.utils'
@@ -50,81 +52,54 @@ type ComboboxProps = {
 
 function Combobox({ options, value, onChange, placeholder = 'Buscar...', disabled, onCreate, createLabel }: ComboboxProps) {
   const [open, setOpen] = useState(false)
-  const [search, setSearch] = useState('')
-  const containerRef = useRef<HTMLDivElement>(null)
 
   const selectedLabel = useMemo(() => options.find(o => o.value === value)?.label || '', [options, value])
 
-  const filtered = useMemo(() => {
-    if (!search) return options
-    const lower = search.toLowerCase()
-    return options.filter(o => o.label.toLowerCase().includes(lower))
-  }, [options, search])
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [])
-
-  const handleFocus = useCallback(() => {
-    if (!disabled) {
-      setOpen(true)
-      setSearch('')
-    }
-  }, [disabled])
-
-  const handleSelect = useCallback((val: string) => {
-    onChange(val)
-    setOpen(false)
-    setSearch('')
-  }, [onChange])
-
   return (
-    <div className="relative" ref={containerRef}>
-      <Input
-        value={open ? search : selectedLabel}
-        onChange={e => setSearch(e.target.value)}
-        onFocus={handleFocus}
-        placeholder={placeholder}
-        disabled={disabled}
-        className={cn('text-body', disabled && 'opacity-50 cursor-not-allowed')}
-        style={{ height: 38, borderColor: 'var(--input-border)', backgroundColor: 'var(--input)' }}
-      />
-      {open && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-card border border-border rounded-sm shadow-lg max-h-[200px] overflow-y-auto">
-          {onCreate && (
-            <button
-              type="button"
-              onClick={() => { onCreate(); setOpen(false) }}
-              className="w-full text-left px-sm py-xs text-primary font-medium border-b border-border cursor-pointer hover:bg-muted"
-            >
-              + {createLabel || 'Criar novo'}
-            </button>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          disabled={disabled}
+          className={cn(
+            'w-full flex items-center justify-between text-body px-sm rounded-sm border bg-input',
+            disabled && 'opacity-50 cursor-not-allowed',
+            !selectedLabel && 'text-muted-foreground'
           )}
-          {filtered.length === 0 && (
-            <div className="px-sm py-xs text-muted-foreground text-caption">Nenhum resultado</div>
-          )}
-          {filtered.map(opt => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => handleSelect(opt.value)}
-              className={cn(
-                'w-full text-left px-sm py-xs hover:bg-muted cursor-pointer text-body',
-                opt.value === value && 'bg-muted font-medium'
-              )}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+          style={{ height: 38, borderColor: 'var(--input-border)', backgroundColor: 'var(--input)' }}
+        >
+          {selectedLabel || placeholder}
+          <ArrowDown2 size={14} className="opacity-50 shrink-0" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        <Command>
+          <CommandInput placeholder={placeholder} />
+          <CommandList>
+            <CommandEmpty>Nenhum resultado</CommandEmpty>
+            {onCreate && (
+              <>
+                <CommandGroup>
+                  <CommandItem onSelect={() => { onCreate(); setOpen(false) }} className="text-primary font-medium">
+                    <Add size={14} />
+                    {createLabel || 'Criar novo'}
+                  </CommandItem>
+                </CommandGroup>
+                <CommandSeparator />
+              </>
+            )}
+            <CommandGroup>
+              {options.map(opt => (
+                <CommandItem key={opt.value} value={opt.label} onSelect={() => { onChange(opt.value); setOpen(false) }}>
+                  {opt.label}
+                  {value === opt.value && <TickCircle size={14} color="currentColor" variant="Bold" className="ml-auto" />}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }
 
