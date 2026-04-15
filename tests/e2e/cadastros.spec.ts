@@ -122,10 +122,12 @@ test.describe('Cadastros', () => {
 
   test.describe('Formulário de edição', () => {
     test('deve abrir form com dados preenchidos ao editar', async ({ page }) => {
-      // Clicar no botão de editar do primeiro material
-      const editBtn = page.locator('button[title="Editar"]').or(page.locator('button').filter({ has: page.locator('svg') })).first()
-      // Este teste verifica que botões de ação existem na tabela
-      const actionBtns = page.locator('button[title]')
+      // Wait for table to load
+      await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
+      // The DataTable action buttons have SVG icons (Edit2, Trash) but no title attribute.
+      // They are rendered by CadastroTab RowActions as buttons with SVG children.
+      // Verify that action buttons (with SVG icons) exist in the table rows.
+      const actionBtns = page.locator('table button').filter({ has: page.locator('svg') })
       const count = await actionBtns.count()
       expect(count).toBeGreaterThan(0)
     })

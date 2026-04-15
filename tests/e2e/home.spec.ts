@@ -82,11 +82,11 @@ test.describe('Home', () => {
 
   test.describe('Cards de workflow', () => {
     test('deve exibir 5 cards de workflow', async ({ page }) => {
-      await expect(page.getByText('Entrada de Materiais')).toBeVisible()
-      await expect(page.getByText('Desinfecção')).toBeVisible()
-      await expect(page.getByText('Esterilização')).toBeVisible()
-      await expect(page.getByText('Saida de Materiais').or(page.getByText('Saída de Materiais'))).toBeVisible()
-      await expect(page.getByText('Conferência').last()).toBeVisible()
+      await expect(page.getByRole('button', { name: /Entrada de Materiais/i }).first()).toBeVisible()
+      await expect(page.getByRole('button', { name: /Desinfecção/i }).first()).toBeVisible()
+      await expect(page.getByRole('button', { name: /Esterilização/i }).first()).toBeVisible()
+      await expect(page.getByRole('button', { name: /Saida de Materiais|Saída de Materiais/i }).first()).toBeVisible()
+      await expect(page.getByRole('button', { name: /Conferência/i }).last()).toBeVisible()
     })
 
     test('deve navegar ao clicar em card de workflow', async ({ page }) => {
@@ -153,8 +153,8 @@ test.describe('Home — Mobile', () => {
   })
 
   test('deve exibir cards de workflow sem imagens', async ({ page }) => {
-    await expect(page.getByText('Entrada de Materiais')).toBeVisible()
-    await expect(page.getByText('Desinfecção')).toBeVisible()
+    await expect(page.getByRole('button', { name: /Entrada de Materiais/i }).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: /Desinfecção/i }).first()).toBeVisible()
   })
 
   test('deve exibir bottom tab bar', async ({ page }) => {
