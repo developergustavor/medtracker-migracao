@@ -11,6 +11,9 @@ import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogD
 // libs
 import { cn } from '@/libs/shadcn.utils'
 
+// store
+import { useAuthStore } from '@/store'
+
 // hooks
 import { useIsDesktop } from '@/hooks'
 
@@ -28,6 +31,8 @@ const _loc = '@/pages/entrada/Entrada'
 
 function Entrada() {
   const isDesktop = useIsDesktop()
+  const { cme } = useAuthStore()
+  const isModuloCompleto = cme?.module === 'COMPLETO'
 
   // -- Form state
   const [formData, setFormData] = useState<EntryFormData>({
@@ -41,7 +46,6 @@ function Entrada() {
     ownerId: '',
     ownerType: ''
   })
-  const [materialsAdded, setMaterialsAdded] = useState(false)
   const [drawerEntity, setDrawerEntity] = useState<'doctor' | 'patient' | 'owner' | null>(null)
 
   const isFormValid = !!(formData.type && (formData.departmentId || formData.sourceCmeId))
@@ -56,6 +60,7 @@ function Entrada() {
 
   // -- Materials state
   const [materials, setMaterials] = useState<EntryMaterialProps[]>([])
+  const hasRegisteredMaterial = useMemo(() => materials.some(m => m.recorded), [materials])
 
   // -- Auth state
   const [authTarget, setAuthTarget] = useState<number | null>(null)
@@ -128,9 +133,21 @@ function Entrada() {
       totalCount: subs.reduce((sum, s) => sum + s.amount, 0)
     }
 
-    setMaterials(prev => [...prev, newMaterial])
-    if (!materialsAdded) setMaterialsAdded(true)
-  }, [materialsAdded])
+    setMaterials(prev => {
+      const newList = [...prev, newMaterial]
+      // Auto-abrir conferência para KIT quando módulo é COMPLETO
+      if (found.type === 'KIT' && isModuloCompleto) {
+        const newIndex = newList.length - 1
+        setTimeout(() => {
+          setConferenceTarget(newIndex)
+          setConferenceItems(subs.map(s => ({
+            id: s.id, code: s.code, name: s.name, amount: s.amount, checkedAmount: 0, images: s.images || []
+          })))
+        }, 0)
+      }
+      return newList
+    })
+  }, [isModuloCompleto])
 
   const handleRemoveMaterial = useCallback((index: number) => {
     setMaterials(prev => prev.filter((_, i) => i !== index))
@@ -236,7 +253,7 @@ function Entrada() {
           <EntradaForm
             formData={formData}
             onChange={handleFormChange}
-            materialsAdded={materialsAdded}
+            materialsAdded={hasRegisteredMaterial}
             onCreateInline={setDrawerEntity}
           />
         </div>
@@ -262,7 +279,7 @@ function Entrada() {
               <EntradaForm
                 formData={formData}
                 onChange={handleFormChange}
-                materialsAdded={materialsAdded}
+                materialsAdded={hasRegisteredMaterial}
                 onCreateInline={setDrawerEntity}
               />
             </div>

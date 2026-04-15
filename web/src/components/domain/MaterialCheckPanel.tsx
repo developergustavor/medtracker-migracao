@@ -1,6 +1,6 @@
 // packages
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
-import { CloseCircle, TickCircle, SearchNormal1 } from 'iconsax-react'
+import { TickCircle, SearchNormal1 } from 'iconsax-react'
 
 // components
 import {
@@ -69,7 +69,10 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [tooltipId, setTooltipId] = useState<number | null>(null)
+  const [lastCheckedItem, setLastCheckedItem] = useState<CheckItem | null>(null)
+  const [showScanDropdown, setShowScanDropdown] = useState(false)
   const scanRef = useRef<HTMLInputElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const tooltipTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Clean up tooltip timer
@@ -77,6 +80,17 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
     return () => {
       if (tooltipTimer.current) clearTimeout(tooltipTimer.current)
     }
+  }, [])
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node) && !scanRef.current?.contains(e.target as Node)) {
+        setShowScanDropdown(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   // -- Derived values
@@ -104,11 +118,14 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
 
   const pendingCount = pendingNames.length
 
-  const lastChecked = useMemo(() => {
-    // Find the last item that has any checks
-    const checked = localItems.filter(i => i.checkedAmount > 0)
-    return checked.length > 0 ? checked[checked.length - 1] : null
-  }, [localItems])
+  // Filtered items for scan combobox
+  const filteredScanItems = useMemo(() => {
+    const val = scanValue.trim().toLowerCase()
+    if (!val) return localItems
+    return localItems.filter(i =>
+      i.name.toLowerCase().includes(val) || i.code.toLowerCase().includes(val)
+    )
+  }, [scanValue, localItems])
 
   // -- Mutation helper
   const updateItem = useCallback((itemId: number, delta: number) => {
@@ -116,12 +133,26 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
       const next = prev.map(i => {
         if (i.id !== itemId) return i
         const newChecked = Math.max(0, Math.min(i.amount, i.checkedAmount + delta))
-        return { ...i, checkedAmount: newChecked }
+        const updated = { ...i, checkedAmount: newChecked }
+        if (delta > 0) {
+          setLastCheckedItem(updated)
+        }
+        return updated
       })
       onUpdate(next)
       return next
     })
   }, [onUpdate])
+
+  // -- Check item from combobox
+  const checkItemById = useCallback((itemId: number) => {
+    updateItem(itemId, 1)
+    setScanValue('')
+    setShowScanDropdown(false)
+    playBeep()
+    setScanError(false)
+    scanRef.current?.focus()
+  }, [updateItem])
 
   // -- Scan handler
   const handleScan = useCallback(() => {
@@ -138,6 +169,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
     if (found) {
       updateItem(found.id, 1)
       setScanValue('')
+      setShowScanDropdown(false)
       playBeep()
       setScanError(false)
     } else {
@@ -224,7 +256,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
   return (
     <Dialog open onOpenChange={(open) => { if (!open) onClose() }}>
       <DialogContent
-        className="max-w-[900px] h-[80vh] flex flex-col p-0 gap-0 overflow-hidden"
+        className="min-w-screen min-h-screen max-w-none rounded-none p-0 flex flex-col gap-0 overflow-hidden"
         onClick={handlePanelClick}
       >
         {/* Accessible title (visually hidden) */}
@@ -240,16 +272,10 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
             <h2 className="text-subheading font-bold text-foreground truncate pr-lg">
               {materialName}
             </h2>
-            <button
-              type="button"
-              onClick={onClose}
-              className="shrink-0 w-[28px] h-[28px] flex items-center justify-center rounded-xs border-none bg-transparent cursor-pointer hover:bg-overlay-8 transition-colors"
-            >
-              <CloseCircle size={18} color="var(--fg-muted)" />
-            </button>
+            {/* Close handled by DialogContent built-in X button */}
           </div>
 
-          {/* Scan input */}
+          {/* Scan input (combobox) */}
           <div className="relative mb-sm">
             <SearchNormal1
               size={16}
@@ -260,7 +286,11 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
               ref={scanRef}
               type="text"
               value={scanValue}
-              onChange={e => setScanValue(e.target.value)}
+              onChange={e => {
+                setScanValue(e.target.value)
+                setShowScanDropdown(true)
+              }}
+              onFocus={() => setShowScanDropdown(true)}
               onKeyDown={handleScanKeyDown}
               placeholder="Bipar código ou digitar nome do submaterial..."
               autoFocus
@@ -271,6 +301,38 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
               `}
               style={{ color: 'var(--fg)' }}
             />
+
+            {/* Combobox dropdown */}
+            {showScanDropdown && filteredScanItems.length > 0 && (
+              <div
+                ref={dropdownRef}
+                className="absolute left-0 right-0 top-full mt-[4px] z-50 max-h-[200px] overflow-y-auto rounded-lg border border-border bg-card shadow-lg"
+              >
+                {filteredScanItems.map(item => {
+                  const status = getStatus(item)
+                  const config = statusConfig[status]
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => checkItemById(item.id)}
+                      className="w-full flex items-center gap-sm px-sm py-[8px] text-left hover:bg-elevated transition-colors cursor-pointer border-none bg-transparent"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <span className="text-xs font-medium text-foreground truncate block">{item.name}</span>
+                        <span className="text-xxs text-fg-dim">{item.code || '\u2014'}</span>
+                      </div>
+                      <span
+                        className="shrink-0 px-[6px] py-[1px] rounded-pill text-xxs font-bold"
+                        style={{ backgroundColor: config.bg, color: config.text }}
+                      >
+                        {config.label}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </div>
 
           {/* Progress bar */}
@@ -315,7 +377,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
           </div>
 
           {/* Right: last checked badge */}
-          {lastChecked && (
+          {lastCheckedItem && (
             <div
               className="shrink-0 flex items-center gap-xs px-sm py-[3px] rounded-sm text-xxs"
               style={{
@@ -326,7 +388,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
             >
               <span className="font-medium">Último conferido</span>
               <span className="font-bold truncate max-w-[120px]">
-                {lastChecked.name} ({lastChecked.checkedAmount}/{lastChecked.amount})
+                {lastCheckedItem.name} ({lastCheckedItem.checkedAmount}/{lastCheckedItem.amount})
               </span>
               <TickCircle size={12} color="var(--primary)" variant="Bold" />
             </div>

@@ -1,9 +1,8 @@
 // packages
-import { useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { TickCircle } from 'iconsax-react'
 
 // components
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -34,6 +33,101 @@ type BadgeField = {
   filled: boolean
 }
 
+type ComboboxOption = {
+  value: string
+  label: string
+}
+
+type ComboboxProps = {
+  options: ComboboxOption[]
+  value: string
+  onChange: (value: string) => void
+  placeholder?: string
+  disabled?: boolean
+  onCreate?: () => void
+  createLabel?: string
+}
+
+function Combobox({ options, value, onChange, placeholder = 'Buscar...', disabled, onCreate, createLabel }: ComboboxProps) {
+  const [open, setOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const selectedLabel = useMemo(() => options.find(o => o.value === value)?.label || '', [options, value])
+
+  const filtered = useMemo(() => {
+    if (!search) return options
+    const lower = search.toLowerCase()
+    return options.filter(o => o.label.toLowerCase().includes(lower))
+  }, [options, search])
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const handleFocus = useCallback(() => {
+    if (!disabled) {
+      setOpen(true)
+      setSearch('')
+    }
+  }, [disabled])
+
+  const handleSelect = useCallback((val: string) => {
+    onChange(val)
+    setOpen(false)
+    setSearch('')
+  }, [onChange])
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <Input
+        value={open ? search : selectedLabel}
+        onChange={e => setSearch(e.target.value)}
+        onFocus={handleFocus}
+        placeholder={placeholder}
+        disabled={disabled}
+        className={cn('text-body', disabled && 'opacity-50 cursor-not-allowed')}
+        style={{ height: 38, borderColor: 'var(--input-border)', backgroundColor: 'var(--input)' }}
+      />
+      {open && (
+        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-card border border-border rounded-sm shadow-lg max-h-[200px] overflow-y-auto">
+          {onCreate && (
+            <button
+              type="button"
+              onClick={() => { onCreate(); setOpen(false) }}
+              className="w-full text-left px-sm py-xs text-primary font-medium border-b border-border cursor-pointer hover:bg-muted"
+            >
+              + {createLabel || 'Criar novo'}
+            </button>
+          )}
+          {filtered.length === 0 && (
+            <div className="px-sm py-xs text-muted-foreground text-caption">Nenhum resultado</div>
+          )}
+          {filtered.map(opt => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => handleSelect(opt.value)}
+              className={cn(
+                'w-full text-left px-sm py-xs hover:bg-muted cursor-pointer text-body',
+                opt.value === value && 'bg-muted font-medium'
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: EntradaFormProps) {
   // -- Filtered options
   const departmentOptions = useMemo(
@@ -61,15 +155,21 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
     []
   )
 
-  // -- Progress badges
-  const badges: BadgeField[] = useMemo(() => {
+  // -- Progress badges (separated into required and optional)
+  const requiredBadges: BadgeField[] = useMemo(() => {
     const sectorLabel = formData.type === entry_type.EXTERNA ? 'CME' : 'Setor'
     const sectorFilled = formData.type === entry_type.EXTERNA ? !!formData.sourceCmeId : !!formData.departmentId
-    const procedureFilled = !!formData.procedureDate && !!formData.procedureTime
 
     return [
       { key: 'type', label: 'Tipo', filled: !!formData.type },
-      { key: 'sector', label: sectorLabel, filled: sectorFilled },
+      { key: 'sector', label: sectorLabel, filled: sectorFilled }
+    ]
+  }, [formData])
+
+  const optionalBadges: BadgeField[] = useMemo(() => {
+    const procedureFilled = !!formData.procedureDate && !!formData.procedureTime
+
+    return [
       { key: 'doctor', label: 'Médico', filled: !!formData.doctorId },
       { key: 'patient', label: 'Paciente', filled: !!formData.patientId },
       { key: 'procedure', label: 'Procedimento', filled: procedureFilled },
@@ -114,21 +214,21 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
     onChange({ ownerId: value })
   }, [onChange])
 
-  const handleOwnerTypeChange = useCallback((value: string) => {
-    onChange({ ownerType: value })
-  }, [onChange])
-
-  // -- Field style helpers
-  const isRequiredFilled = useCallback((value: string) => !!value, [])
-
-  const getSelectTriggerStyle = useCallback((value: string, required: boolean) => {
-    const filled = required && !!value
-    return {
-      height: 38,
-      borderColor: filled ? '#22c55e' : 'var(--input-border)',
-      backgroundColor: filled ? 'rgba(34, 197, 94, 0.05)' : 'var(--input)'
-    }
-  }, [])
+  // -- Badge renderer
+  const renderBadge = useCallback((badge: BadgeField) => (
+    <span
+      key={badge.key}
+      className={cn(
+        'inline-flex items-center gap-[4px] rounded-pill px-[8px] py-[2px] text-xxs font-medium',
+        badge.filled
+          ? 'bg-[rgba(34,197,94,0.1)] text-[#16a34a]'
+          : 'bg-muted text-muted-foreground'
+      )}
+    >
+      {badge.filled ? <TickCircle size={12} color="currentColor" variant="Bold" /> : <span className="text-[10px]">&#9675;</span>}
+      {badge.label}
+    </span>
+  ), [])
 
   return (
     <div className="flex flex-col gap-lg p-lg">
@@ -138,138 +238,103 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
         <p className="text-caption text-muted-foreground mt-[2px]">Preencha para liberar a conferência</p>
       </div>
 
-      {/* Progress badges */}
-      <div className="flex flex-wrap gap-[6px]">
-        {badges.map(badge => (
-          <span
-            key={badge.key}
-            className={cn(
-              'inline-flex items-center gap-[4px] rounded-pill px-[8px] py-[2px] text-xxs font-medium',
-              badge.filled
-                ? 'bg-[rgba(34,197,94,0.1)] text-[#16a34a]'
-                : 'bg-muted text-muted-foreground'
-            )}
-          >
-            {badge.filled ? <TickCircle size={12} color="currentColor" variant="Bold" /> : <span className="text-[10px]">&#9675;</span>}
-            {badge.label}
-          </span>
-        ))}
+      {/* Progress badges — separated required / optional */}
+      <div className="flex flex-col gap-[6px]">
+        <div className="flex flex-wrap gap-[6px]">
+          <span className="text-xxs text-fg-dim font-medium uppercase mr-[2px]">Obrigatório:</span>
+          {requiredBadges.map(renderBadge)}
+        </div>
+        <div className="flex flex-wrap gap-[6px]">
+          <span className="text-xxs text-fg-dim font-medium uppercase mr-[2px]">Opcional:</span>
+          {optionalBadges.map(renderBadge)}
+        </div>
       </div>
 
       {/* Form fields */}
       <div className="flex flex-col gap-md">
-        {/* Tipo */}
+        {/* Tipo — radio buttons */}
         <div className="flex flex-col gap-[6px]">
           <Label className="text-caption text-foreground font-medium">Tipo <span className="text-destructive">*</span></Label>
-          <Select value={formData.type} onValueChange={handleTypeChange} disabled={materialsAdded}>
-            <SelectTrigger
-              className={cn('w-full text-body', materialsAdded && 'opacity-50 cursor-not-allowed')}
-              style={getSelectTriggerStyle(formData.type, true)}
-            >
-              <SelectValue placeholder="Selecione..." />
-              {isRequiredFilled(formData.type) && (
-                <TickCircle size={16} color="#22c55e" variant="Bold" className="ml-auto shrink-0" />
+          <div className="flex gap-sm">
+            <button
+              type="button"
+              onClick={() => handleTypeChange('INTERNA')}
+              disabled={materialsAdded}
+              className={cn(
+                'flex-1 flex items-center justify-center gap-xs rounded-sm py-[10px] text-body font-medium border transition-colors cursor-pointer',
+                formData.type === 'INTERNA' ? 'bg-primary-8 text-primary border-primary' : 'bg-card text-foreground border-border',
+                materialsAdded && 'opacity-50 cursor-not-allowed'
               )}
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={entry_type.INTERNA}>Interna</SelectItem>
-              <SelectItem value={entry_type.EXTERNA}>Externa</SelectItem>
-            </SelectContent>
-          </Select>
+            >
+              Interna
+            </button>
+            <button
+              type="button"
+              onClick={() => handleTypeChange('EXTERNA')}
+              disabled={materialsAdded}
+              className={cn(
+                'flex-1 flex items-center justify-center gap-xs rounded-sm py-[10px] text-body font-medium border transition-colors cursor-pointer',
+                formData.type === 'EXTERNA' ? 'bg-primary-8 text-primary border-primary' : 'bg-card text-foreground border-border',
+                materialsAdded && 'opacity-50 cursor-not-allowed'
+              )}
+            >
+              Externa
+            </button>
+          </div>
         </div>
 
-        {/* Setor (INTERNA only) */}
+        {/* Setor (INTERNA only) — combobox without create */}
         {formData.type === entry_type.INTERNA && (
           <div className="flex flex-col gap-[6px]">
             <Label className="text-caption text-foreground font-medium">Setor <span className="text-destructive">*</span></Label>
-            <Select value={formData.departmentId} onValueChange={handleDepartmentChange} disabled={materialsAdded}>
-              <SelectTrigger
-                className={cn('w-full text-body', materialsAdded && 'opacity-50 cursor-not-allowed')}
-                style={getSelectTriggerStyle(formData.departmentId, true)}
-              >
-                <SelectValue placeholder="Selecione..." />
-                {isRequiredFilled(formData.departmentId) && (
-                  <TickCircle size={16} color="#22c55e" variant="Bold" className="ml-auto shrink-0" />
-                )}
-              </SelectTrigger>
-              <SelectContent>
-                {departmentOptions.map(opt => (
-                  <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Combobox
+              options={departmentOptions}
+              value={formData.departmentId}
+              onChange={handleDepartmentChange}
+              placeholder="Buscar setor..."
+              disabled={materialsAdded}
+            />
           </div>
         )}
 
-        {/* CME Origem (EXTERNA only) */}
+        {/* CME Origem (EXTERNA only) — combobox without create */}
         {formData.type === entry_type.EXTERNA && (
           <div className="flex flex-col gap-[6px]">
             <Label className="text-caption text-foreground font-medium">CME Origem <span className="text-destructive">*</span></Label>
-            <Select value={formData.sourceCmeId} onValueChange={handleCmeChange} disabled={materialsAdded}>
-              <SelectTrigger
-                className={cn('w-full text-body', materialsAdded && 'opacity-50 cursor-not-allowed')}
-                style={getSelectTriggerStyle(formData.sourceCmeId, true)}
-              >
-                <SelectValue placeholder="Selecione..." />
-                {isRequiredFilled(formData.sourceCmeId) && (
-                  <TickCircle size={16} color="#22c55e" variant="Bold" className="ml-auto shrink-0" />
-                )}
-              </SelectTrigger>
-              <SelectContent>
-                {cmeOptions.map(opt => (
-                  <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Combobox
+              options={cmeOptions}
+              value={formData.sourceCmeId}
+              onChange={handleCmeChange}
+              placeholder="Buscar CME..."
+              disabled={materialsAdded}
+            />
           </div>
         )}
 
-        {/* Medico */}
+        {/* Médico — combobox with create */}
         <div className="flex flex-col gap-[6px]">
-          <div className="flex items-center justify-between">
-            <Label className="text-caption text-foreground font-medium">Médico</Label>
-            <button
-              type="button"
-              onClick={() => onCreateInline('doctor')}
-              className="text-caption text-primary font-medium hover:underline cursor-pointer"
-            >
-              + Criar
-            </button>
-          </div>
-          <Select value={formData.doctorId} onValueChange={handleDoctorChange}>
-            <SelectTrigger className="w-full text-body" style={{ height: 38, borderColor: 'var(--input-border)', backgroundColor: 'var(--input)' }}>
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent>
-              {doctorOptions.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Label className="text-caption text-foreground font-medium">Médico</Label>
+          <Combobox
+            options={doctorOptions}
+            value={formData.doctorId}
+            onChange={handleDoctorChange}
+            placeholder="Buscar médico..."
+            onCreate={() => onCreateInline('doctor')}
+            createLabel="Criar novo médico"
+          />
         </div>
 
-        {/* Paciente */}
+        {/* Paciente — combobox with create */}
         <div className="flex flex-col gap-[6px]">
-          <div className="flex items-center justify-between">
-            <Label className="text-caption text-foreground font-medium">Paciente</Label>
-            <button
-              type="button"
-              onClick={() => onCreateInline('patient')}
-              className="text-caption text-primary font-medium hover:underline cursor-pointer"
-            >
-              + Criar
-            </button>
-          </div>
-          <Select value={formData.patientId} onValueChange={handlePatientChange}>
-            <SelectTrigger className="w-full text-body" style={{ height: 38, borderColor: 'var(--input-border)', backgroundColor: 'var(--input)' }}>
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent>
-              {patientOptions.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Label className="text-caption text-foreground font-medium">Paciente</Label>
+          <Combobox
+            options={patientOptions}
+            value={formData.patientId}
+            onChange={handlePatientChange}
+            placeholder="Buscar paciente..."
+            onCreate={() => onCreateInline('patient')}
+            createLabel="Criar novo paciente"
+          />
         </div>
 
         {/* Data Procedimento + Hora Procedimento */}
@@ -296,45 +361,17 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
           </div>
         </div>
 
-        {/* Terceiro */}
+        {/* Terceiro — combobox with create */}
         <div className="flex flex-col gap-[6px]">
-          <div className="flex items-center justify-between">
-            <Label className="text-caption text-foreground font-medium">Terceiro</Label>
-            <button
-              type="button"
-              onClick={() => onCreateInline('owner')}
-              className="text-caption text-primary font-medium hover:underline cursor-pointer"
-            >
-              + Criar
-            </button>
-          </div>
-          <Select value={formData.ownerId} onValueChange={handleOwnerChange}>
-            <SelectTrigger className="w-full text-body" style={{ height: 38, borderColor: 'var(--input-border)', backgroundColor: 'var(--input)' }}>
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent>
-              {ownerOptions.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Tipo Terceiro */}
-        <div className={cn('flex flex-col gap-[6px]', !formData.ownerId && 'opacity-50')}>
-          <Label className="text-caption text-foreground font-medium">Tipo Terceiro</Label>
-          <Select value={formData.ownerType} onValueChange={handleOwnerTypeChange} disabled={!formData.ownerId}>
-            <SelectTrigger
-              className={cn('w-full text-body', !formData.ownerId && 'cursor-not-allowed')}
-              style={{ height: 38, borderColor: 'var(--input-border)', backgroundColor: 'var(--input)' }}
-            >
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="MEDICO">Médico</SelectItem>
-              <SelectItem value="EMPRESA">Empresa</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label className="text-caption text-foreground font-medium">Terceiro</Label>
+          <Combobox
+            options={ownerOptions}
+            value={formData.ownerId}
+            onChange={handleOwnerChange}
+            placeholder="Buscar terceiro..."
+            onCreate={() => onCreateInline('owner')}
+            createLabel="Criar novo terceiro"
+          />
         </div>
       </div>
     </div>

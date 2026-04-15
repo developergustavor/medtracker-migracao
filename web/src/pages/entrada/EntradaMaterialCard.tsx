@@ -1,6 +1,6 @@
 // packages
 import { useState } from 'react'
-import { TickSquare, Camera, Edit2, Trash, Add, Minus, TickCircle } from 'iconsax-react'
+import { TickSquare, Camera, Edit2, Trash, Add, Minus, TickCircle, ArrowDown2 } from 'iconsax-react'
 
 // mock
 import { mockSubmaterials } from '@/mock/data'
@@ -34,7 +34,7 @@ function EntradaMaterialCard({
   const isKit = material.materialType === 'KIT'
   const isRegistered = material.recorded
 
-  // -- Registered card
+  // -- Registered card (read-only, no changes)
   if (isRegistered) {
     const timeStr = material.recordedAt
       ? new Date(material.recordedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
@@ -72,14 +72,15 @@ function EntradaMaterialCard({
     return (
       <div className="rounded-sm border border-border bg-card p-sm">
         {/* Main row */}
-        <div className="flex items-center gap-sm">
+        <div className="flex items-start gap-sm">
           {/* Thumbnail */}
           <div className="w-[44px] h-[44px] shrink-0 rounded-sm bg-muted flex items-center justify-center">
             <span className="text-xxs text-fg-dim">Foto</span>
           </div>
 
-          {/* Name + info */}
+          {/* Name + info + action buttons + progress */}
           <div className="flex-1 min-w-0">
+            {/* Name line */}
             <div className="flex items-center gap-xs">
               <span className="text-body font-semibold text-foreground truncate">{material.materialName}</span>
               <span className="shrink-0 bg-primary text-on-solid text-xxs px-sm rounded">KIT</span>
@@ -89,95 +90,93 @@ function EntradaMaterialCard({
               {material.materialCode && material.packageName && <> &middot; </>}
               {material.packageName && <>{material.packageName}</>}
             </div>
-          </div>
 
-          {/* Progress bar section */}
-          <div className="shrink-0 flex items-center gap-xs">
-            <div className="w-[60px] h-[6px] rounded-pill bg-muted overflow-hidden">
-              <div
-                className="h-full rounded-pill bg-primary transition-all"
-                style={{ width: material.totalCount > 0 ? `${(material.checkedCount / material.totalCount) * 100}%` : '0%' }}
-              />
+            {/* Action buttons (pill style) */}
+            <div className="flex flex-wrap gap-[6px] mt-sm">
+              <button
+                type="button"
+                onClick={onConference}
+                className="inline-flex items-center gap-[4px] px-sm py-[4px] rounded-sm text-xxs font-medium border border-border bg-card hover:bg-elevated transition-colors cursor-pointer"
+              >
+                <TickSquare size={12} color="var(--primary)" />
+                <span>Conferir</span>
+              </button>
+              <button
+                type="button"
+                onClick={onImages}
+                className="inline-flex items-center gap-[4px] px-sm py-[4px] rounded-sm text-xxs font-medium border border-border bg-card hover:bg-elevated transition-colors cursor-pointer"
+              >
+                <Camera size={12} color="var(--primary)" />
+                <span>Imagens</span>
+                {material.images.length > 0 && (
+                  <span className="ml-[2px] min-w-[14px] h-[14px] rounded-full bg-primary text-on-solid text-[9px] font-bold flex items-center justify-center px-[2px]">
+                    {material.images.length}
+                  </span>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={onRegister}
+                className="inline-flex items-center gap-[4px] px-sm py-[4px] rounded-sm text-xxs font-medium border border-border bg-card hover:bg-elevated transition-colors cursor-pointer"
+              >
+                <Edit2 size={12} color="var(--primary)" />
+                <span>Registrar</span>
+              </button>
+              <button
+                type="button"
+                onClick={onRemove}
+                className="inline-flex items-center gap-[4px] px-sm py-[4px] rounded-sm text-xxs font-medium border border-destructive/30 bg-destructive/5 text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
+              >
+                <Trash size={12} color="currentColor" />
+                <span>Remover</span>
+              </button>
             </div>
-            <span className="text-primary font-bold text-xs whitespace-nowrap">
-              {material.checkedCount}/{material.totalCount}
-            </span>
-          </div>
 
-          {/* Action buttons */}
-          <div className="shrink-0 flex gap-[4px]">
-            <button
-              type="button"
-              onClick={onConference}
-              className="w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
-              title="Conferir"
-            >
-              <TickSquare size={14} color="var(--fg-muted)" />
-            </button>
-            <button
-              type="button"
-              onClick={onImages}
-              className="relative w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
-              title="Imagens"
-            >
-              <Camera size={14} color="var(--fg-muted)" />
-              {material.images.length > 0 && (
-                <span className="absolute -top-[5px] -right-[5px] min-w-[14px] h-[14px] rounded-full bg-primary text-on-solid text-[9px] font-bold flex items-center justify-center px-[2px]">
-                  {material.images.length}
-                </span>
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={onRegister}
-              className="w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
-              title="Registrar"
-            >
-              <Edit2 size={14} color="var(--fg-muted)" />
-            </button>
-            <button
-              type="button"
-              onClick={onRemove}
-              className="w-[28px] h-[28px] rounded-xs border border-destructive/40 flex items-center justify-center bg-transparent cursor-pointer hover-destructive-subtle transition-colors"
-              title="Remover"
-            >
-              <Trash size={14} color="var(--destructive)" />
-            </button>
-          </div>
-        </div>
-
-        {/* Accordion: submaterials */}
-        <div className="mt-sm">
-          <button
-            type="button"
-            onClick={() => setExpanded(prev => !prev)}
-            className="text-xxs text-primary font-semibold cursor-pointer bg-transparent border-none p-0 hover:underline"
-          >
-            {expanded ? 'Ocultar' : 'Ver'} submateriais ({subs.length})
-          </button>
-
-          {expanded && (
-            <div className="mt-xs max-h-[120px] overflow-y-auto">
-              <div className="grid grid-cols-2 gap-x-sm gap-y-[4px]">
-                {subs.map(sub => {
-                  // For demo, treat as unchecked (yellow circle)
-                  const checked = false
-                  return (
-                    <div key={sub.id} className="flex items-center gap-xs min-w-0">
-                      {checked ? (
-                        <TickCircle size={12} color="#16a34a" variant="Bold" className="shrink-0" />
-                      ) : (
-                        <div className="w-[12px] h-[12px] shrink-0 rounded-full border-2 border-yellow-400" />
-                      )}
-                      <span className="text-xxs text-foreground truncate">{sub.name}</span>
-                      <span className="text-xxs text-fg-dim shrink-0">({sub.amount})</span>
-                    </div>
-                  )
-                })}
+            {/* Progress bar */}
+            <div className="flex items-center gap-xs mt-sm">
+              <div className="flex-1 h-[6px] rounded-pill bg-muted overflow-hidden">
+                <div
+                  className="h-full rounded-pill bg-primary transition-all"
+                  style={{ width: material.totalCount > 0 ? `${(material.checkedCount / material.totalCount) * 100}%` : '0%' }}
+                />
               </div>
+              <span className="text-primary font-bold text-xs whitespace-nowrap">
+                {material.checkedCount}/{material.totalCount}
+              </span>
             </div>
-          )}
+          </div>
         </div>
+
+        {/* Separator toggle for submaterials */}
+        <div className="mt-sm flex items-center gap-sm cursor-pointer" onClick={() => setExpanded(prev => !prev)}>
+          <div className="flex-1 h-px bg-border" />
+          <span className="flex items-center gap-[4px] text-xxs text-fg-dim font-medium whitespace-nowrap">
+            <ArrowDown2 size={12} color="currentColor" style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }} />
+            {expanded ? 'Ocultar' : 'Ver'} submateriais ({subs.length})
+          </span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+
+        {expanded && (
+          <div className="mt-xs max-h-[120px] overflow-y-auto">
+            <div className="grid grid-cols-2 gap-x-sm gap-y-[4px]">
+              {subs.map(sub => {
+                const checked = false
+                return (
+                  <div key={sub.id} className="flex items-center gap-xs min-w-0">
+                    {checked ? (
+                      <TickCircle size={12} color="#16a34a" variant="Bold" className="shrink-0" />
+                    ) : (
+                      <div className="w-[12px] h-[12px] shrink-0 rounded-full border-2 border-yellow-400" />
+                    )}
+                    <span className="text-xxs text-foreground truncate">{sub.name}</span>
+                    <span className="text-xxs text-fg-dim shrink-0">({sub.amount})</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -185,14 +184,15 @@ function EntradaMaterialCard({
   // -- AVULSO / QUANTIDADE card
   return (
     <div className="rounded-sm border border-border bg-card p-sm">
-      <div className="flex items-center gap-sm">
+      <div className="flex items-start gap-sm">
         {/* Thumbnail */}
         <div className="w-[44px] h-[44px] shrink-0 rounded-sm bg-muted flex items-center justify-center">
           <span className="text-xxs text-fg-dim">Foto</span>
         </div>
 
-        {/* Name + info */}
+        {/* Name + info + action buttons + quantity */}
         <div className="flex-1 min-w-0">
+          {/* Name line */}
           <div className="flex items-center gap-xs">
             <span className="text-body font-semibold text-foreground truncate">{material.materialName}</span>
             <span className="shrink-0 bg-muted text-fg-dim text-xxs px-sm rounded">{material.materialType}</span>
@@ -202,60 +202,60 @@ function EntradaMaterialCard({
             {material.materialCode && material.packageName && <> &middot; </>}
             {material.packageName && <>{material.packageName}</>}
           </div>
-        </div>
 
-        {/* Quantity control */}
-        <div className="shrink-0 flex items-center gap-[2px]">
-          <button
-            type="button"
-            onClick={() => onAmountChange(Math.max(1, material.amount - 1))}
-            className="w-[24px] h-[24px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
-          >
-            <Minus size={12} color="var(--fg-muted)" />
-          </button>
-          <div className="w-[36px] h-[24px] flex items-center justify-center text-xs font-semibold text-foreground">
-            {material.amount}
+          {/* Action buttons (pill style) */}
+          <div className="flex flex-wrap gap-[6px] mt-sm">
+            <button
+              type="button"
+              onClick={onImages}
+              className="inline-flex items-center gap-[4px] px-sm py-[4px] rounded-sm text-xxs font-medium border border-border bg-card hover:bg-elevated transition-colors cursor-pointer"
+            >
+              <Camera size={12} color="var(--primary)" />
+              <span>Imagens</span>
+              {material.images.length > 0 && (
+                <span className="ml-[2px] min-w-[14px] h-[14px] rounded-full bg-primary text-on-solid text-[9px] font-bold flex items-center justify-center px-[2px]">
+                  {material.images.length}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={onRegister}
+              className="inline-flex items-center gap-[4px] px-sm py-[4px] rounded-sm text-xxs font-medium border border-border bg-card hover:bg-elevated transition-colors cursor-pointer"
+            >
+              <Edit2 size={12} color="var(--primary)" />
+              <span>Registrar</span>
+            </button>
+            <button
+              type="button"
+              onClick={onRemove}
+              className="inline-flex items-center gap-[4px] px-sm py-[4px] rounded-sm text-xxs font-medium border border-destructive/30 bg-destructive/5 text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
+            >
+              <Trash size={12} color="currentColor" />
+              <span>Remover</span>
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => onAmountChange(material.amount + 1)}
-            className="w-[24px] h-[24px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
-          >
-            <Add size={12} color="var(--fg-muted)" />
-          </button>
-        </div>
 
-        {/* Action buttons (no Conferir) */}
-        <div className="shrink-0 flex gap-[4px]">
-          <button
-            type="button"
-            onClick={onImages}
-            className="relative w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
-            title="Imagens"
-          >
-            <Camera size={14} color="var(--fg-muted)" />
-            {material.images.length > 0 && (
-              <span className="absolute -top-[5px] -right-[5px] min-w-[14px] h-[14px] rounded-full bg-primary text-on-solid text-[9px] font-bold flex items-center justify-center px-[2px]">
-                {material.images.length}
-              </span>
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={onRegister}
-            className="w-[28px] h-[28px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
-            title="Registrar"
-          >
-            <Edit2 size={14} color="var(--fg-muted)" />
-          </button>
-          <button
-            type="button"
-            onClick={onRemove}
-            className="w-[28px] h-[28px] rounded-xs border border-destructive/40 flex items-center justify-center bg-transparent cursor-pointer hover-destructive-subtle transition-colors"
-            title="Remover"
-          >
-            <Trash size={14} color="var(--destructive)" />
-          </button>
+          {/* Quantity control */}
+          <div className="flex items-center gap-[2px] mt-sm">
+            <button
+              type="button"
+              onClick={() => onAmountChange(Math.max(1, material.amount - 1))}
+              className="w-[24px] h-[24px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
+            >
+              <Minus size={12} color="var(--fg-muted)" />
+            </button>
+            <div className="w-[36px] h-[24px] flex items-center justify-center text-xs font-semibold text-foreground">
+              {material.amount}
+            </div>
+            <button
+              type="button"
+              onClick={() => onAmountChange(material.amount + 1)}
+              className="w-[24px] h-[24px] rounded-xs border border-border flex items-center justify-center bg-transparent cursor-pointer hover-elevated transition-colors"
+            >
+              <Add size={12} color="var(--fg-muted)" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
