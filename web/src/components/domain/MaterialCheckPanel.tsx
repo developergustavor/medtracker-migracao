@@ -72,11 +72,6 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
   const scanRef = useRef<HTMLInputElement>(null)
   const tooltipTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Sync items from parent when they change reference
-  useEffect(() => {
-    setLocalItems(items)
-  }, [items])
-
   // Clean up tooltip timer
   useEffect(() => {
     return () => {

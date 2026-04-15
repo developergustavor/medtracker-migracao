@@ -70,6 +70,7 @@ function Entrada() {
 
   // -- Conference state
   const [conferenceTarget, setConferenceTarget] = useState<number | null>(null)
+  const [conferenceItems, setConferenceItems] = useState<CheckItem[]>([])
 
   const handleFormChange = useCallback((partial: Partial<EntryFormData>) => {
     setFormData(prev => {
@@ -158,16 +159,24 @@ function Entrada() {
   // -- Conference handlers
   const handleConferenceOpen = useCallback((index: number) => {
     setConferenceTarget(index)
-  }, [])
+    const material = materials[index]
+    if (!material) return
+    const subs = mockSubmaterials.filter(s => s.materialId === material.materialId)
+    setConferenceItems(subs.map(s => ({
+      id: s.id, code: s.code, name: s.name, amount: s.amount, checkedAmount: 0, images: s.images || []
+    })))
+  }, [materials])
 
   const handleConferenceUpdate = useCallback((updatedItems: CheckItem[]) => {
     if (conferenceTarget === null) return
     const totalChecked = updatedItems.reduce((sum, item) => sum + item.checkedAmount, 0)
+    setConferenceItems(updatedItems)
     setMaterials(prev => prev.map((m, i) => i === conferenceTarget ? { ...m, checkedCount: totalChecked } : m))
   }, [conferenceTarget])
 
   const handleConferenceClose = useCallback(() => {
     setConferenceTarget(null)
+    setConferenceItems([])
   }, [])
 
   // -- Images handlers
@@ -207,20 +216,6 @@ function Entrada() {
 
   const imagesTargetMaterial = imagesTarget !== null ? materials[imagesTarget] : null
 
-  const conferenceItems: CheckItem[] = useMemo(() => {
-    if (conferenceTarget === null) return []
-    const material = materials[conferenceTarget]
-    if (!material) return []
-    const subs = mockSubmaterials.filter(s => s.materialId === material.materialId)
-    return subs.map(s => ({
-      id: s.id,
-      code: s.code,
-      name: s.name,
-      amount: s.amount,
-      checkedAmount: 0,
-      images: s.images || []
-    }))
-  }, [conferenceTarget, materials])
 
   // Listen for contextual-action events
   useEffect(() => {

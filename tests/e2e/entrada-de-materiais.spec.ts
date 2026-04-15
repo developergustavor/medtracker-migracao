@@ -326,11 +326,7 @@ test.describe('Entrada de Materiais', () => {
       await expect(page.getByText(/submateriais faltando/)).toBeVisible()
     })
 
-    // TODO: component bug — conferenceItems useMemo in Entrada.tsx always creates items with
-    // checkedAmount: 0. When onUpdate triggers parent re-render, the useEffect in MaterialCheckPanel
-    // resets localItems, undoing the scan result. Fix: track checked state in parent or remove the
-    // useEffect sync in MaterialCheckPanel.
-    test.skip('deve conferir submaterial via scan de código', async ({ page }) => {
+    test('deve conferir submaterial via scan de código', async ({ page }) => {
       await page.locator('button[title="Conferir"]').click()
 
       const dialog = page.getByRole('dialog')
