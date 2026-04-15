@@ -17,9 +17,43 @@ import { loginByCode } from './helpers/auth'
 //  10. Relatório placeholder
 //  11. Ações contextuais (Nova Entrada, Gerar Relatório)
 //  12. Layout mobile
+//  13. Auto-abrir conferência para KIT (módulo COMPLETO)
 //
 // Para rodar: npx playwright test tests/e2e/entrada-de-materiais.spec.ts
 // ════════════════════════════════════════════════════════════════════
+
+// -- Helpers for new UI patterns
+
+/** Select Tipo via radio button */
+async function selectTipo(page: import('@playwright/test').Page, tipo: 'Interna' | 'Externa') {
+  await page.getByRole('button', { name: tipo, exact: true }).click()
+}
+
+/** Select Setor via combobox (type to search, click option) */
+async function selectSetor(page: import('@playwright/test').Page, name: string) {
+  const setorInput = page.getByPlaceholder('Buscar setor...')
+  await setorInput.click()
+  await setorInput.fill(name.substring(0, 6))
+  await page.getByText(name, { exact: true }).click()
+}
+
+/** Fill minimum form (Tipo Interna + Setor Centro Cirúrgico) */
+async function fillMinForm(page: import('@playwright/test').Page) {
+  await selectTipo(page, 'Interna')
+  await selectSetor(page, 'Centro Cirúrgico')
+}
+
+/** Get the scan input */
+function scanInput(page: import('@playwright/test').Page) {
+  return page.getByPlaceholder(/bipar código ou buscar material/i)
+}
+
+/** Add material by code via scan */
+async function addMaterial(page: import('@playwright/test').Page, code: string) {
+  const input = scanInput(page)
+  await input.fill(code)
+  await input.press('Enter')
+}
 
 test.describe('Entrada de Materiais', () => {
   test.beforeEach(async ({ page }) => {
@@ -57,40 +91,37 @@ test.describe('Entrada de Materiais', () => {
       await page.goto('/entrada-de-materiais')
     })
 
-    test('deve exibir badges de progresso para todos os campos', async ({ page }) => {
+    test('deve exibir badges de progresso separados em Obrigatório e Opcional', async ({ page }) => {
+      await expect(page.getByText('Obrigatório:')).toBeVisible()
+      await expect(page.getByText('Opcional:')).toBeVisible()
       await expect(page.getByText('Tipo').first()).toBeVisible()
-      await expect(page.getByText('Setor').first()).toBeVisible()
       await expect(page.getByText('Médico').first()).toBeVisible()
       await expect(page.getByText('Paciente').first()).toBeVisible()
-      await expect(page.getByText('Procedimento').first()).toBeVisible()
       await expect(page.getByText('Terceiro').first()).toBeVisible()
     })
 
-    test('deve mostrar campo Setor ao selecionar tipo Interna', async ({ page }) => {
-      // Selecionar tipo
-      await page.locator('[class*="entrada"] select, [role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
+    test('deve exibir Tipo como radio buttons (Interna / Externa)', async ({ page }) => {
+      await expect(page.getByRole('button', { name: 'Interna', exact: true })).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Externa', exact: true })).toBeVisible()
+    })
 
-      // Setor deve estar visível
-      await expect(page.getByText('Setor *')).toBeVisible()
+    test('deve mostrar campo Setor ao selecionar tipo Interna', async ({ page }) => {
+      await selectTipo(page, 'Interna')
+      await expect(page.getByPlaceholder('Buscar setor...')).toBeVisible()
     })
 
     test('deve mostrar campo CME Origem ao selecionar tipo Externa', async ({ page }) => {
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Externa' }).click()
-
-      await expect(page.getByText('CME Origem *')).toBeVisible()
+      await selectTipo(page, 'Externa')
+      await expect(page.getByPlaceholder('Buscar CME...')).toBeVisible()
     })
 
-    test('deve habilitar Tipo Terceiro apenas quando Terceiro está selecionado', async ({ page }) => {
-      // Tipo Terceiro deve estar desabilitado inicialmente
-      const tipoTerceiroCombobox = page.getByRole('combobox').last()
-      await expect(tipoTerceiroCombobox).toBeDisabled()
-    })
+    test('deve exibir botão "+ Criar" dentro do dropdown de Médico', async ({ page }) => {
+      // Open the Médico combobox dropdown
+      const medicoInput = page.getByPlaceholder('Buscar médico...')
+      await medicoInput.click()
 
-    test('deve exibir botão "+ Criar" nos campos Médico, Paciente e Terceiro', async ({ page }) => {
-      const criarButtons = page.getByRole('button', { name: '+ Criar' })
-      await expect(criarButtons).toHaveCount(3)
+      // "+ Criar novo médico" should be visible inside the dropdown
+      await expect(page.getByText('+ Criar novo médico')).toBeVisible()
     })
 
     test('deve exibir campos de Data e Hora do Procedimento', async ({ page }) => {
@@ -110,21 +141,14 @@ test.describe('Entrada de Materiais', () => {
 
     test('deve bloquear área de materiais sem tipo e setor preenchidos', async ({ page }) => {
       await expect(page.getByText('Preencha os dados da entrada para adicionar materiais')).toBeVisible()
-      await expect(page.getByPlaceholder(/bipar código/i)).toBeDisabled()
+      await expect(scanInput(page)).toBeDisabled()
     })
 
     test('deve desbloquear área após preencher tipo e setor', async ({ page }) => {
-      // Preencher tipo
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
+      await fillMinForm(page)
 
-      // Preencher setor
-      await page.locator('[role="combobox"]').nth(1).click()
-      await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
-
-      // Área deve estar desbloqueada
       await expect(page.getByText('Preencha os dados da entrada para adicionar materiais')).not.toBeVisible()
-      await expect(page.getByPlaceholder(/bipar código/i)).toBeEnabled()
+      await expect(scanInput(page)).toBeEnabled()
     })
   })
 
@@ -135,66 +159,50 @@ test.describe('Entrada de Materiais', () => {
   test.describe('Adição de materiais', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/entrada-de-materiais')
-      // Preencher form mínimo
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
-      await page.locator('[role="combobox"]').nth(1).click()
-      await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
+      await fillMinForm(page)
     })
 
     test('deve adicionar material KIT ao bipar código', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-002')
-      await scanInput.press('Enter')
+      await addMaterial(page, 'MAT-002')
 
-      await expect(page.getByText('CX VASCULAR Nº1')).toBeVisible()
+      await expect(page.getByText('CX VASCULAR Nº1').first()).toBeVisible()
       await expect(page.getByText('KIT').first()).toBeVisible()
     })
 
     test('deve adicionar material AVULSO ao bipar código', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+      await addMaterial(page, 'MAT-001')
 
       await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
     })
 
     test('deve adicionar material por busca de nome', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('capote')
-      await scanInput.press('Enter')
+      await addMaterial(page, 'capote')
 
       await expect(page.getByText('CAPOTE')).toBeVisible()
     })
 
     test('deve atualizar contagem no footer ao adicionar materiais', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+      await addMaterial(page, 'MAT-001')
       await expect(page.getByText('1 materiais · 0 registrados')).toBeVisible()
 
-      await scanInput.fill('MAT-002')
-      await scanInput.press('Enter')
+      await addMaterial(page, 'MAT-002')
       await expect(page.getByText('2 materiais · 0 registrados')).toBeVisible()
     })
 
     test('deve limpar input após adicionar material', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+      const input = scanInput(page)
+      await input.fill('MAT-001')
+      await input.press('Enter')
 
-      await expect(scanInput).toHaveValue('')
+      await expect(input).toHaveValue('')
     })
 
-    test('deve travar campos Tipo e Setor após adicionar material', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+    test('NÃO deve travar Tipo e Setor apenas ao adicionar material (somente após registrar)', async ({ page }) => {
+      await addMaterial(page, 'MAT-001')
 
-      // Tipo e Setor devem estar desabilitados
-      const tipoCombobox = page.locator('[role="combobox"]').first()
-      await expect(tipoCombobox).toBeDisabled()
+      // Tipo radio buttons should still be enabled (not disabled) — only disabled after registering
+      const internaBtn = page.getByRole('button', { name: 'Interna', exact: true })
+      await expect(internaBtn).toBeEnabled()
     })
   })
 
@@ -205,71 +213,72 @@ test.describe('Entrada de Materiais', () => {
   test.describe('Cards de material', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/entrada-de-materiais')
-      // Preencher form
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
-      await page.locator('[role="combobox"]').nth(1).click()
-      await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
+      await fillMinForm(page)
     })
 
-    test('card KIT deve exibir accordion de submateriais', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-002')
-      await scanInput.press('Enter')
+    test('card KIT deve exibir submateriais via toggle separador', async ({ page }) => {
+      await addMaterial(page, 'MAT-002')
 
-      // Deve mostrar submateriais no accordion
+      // Auto-conference opens for KIT — close it first
+      const dialog = page.getByRole('dialog')
+      await expect(dialog).toBeVisible({ timeout: 5000 })
+      await page.keyboard.press('Escape')
+      await expect(dialog).not.toBeVisible()
+
+      // Submaterials should be visible (first KIT auto-expands)
       await expect(page.getByText('Pinça Kelly Curva 16cm')).toBeVisible()
       await expect(page.getByText('Tesoura Metzenbaum 18cm')).toBeVisible()
     })
 
     test('card KIT deve exibir progress bar de conferência', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-002')
-      await scanInput.press('Enter')
+      await addMaterial(page, 'MAT-002')
 
-      // totalCount = sum of submaterial amounts for CX VASCULAR (7 items: 1+1+1+1+2+3+1 = 10)
+      // Close auto-conference
+      const dialog = page.getByRole('dialog')
+      await expect(dialog).toBeVisible({ timeout: 5000 })
+      await page.keyboard.press('Escape')
+      await expect(dialog).not.toBeVisible()
+
       await expect(page.getByText('0/10')).toBeVisible()
     })
 
-    test('card KIT deve ter botão Conferir', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-002')
-      await scanInput.press('Enter')
+    test('card KIT deve ter botão Conferir com texto', async ({ page }) => {
+      await addMaterial(page, 'MAT-002')
 
-      // Procurar botão conferir (TickSquare icon)
-      const conferirBtn = page.locator('button[title="Conferir"]')
-      await expect(conferirBtn).toBeVisible()
+      // Close auto-conference
+      const dialog = page.getByRole('dialog')
+      await expect(dialog).toBeVisible({ timeout: 5000 })
+      await page.keyboard.press('Escape')
+      await expect(dialog).not.toBeVisible()
+
+      await expect(page.getByRole('button', { name: /Conferir/ })).toBeVisible()
     })
 
     test('card AVULSO deve ter controle de quantidade', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+      await addMaterial(page, 'MAT-001')
 
-      // Quantity control uses Minus and Add iconsax SVG icons, not text −/+
-      // The quantity value (1) is displayed between the buttons
       await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
-      // Verify the quantity display shows the amount
       const materialCard = page.locator('.rounded-sm.border').filter({ hasText: 'PINÇA BACKAUS' })
       await expect(materialCard).toBeVisible()
-      // Check there are small control buttons (24x24px) with SVG icons
       const controlBtns = materialCard.locator('button').filter({ has: page.locator('svg') })
       const count = await controlBtns.count()
-      // AVULSO card has: minus, plus, images, register, remove = 5 buttons with SVGs
       expect(count).toBeGreaterThanOrEqual(2)
     })
 
-    test('deve remover material ao clicar Remover e confirmar', async ({ page }) => {
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+    test('card AVULSO deve ter botões com texto: Imagens, Registrar, Remover', async ({ page }) => {
+      await addMaterial(page, 'MAT-001')
+
+      await expect(page.getByRole('button', { name: /Imagens/ })).toBeVisible()
+      await expect(page.getByRole('button', { name: /Registrar/ })).toBeVisible()
+      await expect(page.getByRole('button', { name: /Remover/ })).toBeVisible()
+    })
+
+    test('deve remover material ao clicar Remover', async ({ page }) => {
+      await addMaterial(page, 'MAT-001')
       await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
 
-      // Clicar remover — Entrada removes directly without confirm dialog
-      const removeBtn = page.locator('button[title="Remover"]')
-      await removeBtn.click()
+      await page.getByRole('button', { name: /Remover/ }).click()
 
-      // Material removido
       await expect(page.getByText('PINÇA BACKAUS')).not.toBeVisible()
       await expect(page.getByText('0 materiais · 0 registrados')).toBeVisible()
     })
@@ -282,29 +291,26 @@ test.describe('Entrada de Materiais', () => {
   test.describe('Conferência de submateriais', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/entrada-de-materiais')
-      // Preencher form + adicionar KIT
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
-      await page.locator('[role="combobox"]').nth(1).click()
-      await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
+      await fillMinForm(page)
+      await addMaterial(page, 'MAT-002')
 
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-002')
-      await scanInput.press('Enter')
+      // Auto-conference opens for KIT (módulo COMPLETO) — wait for it, then close
+      const dialog = page.getByRole('dialog')
+      await expect(dialog).toBeVisible({ timeout: 5000 })
+      await page.keyboard.press('Escape')
+      await expect(dialog).not.toBeVisible()
     })
 
-    test('deve abrir painel de conferência ao clicar Conferir', async ({ page }) => {
-      await page.locator('button[title="Conferir"]').click()
+    test('deve abrir painel fullscreen de conferência ao clicar Conferir', async ({ page }) => {
+      await page.getByRole('button', { name: /Conferir/ }).click()
 
-      // Dialog de conferência deve abrir
-      await expect(page.getByPlaceholder(/bipar código ou digitar nome/i)).toBeVisible()
+      // Fullscreen dialog with conference scan combobox
+      await expect(page.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)).toBeVisible()
     })
 
     test('deve exibir todos os submateriais no painel', async ({ page }) => {
-      await page.locator('button[title="Conferir"]').click()
+      await page.getByRole('button', { name: /Conferir/ }).click()
 
-      // Scope to dialog and use exact match — names also appear in the
-      // highlight strip summary like "Pinça Kelly Curva 16cm, Pinça Hemostática Crile, ..."
       const dialog = page.getByRole('dialog')
       await expect(dialog.getByText('Pinça Kelly Curva 16cm', { exact: true }).first()).toBeVisible()
       await expect(dialog.getByText('Pinça Hemostática Crile', { exact: true }).first()).toBeVisible()
@@ -313,7 +319,7 @@ test.describe('Entrada de Materiais', () => {
     })
 
     test('deve exibir badges de status PENDENTE nos submateriais', async ({ page }) => {
-      await page.locator('button[title="Conferir"]').click()
+      await page.getByRole('button', { name: /Conferir/ }).click()
 
       const pendenteBadges = page.getByText('PENDENTE')
       const count = await pendenteBadges.count()
@@ -321,42 +327,49 @@ test.describe('Entrada de Materiais', () => {
     })
 
     test('deve exibir contagem de faltantes no highlight strip', async ({ page }) => {
-      await page.locator('button[title="Conferir"]').click()
+      await page.getByRole('button', { name: /Conferir/ }).click()
 
       await expect(page.getByText(/submateriais faltando/)).toBeVisible()
     })
 
     test('deve conferir submaterial via scan de código', async ({ page }) => {
-      await page.locator('button[title="Conferir"]').click()
+      await page.getByRole('button', { name: /Conferir/ }).click()
 
       const dialog = page.getByRole('dialog')
-      const conferenceScan = dialog.getByPlaceholder(/bipar código ou digitar nome/i)
+      const conferenceScan = dialog.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)
       await expect(conferenceScan).toBeVisible()
 
       await conferenceScan.fill('SUB-001')
       await conferenceScan.press('Enter')
 
-      // After scanning SUB-001, the "Conferidos" separator should appear
       await expect(dialog.getByText(/conferidos/i)).toBeVisible()
     })
 
     test('deve exibir progress bar no painel de conferência', async ({ page }) => {
-      await page.locator('button[title="Conferir"]').click()
+      await page.getByRole('button', { name: /Conferir/ }).click()
 
-      // Progress bar with count — total is sum of submaterial amounts (10)
       const dialog = page.getByRole('dialog')
       await expect(dialog.getByText('0/10')).toBeVisible()
     })
 
-    test('deve fechar painel ao clicar fechar', async ({ page }) => {
-      await page.locator('button[title="Conferir"]').click()
-      await expect(page.getByPlaceholder(/bipar código ou digitar nome/i)).toBeVisible()
+    test('deve fechar painel ao pressionar Escape', async ({ page }) => {
+      await page.getByRole('button', { name: /Conferir/ }).click()
+      await expect(page.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)).toBeVisible()
 
-      // Fechar (botão X do dialog ou Escape)
       await page.keyboard.press('Escape')
 
-      // Painel deve ter fechado
-      await expect(page.getByPlaceholder(/bipar código ou digitar nome/i)).not.toBeVisible()
+      await expect(page.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)).not.toBeVisible()
+    })
+
+    test('conference scan deve exibir dropdown combobox ao digitar', async ({ page }) => {
+      await page.getByRole('button', { name: /Conferir/ }).click()
+
+      const dialog = page.getByRole('dialog')
+      const conferenceScan = dialog.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)
+      await conferenceScan.fill('Pinça')
+
+      // Dropdown should appear with filtered items
+      await expect(dialog.getByText('Pinça Kelly Curva 16cm').first()).toBeVisible()
     })
   })
 
@@ -367,26 +380,19 @@ test.describe('Entrada de Materiais', () => {
   test.describe('AuthModal — registrar material', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/entrada-de-materiais')
-      // Preencher form + adicionar material
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
-      await page.locator('[role="combobox"]').nth(1).click()
-      await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
-
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+      await fillMinForm(page)
+      await addMaterial(page, 'MAT-001')
     })
 
     test('deve abrir AuthModal ao clicar Registrar', async ({ page }) => {
-      await page.locator('button[title="Registrar"]').click()
+      await page.getByRole('button', { name: /Registrar/ }).click()
 
       await expect(page.getByText('Autenticar para registrar')).toBeVisible()
       await expect(page.getByPlaceholder(/código do usuário/i)).toBeVisible()
     })
 
     test('deve exibir erro ao inserir código inválido', async ({ page }) => {
-      await page.locator('button[title="Registrar"]').click()
+      await page.getByRole('button', { name: /Registrar/ }).click()
 
       await page.getByPlaceholder(/código do usuário/i).fill('invalido')
       await page.getByRole('button', { name: 'Confirmar' }).click()
@@ -395,43 +401,54 @@ test.describe('Entrada de Materiais', () => {
     })
 
     test('deve registrar material com código válido', async ({ page }) => {
-      await page.locator('button[title="Registrar"]').click()
+      await page.getByRole('button', { name: /Registrar/ }).click()
 
       await page.getByPlaceholder(/código do usuário/i).fill('gg')
       await page.getByRole('button', { name: 'Confirmar' }).click()
 
-      // Material should be marked as registered — use exact match
       await expect(page.getByText('REGISTRADO', { exact: true })).toBeVisible()
       await expect(page.getByText('1 materiais · 1 registrados')).toBeVisible()
     })
 
+    test('deve travar Tipo e Setor somente após registrar material', async ({ page }) => {
+      // Before registering, Tipo should be enabled
+      const internaBtn = page.getByRole('button', { name: 'Interna', exact: true })
+      await expect(internaBtn).toBeEnabled()
+
+      // Register the material
+      await page.getByRole('button', { name: /Registrar/ }).click()
+      await page.getByPlaceholder(/código do usuário/i).fill('gg')
+      await page.getByRole('button', { name: 'Confirmar' }).click()
+      await expect(page.getByText('REGISTRADO', { exact: true })).toBeVisible()
+
+      // Now Tipo should be disabled
+      await expect(internaBtn).toBeDisabled()
+    })
+
     test('deve exibir checkbox "Lembrar de mim"', async ({ page }) => {
-      await page.locator('button[title="Registrar"]').click()
+      await page.getByRole('button', { name: /Registrar/ }).click()
 
       await expect(page.getByText(/lembrar de mim/i)).toBeVisible()
     })
 
     test('deve pular auth quando "Lembrar" está ativo', async ({ page }) => {
-      // Registrar primeiro material com "Lembrar"
-      await page.locator('button[title="Registrar"]').click()
+      // Register first material with "Lembrar"
+      await page.getByRole('button', { name: /Registrar/ }).click()
       await page.getByPlaceholder(/código do usuário/i).fill('gg')
       await page.getByLabel(/lembrar/i).check()
       await page.getByRole('button', { name: 'Confirmar' }).click()
 
-      // Adicionar segundo material
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-007')
-      await scanInput.press('Enter')
+      // Add second material
+      await addMaterial(page, 'MAT-007')
 
-      // Registrar segundo — não deve abrir dialog
-      await page.locator('button[title="Registrar"]').last().click()
+      // Register second — should skip dialog
+      await page.getByRole('button', { name: /Registrar/ }).last().click()
 
-      // Deve registrar direto (sem dialog)
       await expect(page.getByText('2 materiais · 2 registrados')).toBeVisible()
     })
 
     test('deve fechar AuthModal ao clicar Cancelar', async ({ page }) => {
-      await page.locator('button[title="Registrar"]').click()
+      await page.getByRole('button', { name: /Registrar/ }).click()
       await expect(page.getByText('Autenticar para registrar')).toBeVisible()
 
       await page.getByRole('button', { name: 'Cancelar' }).click()
@@ -449,57 +466,57 @@ test.describe('Entrada de Materiais', () => {
       await page.goto('/entrada-de-materiais')
     })
 
-    test('deve abrir drawer ao clicar "+ Criar" em Médico', async ({ page }) => {
-      const criarButtons = page.getByRole('button', { name: '+ Criar' })
-      await criarButtons.first().click()
+    test('deve abrir drawer ao clicar "+ Criar novo médico" no dropdown de Médico', async ({ page }) => {
+      // Open Médico combobox
+      await page.getByPlaceholder('Buscar médico...').click()
+      // Click the create button inside the dropdown
+      await page.getByText('+ Criar novo médico').click()
 
       await expect(page.getByRole('heading', { name: 'Novo Médico' })).toBeVisible()
     })
 
     test('deve criar médico e auto-selecionar no combobox', async ({ page }) => {
-      const criarButtons = page.getByRole('button', { name: '+ Criar' })
-      await criarButtons.first().click()
+      await page.getByPlaceholder('Buscar médico...').click()
+      await page.getByText('+ Criar novo médico').click()
 
       await page.getByPlaceholder(/nome do médico/i).fill('Dr. Teste Silva')
       await page.getByRole('button', { name: 'Salvar' }).click()
 
-      // Drawer deve fechar
       await expect(page.getByText('Novo Médico')).not.toBeVisible()
     })
 
-    test('deve abrir drawer ao clicar "+ Criar" em Paciente', async ({ page }) => {
-      const criarButtons = page.getByRole('button', { name: '+ Criar' })
-      await criarButtons.nth(1).click()
+    test('deve abrir drawer ao clicar "+ Criar novo paciente" no dropdown de Paciente', async ({ page }) => {
+      await page.getByPlaceholder('Buscar paciente...').click()
+      await page.getByText('+ Criar novo paciente').click()
 
       await expect(page.getByRole('heading', { name: 'Novo Paciente' })).toBeVisible()
     })
 
-    test('deve abrir drawer ao clicar "+ Criar" em Terceiro', async ({ page }) => {
-      const criarButtons = page.getByRole('button', { name: '+ Criar' })
-      await criarButtons.nth(2).click()
+    test('deve abrir drawer ao clicar "+ Criar novo terceiro" no dropdown de Terceiro', async ({ page }) => {
+      await page.getByPlaceholder('Buscar terceiro...').click()
+      await page.getByText('+ Criar novo terceiro').click()
 
       await expect(page.getByRole('heading', { name: 'Novo Terceiro' })).toBeVisible()
     })
 
     test('drawer de Terceiro deve ter campo Tipo', async ({ page }) => {
-      const criarButtons = page.getByRole('button', { name: '+ Criar' })
-      await criarButtons.nth(2).click()
+      await page.getByPlaceholder('Buscar terceiro...').click()
+      await page.getByText('+ Criar novo terceiro').click()
 
       await expect(page.getByText('Tipo *')).toBeVisible()
     })
 
     test('deve validar campo Nome obrigatório no drawer', async ({ page }) => {
-      const criarButtons = page.getByRole('button', { name: '+ Criar' })
-      await criarButtons.first().click()
+      await page.getByPlaceholder('Buscar médico...').click()
+      await page.getByText('+ Criar novo médico').click()
 
-      // Botão Salvar deve estar desabilitado sem nome
       const salvarBtn = page.getByRole('button', { name: 'Salvar' })
       await expect(salvarBtn).toBeDisabled()
     })
 
     test('deve fechar drawer ao clicar Cancelar', async ({ page }) => {
-      const criarButtons = page.getByRole('button', { name: '+ Criar' })
-      await criarButtons.first().click()
+      await page.getByPlaceholder('Buscar médico...').click()
+      await page.getByText('+ Criar novo médico').click()
       await expect(page.getByRole('heading', { name: 'Novo Médico' })).toBeVisible()
 
       await page.getByRole('button', { name: 'Cancelar' }).click()
@@ -515,34 +532,25 @@ test.describe('Entrada de Materiais', () => {
   test.describe('Dialog de imagens', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/entrada-de-materiais')
-      // Preencher form + adicionar material
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
-      await page.locator('[role="combobox"]').nth(1).click()
-      await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
-
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+      await fillMinForm(page)
+      await addMaterial(page, 'MAT-001')
     })
 
     test('deve abrir dialog de imagens ao clicar botão Imagens', async ({ page }) => {
-      await page.locator('button[title="Imagens"]').click()
+      await page.getByRole('button', { name: /Imagens/ }).click()
 
       await expect(page.getByText(/Imagens —/)).toBeVisible()
     })
 
     test('deve exibir botão "Adicionar Foto" no dialog', async ({ page }) => {
-      await page.locator('button[title="Imagens"]').click()
+      await page.getByRole('button', { name: /Imagens/ }).click()
 
       await expect(page.getByText('Adicionar Foto')).toBeVisible()
     })
 
     test('deve exibir mensagem quando não há imagens', async ({ page }) => {
-      await page.locator('button[title="Imagens"]').click()
+      await page.getByRole('button', { name: /Imagens/ }).click()
 
-      // The images dialog shows "Adicionar Foto" button when no images exist
-      // (no "nenhuma imagem" empty state message in the component)
       await expect(page.getByText('Adicionar Foto')).toBeVisible()
     })
   })
@@ -557,8 +565,6 @@ test.describe('Entrada de Materiais', () => {
     })
 
     test('deve abrir dialog de relatório ao clicar botão Relatório', async ({ page }) => {
-      // Use contextual bar "Gerar Relatório" since the footer Relatório button
-      // is behind the disabled overlay when form is not filled
       await page.getByRole('button', { name: 'Gerar Relatório' }).click()
 
       await expect(page.getByText('Relatório de Entrada')).toBeVisible()
@@ -590,8 +596,7 @@ test.describe('Entrada de Materiais', () => {
       await page.goto('/entrada-de-materiais')
 
       // Preencher algo
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
+      await selectTipo(page, 'Interna')
 
       // Clicar Nova Entrada
       await page.getByRole('button', { name: 'Nova Entrada' }).click()
@@ -611,40 +616,60 @@ test.describe('Entrada de Materiais', () => {
       await page.goto('/entrada-de-materiais')
 
       // 1. Preencher form de metadados
-      await page.locator('[role="combobox"]').first().click()
-      await page.getByRole('option', { name: 'Interna' }).click()
-      await page.locator('[role="combobox"]').nth(1).click()
-      await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
+      await fillMinForm(page)
 
       // 2. Bipar material KIT
-      const scanInput = page.getByPlaceholder(/bipar código/i)
-      await scanInput.fill('MAT-002')
-      await scanInput.press('Enter')
-      await expect(page.getByText('CX VASCULAR Nº1')).toBeVisible()
+      await addMaterial(page, 'MAT-002')
+      await expect(page.getByText('CX VASCULAR Nº1').first()).toBeVisible()
+
+      // Close auto-conference dialog
+      const dialog = page.getByRole('dialog')
+      await expect(dialog).toBeVisible({ timeout: 5000 })
+      await page.keyboard.press('Escape')
+      await expect(dialog).not.toBeVisible()
 
       // 3. Bipar material AVULSO
-      await scanInput.fill('MAT-001')
-      await scanInput.press('Enter')
+      await addMaterial(page, 'MAT-001')
       await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
       await expect(page.getByText('2 materiais · 0 registrados')).toBeVisible()
 
-      // 4. Registrar AVULSO
-      await page.locator('button[title="Registrar"]').last().click()
+      // 4. Registrar AVULSO (last card)
+      await page.getByRole('button', { name: /Registrar/ }).last().click()
       await page.getByPlaceholder(/código do usuário/i).fill('gg')
       await page.getByRole('button', { name: 'Confirmar' }).click()
       await expect(page.getByText('2 materiais · 1 registrados')).toBeVisible()
 
-      // 5. Registrar KIT (deve pedir auth novamente pois não marcou lembrar)
-      await page.locator('button[title="Registrar"]').first().click()
+      // 5. Registrar KIT (first card — must request auth again since "Lembrar" was not checked)
+      await page.getByRole('button', { name: /Registrar/ }).first().click()
       await page.getByPlaceholder(/código do usuário/i).fill('gg')
       await page.getByRole('button', { name: 'Confirmar' }).click()
       await expect(page.getByText('2 materiais · 2 registrados')).toBeVisible()
     })
   })
+
+  // ──────────────────────────────────────────────
+  // 13. Auto-abrir conferência para KIT (módulo COMPLETO)
+  // ──────────────────────────────────────────────
+
+  test.describe('Auto-abrir conferência para KIT', () => {
+    test('deve abrir conferência automaticamente ao adicionar KIT quando módulo é COMPLETO', async ({ page }) => {
+      await page.goto('/entrada-de-materiais')
+      await fillMinForm(page)
+
+      // Add KIT material
+      await addMaterial(page, 'MAT-002')
+
+      // Conference dialog should auto-open (fullscreen)
+      const dialog = page.getByRole('dialog')
+      await expect(dialog).toBeVisible()
+      await expect(dialog.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)).toBeVisible()
+      await expect(dialog.getByRole('heading', { name: 'CX VASCULAR Nº1', exact: true })).toBeVisible()
+    })
+  })
 })
 
 // ══════════════════════════════════════════════════
-// 12. Layout mobile
+// 14. Layout mobile
 // ══════════════════════════════════════════════════
 
 test.describe('Entrada de Materiais — Mobile', () => {
@@ -656,40 +681,27 @@ test.describe('Entrada de Materiais — Mobile', () => {
   })
 
   test('deve exibir form como accordion colapsável', async ({ page }) => {
-    // On mobile, "Dados da Entrada" appears as an accordion button
     await expect(page.getByRole('button', { name: /Dados da Entrada/ })).toBeVisible()
-    // Progress indicator shows "X/6 preenchidos"
     await expect(page.getByText(/\/6 preenchidos/)).toBeVisible()
   })
 
   test('deve colapsar accordion ao preencher form', async ({ page }) => {
-    // On mobile, accordion starts expanded by default (mobileFormExpanded = !isFormValid = true)
-    // The form comboboxes should already be visible — do NOT click the accordion button
-
-    await page.locator('[role="combobox"]').first().click()
-    await page.getByRole('option', { name: 'Interna' }).click()
-    await page.locator('[role="combobox"]').nth(1).click()
-    await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
+    // On mobile, accordion starts expanded — fill the form directly
+    await selectTipo(page, 'Interna')
+    await selectSetor(page, 'Centro Cirúrgico')
 
     // Accordion should auto-collapse when form becomes valid
-    // Verify scan bar is visible (materials unlocked)
-    await expect(page.getByPlaceholder(/bipar código/i)).toBeVisible()
+    await expect(scanInput(page)).toBeVisible()
   })
 
   test('deve permitir adicionar material no mobile', async ({ page }) => {
     // On mobile, accordion starts expanded — fill the form directly
-    await page.locator('[role="combobox"]').first().click()
-    await page.getByRole('option', { name: 'Interna' }).click()
-    await page.locator('[role="combobox"]').nth(1).click()
-    await page.getByRole('option', { name: 'Centro Cirúrgico' }).click()
+    await selectTipo(page, 'Interna')
+    await selectSetor(page, 'Centro Cirúrgico')
 
-    // Wait for unlock
     await page.waitForTimeout(300)
 
-    // Scan material
-    const scanInput = page.getByPlaceholder(/bipar código/i)
-    await scanInput.fill('MAT-001')
-    await scanInput.press('Enter')
+    await addMaterial(page, 'MAT-001')
 
     await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
   })
