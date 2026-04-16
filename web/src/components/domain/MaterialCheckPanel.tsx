@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/dialog'
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
 import { Command, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command'
 
 // -- Types
@@ -47,17 +47,11 @@ const statusConfig: Record<ItemStatus, { bg: string; text: string; label: string
 }
 
 function playBeep() {
-  try {
-    const ctx = new AudioContext()
-    const osc = ctx.createOscillator()
-    osc.type = 'sine'
-    osc.frequency.value = 880
-    osc.connect(ctx.destination)
-    osc.start()
-    osc.stop(ctx.currentTime + 0.1)
-  } catch {
-    // AudioContext not available
-  }
+  try { new Audio('/audios/beep-success.wav').play() } catch { /* noop */ }
+}
+
+function playErrorBeep() {
+  try { new Audio('/audios/beep-error.wav').play() } catch { /* noop */ }
 }
 
 // -- Component
@@ -112,9 +106,9 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
   const filteredScanItems = useMemo(() => {
     const val = scanValue.trim().toLowerCase()
     if (!val) return localItems
-    return localItems.filter(i =>
-      i.name.toLowerCase().includes(val) || i.code.toLowerCase().includes(val)
-    )
+    return localItems
+      .filter(i => i.name.toLowerCase().includes(val) || i.code.toLowerCase().includes(val))
+      .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
   }, [scanValue, localItems])
 
   // -- Mutation helper
@@ -164,6 +158,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
       setScanError(false)
     } else {
       setScanError(true)
+      playErrorBeep()
       setTimeout(() => setScanError(false), 800)
     }
     scanRef.current?.focus()
@@ -267,7 +262,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
           {/* Scan input (combobox) */}
           <div className="relative mb-sm">
             <Popover open={scanOpen} onOpenChange={setScanOpen}>
-              <PopoverTrigger asChild>
+              <PopoverAnchor asChild>
                 <div className="relative">
                   <SearchNormal1
                     size={16}
@@ -283,7 +278,10 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
                       setScanOpen(true)
                     }}
                     onFocus={() => setScanOpen(true)}
-                    onKeyDown={handleScanKeyDown}
+                    onKeyDown={e => {
+                      if (e.key === 'Escape') { setScanOpen(false); return }
+                      handleScanKeyDown(e)
+                    }}
                     placeholder="Bipar código ou digitar nome do submaterial..."
                     autoFocus
                     className={`
@@ -294,7 +292,7 @@ function MaterialCheckPanel({ materialName, items, onUpdate, onClose }: Material
                     style={{ color: 'var(--fg)' }}
                   />
                 </div>
-              </PopoverTrigger>
+              </PopoverAnchor>
               <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
                 <Command shouldFilter={false}>
                   <CommandList>

@@ -106,27 +106,27 @@ function Combobox({ options, value, onChange, placeholder = 'Buscar...', disable
 function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: EntradaFormProps) {
   // -- Filtered options
   const departmentOptions = useMemo(
-    () => mockDepartments.filter(d => d.status === 'ATIVO').map(d => ({ value: String(d.id), label: d.name })),
+    () => mockDepartments.filter(d => d.status === 'ATIVO').map(d => ({ value: String(d.id), label: d.name })).sort((a, b) => a.label.localeCompare(b.label, 'pt-BR')),
     []
   )
 
   const cmeOptions = useMemo(
-    () => mockCmes.map(c => ({ value: String(c.id), label: c.corporateName })),
+    () => mockCmes.map(c => ({ value: String(c.id), label: c.corporateName })).sort((a, b) => a.label.localeCompare(b.label, 'pt-BR')),
     []
   )
 
   const doctorOptions = useMemo(
-    () => mockDoctors.filter(d => d.status === 'ATIVO').map(d => ({ value: String(d.id), label: d.name })),
+    () => mockDoctors.filter(d => d.status === 'ATIVO').map(d => ({ value: String(d.id), label: d.name })).sort((a, b) => a.label.localeCompare(b.label, 'pt-BR')),
     []
   )
 
   const patientOptions = useMemo(
-    () => mockPatients.filter(p => p.status === 'ATIVO').map(p => ({ value: String(p.id), label: p.name })),
+    () => mockPatients.filter(p => p.status === 'ATIVO').map(p => ({ value: String(p.id), label: p.name })).sort((a, b) => a.label.localeCompare(b.label, 'pt-BR')),
     []
   )
 
   const ownerOptions = useMemo(
-    () => mockOwners.filter(o => o.status === 'ATIVO').map(o => ({ value: String(o.id), label: o.name })),
+    () => mockOwners.filter(o => o.status === 'ATIVO').map(o => ({ value: String(o.id), label: o.name })).sort((a, b) => a.label.localeCompare(b.label, 'pt-BR')),
     []
   )
 
@@ -190,17 +190,17 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
   }, [onChange])
 
   // -- Badge renderer
-  const renderBadge = useCallback((badge: BadgeField) => (
+  const renderBadge = useCallback((badge: BadgeField, isRequired: boolean) => (
     <span
       key={badge.key}
       className={cn(
-        'inline-flex items-center gap-[4px] rounded-pill px-[8px] py-[2px] text-xxs font-medium',
+        'inline-flex items-center gap-[4px] rounded-pill px-[6px] py-[1px] text-[9px] font-medium',
         badge.filled
-          ? 'bg-[rgba(34,197,94,0.1)] text-[#16a34a]'
-          : 'bg-muted text-muted-foreground'
+          ? 'bg-primary-15 text-primary'
+          : isRequired ? 'bg-primary-7' : 'bg-muted text-muted-foreground'
       )}
     >
-      {badge.filled ? <TickCircle size={12} color="currentColor" variant="Bold" /> : <span className="text-[10px]">&#9675;</span>}
+      {badge.filled ? <TickCircle size={10} color="currentColor" variant="Bold" /> : <span className="text-[8px]">&#9675;</span>}
       {badge.label}
     </span>
   ), [])
@@ -214,14 +214,26 @@ function EntradaForm({ formData, onChange, materialsAdded, onCreateInline }: Ent
       </div>
 
       {/* Progress badges — separated required / optional */}
-      <div className="flex flex-col gap-[6px]">
-        <div className="flex flex-wrap gap-[6px]">
-          <span className="text-xxs text-fg-dim font-medium uppercase mr-[2px]">Obrigatório:</span>
-          {requiredBadges.map(renderBadge)}
+      <div className="flex flex-col gap-[8px]">
+        <div className="flex flex-col gap-[6px]">
+          <div className="flex items-center gap-sm">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-[9px] text-fg-dim font-medium uppercase whitespace-nowrap">Obrigatório</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+          <div className="flex flex-wrap gap-[6px]">
+            {requiredBadges.map(b => renderBadge(b, true))}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-[6px]">
-          <span className="text-xxs text-fg-dim font-medium uppercase mr-[2px]">Opcional:</span>
-          {optionalBadges.map(renderBadge)}
+        <div className="flex flex-col gap-[6px]">
+          <div className="flex items-center gap-sm">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-[9px] text-fg-dim font-medium uppercase whitespace-nowrap">Opcional</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+          <div className="flex flex-wrap gap-[6px]">
+            {optionalBadges.map(b => renderBadge(b, false))}
+          </div>
         </div>
       </div>
 

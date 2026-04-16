@@ -1,9 +1,9 @@
 // packages
 import { useState, useRef, useCallback, useMemo } from 'react'
-import { SearchNormal1, Add, Lock1, DocumentText } from 'iconsax-react'
+import { SearchNormal1, Add, Lock1, DocumentText, Box1 } from 'iconsax-react'
 
 // components
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
 import { Command, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command'
 import { EntradaMaterialCard } from './EntradaMaterialCard'
 
@@ -25,6 +25,7 @@ type EntradaMaterialListProps = {
   onRemove: (index: number) => void
   onAmountChange: (index: number, amount: number) => void
   onReport: () => void
+  getCheckedSubmaterials: (materialId: number) => Record<number, number>
 }
 
 function EntradaMaterialList({
@@ -36,7 +37,8 @@ function EntradaMaterialList({
   onRegister,
   onRemove,
   onAmountChange,
-  onReport
+  onReport,
+  getCheckedSubmaterials
 }: EntradaMaterialListProps) {
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -92,7 +94,7 @@ function EntradaMaterialList({
       <div className="shrink-0 px-md pt-md pb-sm sticky top-0 z-[5] bg-background">
         <div className="flex items-center gap-sm">
           <Popover open={open && isFormValid} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
+            <PopoverAnchor asChild>
               <div className="relative flex-1">
                 <SearchNormal1
                   size={16}
@@ -109,6 +111,7 @@ function EntradaMaterialList({
                   }}
                   onFocus={() => setOpen(true)}
                   onKeyDown={e => {
+                    if (e.key === 'Escape') { setOpen(false); return }
                     if (e.key === 'Enter') {
                       e.preventDefault()
                       handleSubmit()
@@ -120,7 +123,7 @@ function EntradaMaterialList({
                   disabled={!isFormValid}
                 />
               </div>
-            </PopoverTrigger>
+            </PopoverAnchor>
             <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
               <Command shouldFilter={false}>
                 <CommandList>
@@ -132,6 +135,7 @@ function EntradaMaterialList({
                         if (!val) return true
                         return m.name.toLowerCase().includes(val) || (m.code && m.code.toLowerCase().includes(val))
                       })
+                      .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
                       .map(mat => {
                         const colors = typeBadgeColors[mat.type] || typeBadgeColors.AVULSO
                         return (
@@ -168,8 +172,12 @@ function EntradaMaterialList({
       {/* Material cards */}
       <div className="flex-1 overflow-y-auto px-md py-sm flex flex-col gap-md">
         {materials.length === 0 && (
-          <div className="flex-1 flex items-center justify-center">
-            <span className="text-body text-fg-dim">Nenhum material adicionado</span>
+          <div className="flex-1 flex flex-col items-center justify-center gap-lg py-3xl">
+            <Box1 size={48} color="var(--fg-ghost)" />
+            <div className="flex flex-col items-center gap-xs">
+              <span className="text-body font-medium text-fg-dim">Nenhum material adicionado</span>
+              <span className="text-caption text-fg-ghost">Bipe ou busque um material para começar</span>
+            </div>
           </div>
         )}
         {materials.map((material, index) => (
@@ -182,6 +190,7 @@ function EntradaMaterialList({
             onRemove={() => onRemove(index)}
             onAmountChange={(amount) => onAmountChange(index, amount)}
             defaultExpanded={index === firstKitIndex}
+            checkedSubmaterials={getCheckedSubmaterials(material.materialId)}
           />
         ))}
       </div>

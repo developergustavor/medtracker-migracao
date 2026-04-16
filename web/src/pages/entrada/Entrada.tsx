@@ -76,6 +76,7 @@ function Entrada() {
   // -- Conference state
   const [conferenceTarget, setConferenceTarget] = useState<number | null>(null)
   const [conferenceItems, setConferenceItems] = useState<CheckItem[]>([])
+  const [conferenceMap, setConferenceMap] = useState<Record<number, CheckItem[]>>({})
 
   const handleFormChange = useCallback((partial: Partial<EntryFormData>) => {
     setFormData(prev => {
@@ -139,10 +140,12 @@ function Entrada() {
       if (found.type === 'KIT' && isModuloCompleto) {
         const newIndex = newList.length - 1
         setTimeout(() => {
-          setConferenceTarget(newIndex)
-          setConferenceItems(subs.map(s => ({
+          const items = subs.map(s => ({
             id: s.id, code: s.code, name: s.name, amount: s.amount, checkedAmount: 0, images: s.images || []
-          })))
+          }))
+          setConferenceTarget(newIndex)
+          setConferenceItems(items)
+          setConferenceMap(prev => ({ ...prev, [found.id]: items }))
         }, 0)
       }
       return newList
@@ -178,18 +181,25 @@ function Entrada() {
     setConferenceTarget(index)
     const material = materials[index]
     if (!material) return
-    const subs = mockSubmaterials.filter(s => s.materialId === material.materialId)
-    setConferenceItems(subs.map(s => ({
-      id: s.id, code: s.code, name: s.name, amount: s.amount, checkedAmount: 0, images: s.images || []
-    })))
-  }, [materials])
+    const existing = conferenceMap[material.materialId]
+    if (existing) {
+      setConferenceItems(existing)
+    } else {
+      const subs = mockSubmaterials.filter(s => s.materialId === material.materialId)
+      setConferenceItems(subs.map(s => ({
+        id: s.id, code: s.code, name: s.name, amount: s.amount, checkedAmount: 0, images: s.images || []
+      })))
+    }
+  }, [materials, conferenceMap])
 
   const handleConferenceUpdate = useCallback((updatedItems: CheckItem[]) => {
     if (conferenceTarget === null) return
+    const material = materials[conferenceTarget]
     const totalChecked = updatedItems.reduce((sum, item) => sum + item.checkedAmount, 0)
     setConferenceItems(updatedItems)
+    setConferenceMap(prev => ({ ...prev, [material.materialId]: updatedItems }))
     setMaterials(prev => prev.map((m, i) => i === conferenceTarget ? { ...m, checkedCount: totalChecked } : m))
-  }, [conferenceTarget])
+  }, [conferenceTarget, materials])
 
   const handleConferenceClose = useCallback(() => {
     setConferenceTarget(null)
@@ -230,6 +240,14 @@ function Entrada() {
     reader.readAsDataURL(file)
     e.target.value = ''
   }, [handleAddImage])
+
+  const getCheckedSubmaterials = useCallback((materialId: number): Record<number, number> => {
+    const items = conferenceMap[materialId]
+    if (!items) return {}
+    const map: Record<number, number> = {}
+    items.forEach(item => { map[item.id] = item.checkedAmount })
+    return map
+  }, [conferenceMap])
 
   const imagesTargetMaterial = imagesTarget !== null ? materials[imagesTarget] : null
 
@@ -299,6 +317,7 @@ function Entrada() {
           onRemove={handleRemoveMaterial}
           onAmountChange={handleAmountChange}
           onReport={handleReport}
+          getCheckedSubmaterials={getCheckedSubmaterials}
         />
       </div>
 
