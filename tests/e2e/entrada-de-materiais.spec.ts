@@ -29,11 +29,12 @@ async function selectTipo(page: import('@playwright/test').Page, tipo: 'Interna'
   await page.getByRole('button', { name: tipo, exact: true }).click()
 }
 
-/** Select Setor via combobox (type to search, click option) */
+/** Select Setor via Popover+Command combobox (click trigger → type in CommandInput → click option) */
 async function selectSetor(page: import('@playwright/test').Page, name: string) {
-  const setorInput = page.getByPlaceholder('Buscar setor...')
-  await setorInput.click()
-  await setorInput.fill(name.substring(0, 6))
+  // Trigger is a <button> showing placeholder text "Buscar setor..."
+  await page.getByRole('button', { name: 'Buscar setor...' }).click()
+  // CommandInput inside the popover
+  await page.getByPlaceholder('Buscar setor...').fill(name.substring(0, 6))
   await page.getByText(name, { exact: true }).click()
 }
 
@@ -107,21 +108,20 @@ test.describe('Entrada de Materiais', () => {
 
     test('deve mostrar campo Setor ao selecionar tipo Interna', async ({ page }) => {
       await selectTipo(page, 'Interna')
-      await expect(page.getByPlaceholder('Buscar setor...')).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Buscar setor...' })).toBeVisible()
     })
 
     test('deve mostrar campo CME Origem ao selecionar tipo Externa', async ({ page }) => {
       await selectTipo(page, 'Externa')
-      await expect(page.getByPlaceholder('Buscar CME...')).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Buscar CME...' })).toBeVisible()
     })
 
     test('deve exibir botão "+ Criar" dentro do dropdown de Médico', async ({ page }) => {
-      // Open the Médico combobox dropdown
-      const medicoInput = page.getByPlaceholder('Buscar médico...')
-      await medicoInput.click()
+      // Open the Médico combobox by clicking the trigger button
+      await page.getByRole('button', { name: 'Buscar médico...' }).click()
 
       // "+ Criar novo médico" should be visible inside the dropdown
-      await expect(page.getByText('+ Criar novo médico')).toBeVisible()
+      await expect(page.getByText('Criar novo médico')).toBeVisible()
     })
 
     test('deve exibir campos de Data e Hora do Procedimento', async ({ page }) => {
@@ -172,13 +172,13 @@ test.describe('Entrada de Materiais', () => {
     test('deve adicionar material AVULSO ao bipar código', async ({ page }) => {
       await addMaterial(page, 'MAT-001')
 
-      await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
+      await expect(page.getByText('PINÇA BACKAUS').first()).toBeVisible()
     })
 
     test('deve adicionar material por busca de nome', async ({ page }) => {
       await addMaterial(page, 'capote')
 
-      await expect(page.getByText('CAPOTE')).toBeVisible()
+      await expect(page.getByText('CAPOTE').first()).toBeVisible()
     })
 
     test('deve atualizar contagem no footer ao adicionar materiais', async ({ page }) => {
@@ -220,7 +220,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Auto-conference opens for KIT — close it first
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       await expect(dialog).toBeVisible({ timeout: 5000 })
       await page.keyboard.press('Escape')
       await expect(dialog).not.toBeVisible()
@@ -234,7 +234,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Close auto-conference
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       await expect(dialog).toBeVisible({ timeout: 5000 })
       await page.keyboard.press('Escape')
       await expect(dialog).not.toBeVisible()
@@ -246,7 +246,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Close auto-conference
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       await expect(dialog).toBeVisible({ timeout: 5000 })
       await page.keyboard.press('Escape')
       await expect(dialog).not.toBeVisible()
@@ -257,7 +257,7 @@ test.describe('Entrada de Materiais', () => {
     test('card AVULSO deve ter controle de quantidade', async ({ page }) => {
       await addMaterial(page, 'MAT-001')
 
-      await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
+      await expect(page.getByText('PINÇA BACKAUS').first()).toBeVisible()
       const materialCard = page.locator('.rounded-sm.border').filter({ hasText: 'PINÇA BACKAUS' })
       await expect(materialCard).toBeVisible()
       const controlBtns = materialCard.locator('button').filter({ has: page.locator('svg') })
@@ -275,11 +275,11 @@ test.describe('Entrada de Materiais', () => {
 
     test('deve remover material ao clicar Remover', async ({ page }) => {
       await addMaterial(page, 'MAT-001')
-      await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
+      await expect(page.getByText('PINÇA BACKAUS').first()).toBeVisible()
 
       await page.getByRole('button', { name: /Remover/ }).click()
 
-      await expect(page.getByText('PINÇA BACKAUS')).not.toBeVisible()
+      await expect(page.getByText('PINÇA BACKAUS').first()).not.toBeVisible()
       await expect(page.getByText('0 materiais · 0 registrados')).toBeVisible()
     })
   })
@@ -295,7 +295,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Auto-conference opens for KIT (módulo COMPLETO) — wait for it, then close
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       await expect(dialog).toBeVisible({ timeout: 5000 })
       await page.keyboard.press('Escape')
       await expect(dialog).not.toBeVisible()
@@ -311,7 +311,7 @@ test.describe('Entrada de Materiais', () => {
     test('deve exibir todos os submateriais no painel', async ({ page }) => {
       await page.getByRole('button', { name: /Conferir/ }).click()
 
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       await expect(dialog.getByText('Pinça Kelly Curva 16cm', { exact: true }).first()).toBeVisible()
       await expect(dialog.getByText('Pinça Hemostática Crile', { exact: true }).first()).toBeVisible()
       await expect(dialog.getByText('Tesoura Metzenbaum 18cm', { exact: true }).first()).toBeVisible()
@@ -335,7 +335,7 @@ test.describe('Entrada de Materiais', () => {
     test('deve conferir submaterial via scan de código', async ({ page }) => {
       await page.getByRole('button', { name: /Conferir/ }).click()
 
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       const conferenceScan = dialog.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)
       await expect(conferenceScan).toBeVisible()
 
@@ -348,7 +348,7 @@ test.describe('Entrada de Materiais', () => {
     test('deve exibir progress bar no painel de conferência', async ({ page }) => {
       await page.getByRole('button', { name: /Conferir/ }).click()
 
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       await expect(dialog.getByText('0/10')).toBeVisible()
     })
 
@@ -364,7 +364,7 @@ test.describe('Entrada de Materiais', () => {
     test('conference scan deve exibir dropdown combobox ao digitar', async ({ page }) => {
       await page.getByRole('button', { name: /Conferir/ }).click()
 
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       const conferenceScan = dialog.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)
       await conferenceScan.fill('Pinça')
 
@@ -467,17 +467,17 @@ test.describe('Entrada de Materiais', () => {
     })
 
     test('deve abrir drawer ao clicar "+ Criar novo médico" no dropdown de Médico', async ({ page }) => {
-      // Open Médico combobox
-      await page.getByPlaceholder('Buscar médico...').click()
+      // Open Médico combobox via trigger button
+      await page.getByRole('button', { name: 'Buscar médico...' }).click()
       // Click the create button inside the dropdown
-      await page.getByText('+ Criar novo médico').click()
+      await page.getByText('Criar novo médico').click()
 
       await expect(page.getByRole('heading', { name: 'Novo Médico' })).toBeVisible()
     })
 
     test('deve criar médico e auto-selecionar no combobox', async ({ page }) => {
-      await page.getByPlaceholder('Buscar médico...').click()
-      await page.getByText('+ Criar novo médico').click()
+      await page.getByRole('button', { name: 'Buscar médico...' }).click()
+      await page.getByText('Criar novo médico').click()
 
       await page.getByPlaceholder(/nome do médico/i).fill('Dr. Teste Silva')
       await page.getByRole('button', { name: 'Salvar' }).click()
@@ -486,37 +486,37 @@ test.describe('Entrada de Materiais', () => {
     })
 
     test('deve abrir drawer ao clicar "+ Criar novo paciente" no dropdown de Paciente', async ({ page }) => {
-      await page.getByPlaceholder('Buscar paciente...').click()
-      await page.getByText('+ Criar novo paciente').click()
+      await page.getByRole('button', { name: 'Buscar paciente...' }).click()
+      await page.getByText('Criar novo paciente').click()
 
       await expect(page.getByRole('heading', { name: 'Novo Paciente' })).toBeVisible()
     })
 
     test('deve abrir drawer ao clicar "+ Criar novo terceiro" no dropdown de Terceiro', async ({ page }) => {
-      await page.getByPlaceholder('Buscar terceiro...').click()
-      await page.getByText('+ Criar novo terceiro').click()
+      await page.getByRole('button', { name: 'Buscar terceiro...' }).click()
+      await page.getByText('Criar novo terceiro').click()
 
       await expect(page.getByRole('heading', { name: 'Novo Terceiro' })).toBeVisible()
     })
 
     test('drawer de Terceiro deve ter campo Tipo', async ({ page }) => {
-      await page.getByPlaceholder('Buscar terceiro...').click()
-      await page.getByText('+ Criar novo terceiro').click()
+      await page.getByRole('button', { name: 'Buscar terceiro...' }).click()
+      await page.getByText('Criar novo terceiro').click()
 
       await expect(page.getByText('Tipo *')).toBeVisible()
     })
 
     test('deve validar campo Nome obrigatório no drawer', async ({ page }) => {
-      await page.getByPlaceholder('Buscar médico...').click()
-      await page.getByText('+ Criar novo médico').click()
+      await page.getByRole('button', { name: 'Buscar médico...' }).click()
+      await page.getByText('Criar novo médico').click()
 
       const salvarBtn = page.getByRole('button', { name: 'Salvar' })
       await expect(salvarBtn).toBeDisabled()
     })
 
     test('deve fechar drawer ao clicar Cancelar', async ({ page }) => {
-      await page.getByPlaceholder('Buscar médico...').click()
-      await page.getByText('+ Criar novo médico').click()
+      await page.getByRole('button', { name: 'Buscar médico...' }).click()
+      await page.getByText('Criar novo médico').click()
       await expect(page.getByRole('heading', { name: 'Novo Médico' })).toBeVisible()
 
       await page.getByRole('button', { name: 'Cancelar' }).click()
@@ -623,14 +623,14 @@ test.describe('Entrada de Materiais', () => {
       await expect(page.getByText('CX VASCULAR Nº1').first()).toBeVisible()
 
       // Close auto-conference dialog
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       await expect(dialog).toBeVisible({ timeout: 5000 })
       await page.keyboard.press('Escape')
       await expect(dialog).not.toBeVisible()
 
       // 3. Bipar material AVULSO
       await addMaterial(page, 'MAT-001')
-      await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
+      await expect(page.getByText('PINÇA BACKAUS').first()).toBeVisible()
       await expect(page.getByText('2 materiais · 0 registrados')).toBeVisible()
 
       // 4. Registrar AVULSO (last card)
@@ -660,7 +660,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Conference dialog should auto-open (fullscreen)
-      const dialog = page.getByRole('dialog')
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
       await expect(dialog).toBeVisible()
       await expect(dialog.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)).toBeVisible()
       await expect(dialog.getByRole('heading', { name: 'CX VASCULAR Nº1', exact: true })).toBeVisible()
@@ -703,6 +703,6 @@ test.describe('Entrada de Materiais — Mobile', () => {
 
     await addMaterial(page, 'MAT-001')
 
-    await expect(page.getByText('PINÇA BACKAUS')).toBeVisible()
+    await expect(page.getByText('PINÇA BACKAUS').first()).toBeVisible()
   })
 })
