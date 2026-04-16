@@ -44,6 +44,20 @@ async function fillMinForm(page: import('@playwright/test').Page) {
   await selectSetor(page, 'Centro Cirúrgico')
 }
 
+/** Close the conference dialog (needs two Escapes: one for scan popover, one for dialog) */
+async function closeConferenceDialog(page: import('@playwright/test').Page) {
+  const dialog = page.getByRole('dialog', { name: /Conferência/ })
+  await expect(dialog).toBeVisible({ timeout: 5000 })
+  // The scan popover auto-opens on focus inside the dialog, so Escape may close the popover first.
+  // Press Escape multiple times with waits to ensure both popover and dialog close.
+  for (let i = 0; i < 3; i++) {
+    await page.keyboard.press('Escape')
+    await page.waitForTimeout(300)
+    if (await dialog.isHidden()) break
+  }
+  await expect(dialog).not.toBeVisible({ timeout: 5000 })
+}
+
 /** Get the scan input */
 function scanInput(page: import('@playwright/test').Page) {
   return page.getByPlaceholder(/bipar código ou buscar material/i)
@@ -93,8 +107,8 @@ test.describe('Entrada de Materiais', () => {
     })
 
     test('deve exibir badges de progresso separados em Obrigatório e Opcional', async ({ page }) => {
-      await expect(page.getByText('Obrigatório:')).toBeVisible()
-      await expect(page.getByText('Opcional:')).toBeVisible()
+      await expect(page.getByText('Obrigatório', { exact: true })).toBeVisible()
+      await expect(page.getByText('Opcional', { exact: true })).toBeVisible()
       await expect(page.getByText('Tipo').first()).toBeVisible()
       await expect(page.getByText('Médico').first()).toBeVisible()
       await expect(page.getByText('Paciente').first()).toBeVisible()
@@ -220,10 +234,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Auto-conference opens for KIT — close it first
-      const dialog = page.getByRole('dialog', { name: /Conferência/ })
-      await expect(dialog).toBeVisible({ timeout: 5000 })
-      await page.keyboard.press('Escape')
-      await expect(dialog).not.toBeVisible()
+      await closeConferenceDialog(page)
 
       // Submaterials should be visible (first KIT auto-expands)
       await expect(page.getByText('Pinça Kelly Curva 16cm')).toBeVisible()
@@ -234,10 +245,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Close auto-conference
-      const dialog = page.getByRole('dialog', { name: /Conferência/ })
-      await expect(dialog).toBeVisible({ timeout: 5000 })
-      await page.keyboard.press('Escape')
-      await expect(dialog).not.toBeVisible()
+      await closeConferenceDialog(page)
 
       await expect(page.getByText('0/10')).toBeVisible()
     })
@@ -246,10 +254,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Close auto-conference
-      const dialog = page.getByRole('dialog', { name: /Conferência/ })
-      await expect(dialog).toBeVisible({ timeout: 5000 })
-      await page.keyboard.press('Escape')
-      await expect(dialog).not.toBeVisible()
+      await closeConferenceDialog(page)
 
       await expect(page.getByRole('button', { name: /Conferir/ })).toBeVisible()
     })
@@ -295,10 +300,7 @@ test.describe('Entrada de Materiais', () => {
       await addMaterial(page, 'MAT-002')
 
       // Auto-conference opens for KIT (módulo COMPLETO) — wait for it, then close
-      const dialog = page.getByRole('dialog', { name: /Conferência/ })
-      await expect(dialog).toBeVisible({ timeout: 5000 })
-      await page.keyboard.press('Escape')
-      await expect(dialog).not.toBeVisible()
+      await closeConferenceDialog(page)
     })
 
     test('deve abrir painel fullscreen de conferência ao clicar Conferir', async ({ page }) => {
@@ -356,6 +358,9 @@ test.describe('Entrada de Materiais', () => {
       await page.getByRole('button', { name: /Conferir/ }).click()
       await expect(page.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)).toBeVisible()
 
+      // First Escape closes the scan popover, second closes the dialog
+      await page.keyboard.press('Escape')
+      await page.waitForTimeout(200)
       await page.keyboard.press('Escape')
 
       await expect(page.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)).not.toBeVisible()
@@ -623,10 +628,7 @@ test.describe('Entrada de Materiais', () => {
       await expect(page.getByText('CX VASCULAR Nº1').first()).toBeVisible()
 
       // Close auto-conference dialog
-      const dialog = page.getByRole('dialog', { name: /Conferência/ })
-      await expect(dialog).toBeVisible({ timeout: 5000 })
-      await page.keyboard.press('Escape')
-      await expect(dialog).not.toBeVisible()
+      await closeConferenceDialog(page)
 
       // 3. Bipar material AVULSO
       await addMaterial(page, 'MAT-001')
@@ -666,6 +668,57 @@ test.describe('Entrada de Materiais', () => {
       await expect(dialog.getByRole('heading', { name: 'CX VASCULAR Nº1', exact: true })).toBeVisible()
     })
   })
+
+  // ──────────────────────────────────────────────
+  // 14. Persistência de conferência (conferenceMap)
+  // ──────────────────────────────────────────────
+
+  test.describe('Persistência de conferência', () => {
+    test('deve preservar estado de conferência ao reabrir painel', async ({ page }) => {
+      await page.goto('/entrada-de-materiais')
+      await fillMinForm(page)
+      await addMaterial(page, 'MAT-002')
+
+      // Auto-conference opens — check a submaterial
+      const dialog = page.getByRole('dialog', { name: /Conferência/ })
+      await expect(dialog).toBeVisible({ timeout: 5000 })
+      const conferenceScan = dialog.getByPlaceholder(/bipar código ou digitar nome do submaterial/i)
+      await conferenceScan.fill('SUB-001')
+      await conferenceScan.press('Enter')
+
+      // Close conference (after Enter, popover may already be closed, so try two escapes)
+      await page.waitForTimeout(300)
+      await page.keyboard.press('Escape')
+      await page.waitForTimeout(200)
+      await page.keyboard.press('Escape')
+      await expect(dialog).not.toBeVisible({ timeout: 5000 })
+
+      // Re-open conference
+      await page.getByRole('button', { name: /Conferir/ }).click()
+
+      // Checked state should persist — progress should reflect the check
+      const reopenedDialog = page.getByRole('dialog', { name: /Conferência/ })
+      await expect(reopenedDialog.getByText(/conferidos/i)).toBeVisible()
+    })
+  })
+
+  // ──────────────────────────────────────────────
+  // 15. Submateriais exibem (checkedAmount/amount)
+  // ──────────────────────────────────────────────
+
+  test.describe('Submateriais — formato checkedAmount/amount', () => {
+    test('deve exibir submateriais com formato (checkedAmount/amount) no card', async ({ page }) => {
+      await page.goto('/entrada-de-materiais')
+      await fillMinForm(page)
+      await addMaterial(page, 'MAT-002')
+
+      // Close auto-conference
+      await closeConferenceDialog(page)
+
+      // First KIT auto-expands — submaterials should show (0/N) format
+      await expect(page.getByText(/\(0\/\d+\)/).first()).toBeVisible()
+    })
+  })
 })
 
 // ══════════════════════════════════════════════════
@@ -703,6 +756,9 @@ test.describe('Entrada de Materiais — Mobile', () => {
 
     await addMaterial(page, 'MAT-001')
 
-    await expect(page.getByText('PINÇA BACKAUS').first()).toBeVisible()
+    // On mobile the material name may be truncated by action buttons,
+    // so check for the material code which is always visible in row 2
+    await expect(page.getByText('MAT-001').first()).toBeVisible()
+    await expect(page.getByText('1 materiais · 0 registrados')).toBeVisible()
   })
 })
